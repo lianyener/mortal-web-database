@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.mental}-62 / {@PlayerStat.dexterity}-1 / {@PlayerStat.fate}+1 / {@System.Title.Misc}❮{@Misc.Name.2002}❯+1"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Misc":["2002"],"Script":["free"]}},"remark":[]}

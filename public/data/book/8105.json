@@ -1,0 +1,1 @@
+{"cost":1500,"martial":true,"type":"Etc","level":5,"condition":["{@PlayerStat.literacy}≥10","{@PlayerStat.literacy}≥10","{@PlayerStat.literacy}≥10","{@PlayerStat.literacy}≥10","{@PlayerStat.literacy}≥10"],"learned":["{@PlayerStat.literacy}","{@PlayerStat.training}","{@PlayerStat.behaviour}"],"rel":{"pre":{},"post":{}},"backRel":{"post":{"Script":["S2200_04_10"]}}}

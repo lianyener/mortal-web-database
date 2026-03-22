@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"{{@Flag.A00001}=0} / {{@Flag.A00002}=0} / {{@Flag.A00003}=0} / ◎{@Custom.NextScript}{@Custom.Random}{@Position.Door_02}{@System.StoryEvent}"}],"rel":{"pre":{},"intra":{},"post":{"Flag":["A00001","A00002","A00003"],"Position":["Door_02"]}},"remark":[],"backRel":{"post":{"Mission":["Door"],"Script":["free"]}}}

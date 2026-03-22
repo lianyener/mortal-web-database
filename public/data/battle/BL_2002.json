@@ -1,0 +1,1 @@
+{"type":"100","friend":{"name":["{@EnemyTeam.004}","{@EnemyTeam.006}","{@EnemyTeam.007}","{@EnemyTeam.009}"],"people":50},"enemy":{"name":["{@EnemyTeam.100}"],"people":50},"neutral":{"name":[],"people":""},"end":["{@Custom.Defeat}","{@Custom.PlayerDie}"],"rel":{"pre":{}},"backRel":{"post":{"Script":["ch2_5_2_2"]}}}

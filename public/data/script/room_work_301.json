@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.mental}+40 / {@PlayerStat.money}+1000 / {@PlayerStat.team}-2"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[],"backRel":{"post":{"Script":["room_001_break_option"]}}}

@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.mental}-20 / {@PlayerStat.disposition}-1 / {@PlayerStat.fame}+1 / {@PlayerStat.contribution}-20"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[section_02_free_start_01]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["section_02_free_start_01"]}},"remark":[]}

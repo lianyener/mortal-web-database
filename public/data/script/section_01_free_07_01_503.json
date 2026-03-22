@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"★{@System.Combat}[CL_5100_03] / ◎{@Custom.CombatNextScript}[section_01_free_07_101_01]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["section_01_free_07_101_01"],"Combat":["CL_5100_03"]}},"remark":[]}

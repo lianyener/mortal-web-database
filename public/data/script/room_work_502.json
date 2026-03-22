@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.mental}+30 / {@PlayerStat.money}+100 / {@Character.special206}+1 / {@Character.brother4}-1"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Character":["special206","brother4"],"Script":["free"]}},"remark":[]}

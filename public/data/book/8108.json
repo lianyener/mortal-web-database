@@ -1,0 +1,1 @@
+{"cost":1500,"martial":true,"type":"Etc","level":1,"condition":["{@System.NA}"],"learned":["{@Name.Talent,9503}","{@PlayerStat.disposition}"],"rel":{"pre":{},"post":{"Talent":["9503"]}},"backRel":{"post":{"Script":["ch2_4_8_10"]}}}

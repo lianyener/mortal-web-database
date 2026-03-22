@@ -1,0 +1,1 @@
+{"type":"000","friend":{"name":["{@EnemyTeam.002}"],"people":100},"enemy":{"name":["{@EnemyTeam.100}","{@EnemyTeam.004}","{@EnemyTeam.008}","{@EnemyTeam.007}"],"people":100},"neutral":{"name":["{@EnemyTeam.900}"],"people":20},"end":["{@Custom.Timeout}(60 {@Custom.Second})","{@Custom.Defeat}","{@Custom.PlayerDie}"],"rel":{"pre":{}},"backRel":{"post":{"Script":["S0018_02_01"]}}}

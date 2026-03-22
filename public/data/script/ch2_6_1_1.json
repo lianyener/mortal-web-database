@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"{{@Flag.A00001}=1}"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[ch2_6_3_1]"}],"rel":{"pre":{},"intra":{"Character":["special835","brother2"]},"post":{"Flag":["A00001"],"Script":["ch2_6_3_1"]}},"remark":[],"backRel":{"post":{"Script":["ch2_6_1","ch2_6_2_2"]}}}

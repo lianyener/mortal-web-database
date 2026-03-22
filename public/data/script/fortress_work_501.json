@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.literacy}+1 / {@PlayerStat.training}+1 / {@Character.special206}+1 / {@PlayerStat.mental}-8"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Character":["special206"],"Script":["free"]}},"remark":[]}

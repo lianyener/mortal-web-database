@@ -1,0 +1,1 @@
+{"type":"Projectile","faction":2,"evolution":[{"name":"{@Equip.Name.Ball_01}","condition":["({@Name.Equip,Ball_11}LV≥10)"]},{"name":"{@Equip.Name.Ball_20}","condition":["({@Name.Equip,Ball_11}LV≥10)"]}],"rel":{"pre":{},"post":{"Equip":["Ball_01","Ball_20"]}},"backRel":{"post":{"Equip":["Ball_01"]}}}

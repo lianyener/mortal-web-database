@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"{@Character.girl2}+1 / *{@PlayerStat.cook}+1"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[ch3_3_2_2_4]"}],"rel":{"pre":{},"intra":{"Character":["girl2"]},"post":{"Character":["girl2"],"Script":["ch3_3_2_2_4"]}},"remark":[],"backRel":{"post":{"Script":["ch3_3_2_2"]}}}

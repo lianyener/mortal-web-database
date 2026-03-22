@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.team}+2 / {@PlayerStat.life}+1(☹︎0) / {@PlayerStat.mental}-16 / {@Character.brother1}+1 / {@Character.sister1}+1"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Character":["brother1","sister1"],"Script":["free"]}},"remark":[]}

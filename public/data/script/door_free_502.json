@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.disposition}-1 / {@PlayerStat.martial-point}+2 / {@PlayerStat.m-sword}+1(☹︎0) / {@PlayerStat.mental}-10"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[]}

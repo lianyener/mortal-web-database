@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"{@PlayerStat.mental}+15 / {@PlayerStat.martial-point}+2"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[],"backRel":{"post":{"Script":["teashop_work_201"]}}}

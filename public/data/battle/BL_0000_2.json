@@ -1,0 +1,1 @@
+{"type":"000","friend":{"name":["{@EnemyTeam.500}","{@EnemyTeam.100}","{@EnemyTeam.004}","{@EnemyTeam.005}"],"people":100},"enemy":{"name":["{@EnemyTeam.002}","{@EnemyTeam.300}"],"people":100},"neutral":{"name":["{@EnemyTeam.900}"],"people":30},"end":["{@Custom.Defeat}","{@Custom.PlayerDie}"],"rel":{"pre":{}}}

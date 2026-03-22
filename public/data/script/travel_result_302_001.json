@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"{@PlayerStat.disposition}+1 / {@PlayerStat.mental}+10"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Custom.TravelScript}"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[]}

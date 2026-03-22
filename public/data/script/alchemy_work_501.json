@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.team}-1 / {@PlayerStat.fame}-1 / {@PlayerStat.poison}+5 / {{@Flag.M20009}+1} / {@PlayerStat.mental}-21"},{"form":"effect","type":"merge","text":"◎{@Custom.PoisonPanel} / ◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Flag":["M20009"],"Script":["free"]}},"remark":[]}

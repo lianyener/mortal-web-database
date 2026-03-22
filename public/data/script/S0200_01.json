@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◎[[Back_Work_E_01]]{@Custom.SetTriggerTime}:{@Custom.Now}{@Custom.After} / ◎[[[S0200]]]{@Custom.SetClear} / ◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{"Character":["sister1","girl2"]},"post":{"Time":["Back_Work_E_01"],"Script":["free"]}},"remark":[]}

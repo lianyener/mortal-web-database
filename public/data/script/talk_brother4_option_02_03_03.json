@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"{@PlayerStat.mental}-10 / {@PlayerStat.disposition}-1"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[talk_brother4]"}],"rel":{"pre":{},"intra":{"Character":["brother4"]},"post":{"Script":["talk_brother4"]}},"remark":[],"backRel":{"post":{"Script":["talk_brother4_option_02_03"]}}}

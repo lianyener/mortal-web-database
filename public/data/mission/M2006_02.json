@@ -1,0 +1,1 @@
+{"mission":"main","trigger":"M2006_02","active":false,"minTime":{"year":"2","month":"2","stage":"2"},"maxTime":{"year":"2","month":"2","stage":"2"},"condition":["{@Custom.TriggerSet,Main}","{@Custom.SpecificTime}: {@System.GameTimeText,2,2,2}"],"script":"","content":[],"remark":["※{@Custom.TriggerDisable}"],"rel":{"pre":{},"post":{}},"type":"Main","orderKey":"2-02-2-1-M2006_02"}

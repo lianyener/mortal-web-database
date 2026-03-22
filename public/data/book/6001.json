@@ -1,0 +1,1 @@
+{"cost":1000,"martial":true,"type":"Fist","level":5,"condition":["{@System.NA}","{@System.NA}","{@System.NA}","{@System.NA}","{@System.NA}"],"learned":["{@PlayerStat.m-fist}","{@Name.Talent,9502}"],"rel":{"pre":{},"post":{"Talent":["9502"]}},"backRel":{"post":{"Script":["act1","door_free_512"]},"pre":{"Script":["door_free_512"]}}}

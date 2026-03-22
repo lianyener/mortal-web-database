@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.disposition}-1 / {@PlayerStat.life}+1(☹︎0) / {@PlayerStat.team}+1 / {@PlayerStat.mental}-21"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[]}

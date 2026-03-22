@@ -1,0 +1,1 @@
+{"cost":900,"martial":true,"type":"Internal","level":5,"condition":["{@System.NA}","{@System.NA}","{@System.NA}","{@System.NA}","{@System.NA}"],"learned":["{@PlayerStat.life}","{@Name.Talent,4013}","{@Name.Talent,9100}"],"rel":{"pre":{},"post":{"Talent":["4013","9100"]}},"backRel":{"post":{"Script":["act1","S0302_01","section_01_free_00_901_02"]}}}

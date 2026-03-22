@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@System.Title.Talent}❮{@PlayerTalent.Name.9110}❯-1"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}var1"}],"rel":{"pre":{},"intra":{},"post":{"Talent":["9110"]}},"remark":[]}

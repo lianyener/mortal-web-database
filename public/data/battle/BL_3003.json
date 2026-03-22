@@ -1,0 +1,1 @@
+{"type":"002","friend":{"name":["{@EnemyTeam.500}"],"people":0},"enemy":{"name":["{@EnemyTeam.002}"],"people":"{@PlayerStat.people}×{@PlayerStat.team}% ({@Custom.Init}:100×60%)"},"neutral":{"name":[],"people":""},"end":["{@Custom.Timeout}(30 {@Custom.Second})","{@Custom.PlayerDie}"],"rel":{"pre":{}},"backRel":{"post":{"Script":["ch3_5_3_2"]}}}

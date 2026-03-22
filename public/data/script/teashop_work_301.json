@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.mental}+18 / {@PlayerStat.money}-100 / {@PlayerStat.team}+1 / {@PlayerStat.behaviour}+3 / {@PlayerStat.training}±1 / {@PlayerStat.disposition}±1"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[]}

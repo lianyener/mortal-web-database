@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.TempScript}1:[ch3_15_travel] / ◎{@Custom.NextScript}{@Custom.TravelScript}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["ch3_15_travel"]}},"remark":[],"backRel":{"post":{"Script":["ch3_15_1","ch3_15_travel"]}}}

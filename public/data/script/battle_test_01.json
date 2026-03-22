@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.SetBattleSkill}❮{@BattleSkill.brother1}❯ / ◎{@Custom.SetBattleSkill}❮{@BattleSkill.brother4}❯ / ★{@System.Battle}[BL_0000] / ◎{@Custom.CombatNextScript}[Unknown]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["Unknown"],"Battle":["BL_0000"]}},"remark":[]}

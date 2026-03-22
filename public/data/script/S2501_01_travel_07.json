@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowMap} / {@PlayerStat.mental}-6 / ◎{@Custom.NextScript}[S2502_01]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["S2502_01"]}},"remark":[],"backRel":{"post":{"Script":["S2501_01_travel_06"]}}}

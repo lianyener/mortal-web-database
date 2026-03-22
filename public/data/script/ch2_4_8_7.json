@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.AddStory}"},{"form":"effect","type":"merge","text":"{{@Flag.P_Back_01}={@Flag.P_Back_01.1}} / ◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Flag":["P_Back_01"],"Script":["free"]}},"remark":[]}

@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.karma}+1 / {{@Flag.Pharmacy_Work_303_01}+1} / {@PlayerStat.mental}-12"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Flag":["Pharmacy_Work_303_01"],"Script":["free"]}},"remark":[]}

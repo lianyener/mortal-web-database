@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowMap} / {@PlayerStat.mental}-6 / ◎{@Custom.TravelScript}:[ch2_2_3_1_travel_02] / ◎{@Custom.NextScript}{@Custom.Random}{@Position.Travel_001}{@System.StoryEvent}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["ch2_2_3_1_travel_02"],"Position":["Travel_001"]}},"remark":[],"backRel":{"post":{"Script":["ch2_2_3_1"]}}}

@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.mental}+15 / {@PlayerStat.life}+1"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Custom.TempScript}2"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[],"backRel":{"post":{"Script":["S0208_04_01"]}}}

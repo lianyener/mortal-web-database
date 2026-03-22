@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.mental}-20 / {@PlayerStat.money}-1000 / {@PlayerStat.fate}+1"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[section_01_free_start_01]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["section_01_free_start_01"]}},"remark":[]}

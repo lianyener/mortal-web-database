@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowMap} / {@PlayerStat.mental}-6 / ◎{@Custom.NextScript}[ch2_2_3_1_travel_03_break_start_01]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["ch2_2_3_1_travel_03_break_start_01"]}},"remark":[],"backRel":{"post":{"Script":["ch2_2_3_1_travel_02"]}}}

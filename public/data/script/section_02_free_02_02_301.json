@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.mental}-15 / {@PlayerStat.fame}+1 / {@PlayerStat.money}+500 / {{@Flag.M30040}+1}"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[section_02_free_start_01]"}],"rel":{"pre":{},"intra":{},"post":{"Flag":["M30040"],"Script":["section_02_free_start_01"]}},"remark":[]}

@@ -1,0 +1,1 @@
+{"type":"201","friend":{"name":["{@EnemyTeam.500}"],"people":4},"enemy":{"name":["{@EnemyTeam.201}"],"people":12},"neutral":{"name":[],"people":""},"end":["{@Custom.Timeout}(90 {@Custom.Second})","{@Custom.Defeat}","{@Custom.PlayerDie}"],"rel":{"pre":{}},"backRel":{"post":{"Script":["ch3_1_7_4"]}}}

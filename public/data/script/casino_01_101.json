@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.karma}-1 / {@PlayerStat.behaviour}+1 / {@PlayerStat.training}-1 / {@PlayerStat.mental}-30 / {@PlayerStat.money}-2000"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Custom.TempScript}1"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[]}

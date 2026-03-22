@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.contribution}+10 / {@PlayerStat.fame}+1 / {@PlayerStat.disposition}+1 / {@PlayerStat.martial-point}+3 / {@PlayerStat.mental}-26"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[]}

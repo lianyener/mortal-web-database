@@ -1,0 +1,1 @@
+{"type":"Dart","faction":1,"evolution":[{"name":"{@Equip.Name.Knife_11}","condition":["({@Name.Equip,Knife_01}LV≥5)"]},{"name":"{@Equip.Name.Knife_10}","condition":["({@Name.Equip,Knife_01}LV≥10)"]}],"rel":{"pre":{},"post":{"Equip":["Knife_11","Knife_10"]}},"backRel":{"post":{"Equip":["Knife_10","Knife_11","Knife_20","Knife_21"]}}}

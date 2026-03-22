@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Custom.Random}{@Position.Fish_01}{@System.StoryEvent}"}],"rel":{"pre":{},"intra":{},"post":{"Position":["Fish_01"]}},"remark":[],"backRel":{"post":{"Script":["ch2_4_3_break_start_01"]}}}

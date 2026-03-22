@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"{@PlayerStat.literacy}+1 / {@PlayerStat.contribution}+5 / {@Character.special206}+1 / {@Character.master}+1 / {@PlayerStat.mental}-12"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Character":["special206","master"],"Script":["free"]}},"remark":[]}

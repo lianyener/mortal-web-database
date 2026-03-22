@@ -1,0 +1,1 @@
+{"type":"","faction":2,"evolution":[{"name":"{@Equip.Name.Poison_01}","condition":[]}],"rel":{"pre":{},"post":{"Equip":["Poison_01"]}},"backRel":{"post":{"Equip":["Poison_01"]}}}

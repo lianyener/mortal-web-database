@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.weapon}+5 / {@PlayerStat.fate}+1 / {@PlayerStat.mental}-66"},{"form":"effect","type":"merge","text":"◎{@Custom.WeaponPanel} / ◎{@Custom.Free}:{@Free.free}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[]}

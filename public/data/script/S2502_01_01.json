@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"{@Character.girl6}+2"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[S2502_01_02]"}],"rel":{"pre":{},"intra":{"Character":["girl6"]},"post":{"Character":["girl6"],"Script":["S2502_01_02"]}},"remark":[],"backRel":{"post":{"Script":["S2502_01"]}}}

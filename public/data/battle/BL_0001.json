@@ -1,0 +1,1 @@
+{"type":"001","friend":{"name":["{@EnemyTeam.500}"],"people":100},"enemy":{"name":["{@EnemyTeam.001}"],"people":100},"neutral":{"name":[],"people":""},"end":["{@Custom.Defeat}","{@Custom.PlayerDie}"],"rel":{"pre":{}},"backRel":{"post":{"Script":["ch0_meeting_option_03_01"]}}}

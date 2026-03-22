@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"★{@System.Combat}[CL_3001] / ◎{@Custom.CombatNextScript}[talk_brother3_option_05_01]"}],"rel":{"pre":{},"intra":{"Character":["brother3"]},"post":{"Script":["talk_brother3_option_05_01"],"Combat":["CL_3001"]}},"remark":[],"backRel":{"post":{"Script":["talk_brother3"]}}}

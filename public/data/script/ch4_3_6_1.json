@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.AddStory}"},{"form":"effect","type":"merge","text":"★{@System.Combat}[CL_1402_03] / ◎{@Custom.CombatNextScript}[ch4_3_6_2]"}],"rel":{"pre":{},"intra":{"Character":["special812","master","sister1"]},"post":{"Script":["ch4_3_6_2"],"Combat":["CL_1402_03"]}},"remark":[],"backRel":{"post":{"Script":["ch4_3_4"]}}}

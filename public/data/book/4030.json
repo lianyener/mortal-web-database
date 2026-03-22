@@ -1,0 +1,1 @@
+{"cost":900,"martial":true,"type":"Etc","level":5,"condition":["{@System.NA}","{@System.NA}","{@System.NA}","{@System.NA}","{@System.NA}"],"learned":["{@PlayerStat.dexterity}","{@PlayerStat.disposition}","{@PlayerStat.training}","{@PlayerStat.karma}"],"rel":{"pre":{},"post":{}},"backRel":{"post":{"Script":["act1","S9906_01_03_01"]}}}

@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.training}+1 / {@PlayerStat.mental}+20 / {@Character.girl4}+1"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[ch6_4_3_break_01]"}],"rel":{"pre":{},"intra":{},"post":{"Character":["girl4"],"Script":["ch6_4_3_break_01"]}},"remark":[]}

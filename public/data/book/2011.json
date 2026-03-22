@@ -1,0 +1,1 @@
+{"cost":0,"martial":true,"type":"Sword","level":5,"condition":["{@System.NA}","{@System.NA}","{@System.NA}","{@System.NA}","{@System.NA}"],"learned":["{@PlayerStat.m-sword}","{@PlayerStat.life}","{@PlayerStat.disposition}","{@PlayerStat.behaviour}"],"rel":{"pre":{},"post":{}},"backRel":{"post":{"Script":["S3002_01"]}}}

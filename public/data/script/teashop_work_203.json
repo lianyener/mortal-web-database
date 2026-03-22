@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.mental}-12"},{"form":"effect","type":"merge","text":"★{@System.Battle}[BL_5003_03] / ◎{@Custom.CombatNextScript}[teashop_work_203_01]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["teashop_work_203_01"],"Battle":["BL_5003_03"]}},"remark":[]}

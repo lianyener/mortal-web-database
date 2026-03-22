@@ -1,0 +1,1 @@
+{"data":[{"script":[],"value":{"0":"{@Flag.P_Center_01.0.0}","1":"{@Flag.P_Center_01.0.1}"}}],"init":0,"backRel":{"pre":{"Mission":["Center"],"Script":["free"]},"post":{"Script":["ch2_4_10_1","ch2_4_8_3","ch3_3_1_1","ch7_5_2_7"]}}}
