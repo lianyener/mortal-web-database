@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{}}],"init":0,"backRel":{"post":{"Script":["ch2_2_3_4_3_break_01_04_02_01"]},"pre":{"Script":["ch4_6_4_2"]}}}
+{"data":[{"script":[],"value":{},"type":"Relationship"}],"init":0,"backRel":{"post":{"Script":["ch2_2_3_4_3_break_01_04_02_01"]},"pre":{"Script":["ch4_6_4_2"]}}}

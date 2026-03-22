@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"{@System.Menu.LibraryEnd}｢{@Library.Name.20031}｣"}],"rel":{"pre":{},"intra":{},"post":{"Library":["20031"]}},"remark":[],"backRel":{"post":{"Script":["ch8_2_5_2_1","ch8_2_5_4_1","ch8_2_5_3_1","ch8_2_5_6_1","ch8_2_5_6_2","ch8_2_5_7_1","ch8_2_5_8_1"]}}}
+{"content":[{"form":"effect","type":"merge","text":"{@Label.End,20031}"}],"rel":{"pre":{},"intra":{},"post":{"Library":["20031"]}},"remark":[],"backRel":{"post":{"Script":["ch8_2_5_2_1","ch8_2_5_3_1","ch8_2_5_4_1","ch8_2_5_6_2","ch8_2_5_6_1","ch8_2_5_7_1","ch8_2_5_8_1"]}}}

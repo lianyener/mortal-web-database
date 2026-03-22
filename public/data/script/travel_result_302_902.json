@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"{@PlayerStat.money}+1000 / {@PlayerStat.fame}+2 / {{@Flag.M30002}+1}"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Custom.TravelScript}"}],"rel":{"pre":{},"intra":{},"post":{"Flag":["M30002"]}},"remark":[]}
+{"content":[{"form":"effect","type":"merge","text":"{@PlayerStat.money}+1000 / {@PlayerStat.fame}+2 / {@Label.Flag,M30002.0}+1"},{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Custom.TravelScript}"}],"rel":{"pre":{},"intra":{},"post":{"Flag":["M30002"]}},"remark":[]}

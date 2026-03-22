@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[S9906_01_03_option]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["S9906_01_03_option"]}},"remark":[],"backRel":{"post":{"Script":["S9906_01_02","S9906_01_03_01"]}}}
+{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Label.Script,S9906_01_03_option}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["S9906_01_03_option"]}},"remark":[],"backRel":{"post":{"Script":["S9906_01_02","S9906_01_03_01"]}}}

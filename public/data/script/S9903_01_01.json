@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"{@System.Menu.LibraryDead}｢{@Library.Name.10009}｣"}],"rel":{"pre":{},"intra":{"Character":["master","brother1","brother2"]},"post":{"Library":["10009"]}},"remark":[],"backRel":{"post":{"Script":["S9903_01"]}}}
+{"content":[{"form":"effect","type":"merge","text":"{@Label.Dead,10009}"}],"rel":{"pre":{},"intra":{"Character":["master","brother1","brother2"]},"post":{"Library":["10009"]}},"remark":[],"backRel":{"post":{"Script":["S9903_01"]}}}

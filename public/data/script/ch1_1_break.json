@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[ch1_1_break_option]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["ch1_1_break_option"]}},"remark":[]}
+{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Label.Script,ch1_1_break_option}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["ch1_1_break_option"]}},"remark":[]}

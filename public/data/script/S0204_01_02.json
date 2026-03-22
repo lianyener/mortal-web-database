@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[S0204_01_03]"}],"rel":{"pre":{},"intra":{"Character":["special3","girl2","brother4","brother3"]},"post":{"Script":["S0204_01_03"]}},"remark":[],"backRel":{"post":{"Script":["S0204_01"]}}}
+{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Label.Script,S0204_01_03}"}],"rel":{"pre":{},"intra":{"Character":["special3","girl2","brother4","brother3"]},"post":{"Script":["S0204_01_03"]}},"remark":[],"backRel":{"post":{"Script":["S0204_01"]}}}

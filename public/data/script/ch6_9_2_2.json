@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}[ch6_10_1]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["ch6_10_1"]}},"remark":[],"backRel":{"post":{"Script":["ch6_9_2_break_start_01"]}}}
+{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Label.Script,ch6_10_1}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["ch6_10_1"]}},"remark":[],"backRel":{"post":{"Script":["ch6_9_2_break_start_01"]}}}
