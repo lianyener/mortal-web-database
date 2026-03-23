@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{}}],"init":0,"backRel":{"pre":{"Combat":["CL_1809_01"],"Script":["ch3_6_3","ch8_3_1_2","ch8_3_1_4_1","S0021_02_04"]},"post":{"Script":["ch3_6_1","ch3_6_3","ch6_3_1","ch8_3_1_2","ch8_6_3","S0021_01","travel_result_601_101","travel_result_601_501"]}}}
+{"data":[{"script":[],"value":{}}],"init":0,"backRel":{"pre":{"Combat":["CL_1809_01"],"Script":["ch3_6_3","ch8_3_1_4_1","ch8_3_1_2","S0021_02_04"]},"post":{"Script":["ch3_6_1","ch3_6_3","ch6_3_1","ch8_3_1_2","ch8_6_3","S0021_01","travel_result_601_101","travel_result_601_501"]}}}

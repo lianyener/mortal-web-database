@@ -20,6 +20,54 @@ interface StateItem {
   [key: string]: unknown;
 }
 
+// 遞迴解析與渲染文字內容的元件
+function ParsedText({ 
+  text, 
+  translate 
+}: { 
+  text: string, 
+  translate: (key: string, params?: Record<string, string>) => string 
+}) {
+  if (!text) return null;
+
+  // 匹配 [%條件式%] 或 [*翻譯參照*]
+  const regex = /(\[%[\s\S]*?%\]|\[\*[\s\S]*?\*\])/g;
+  const parts = text.split(regex);
+
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('[%') && part.endsWith('%]')) {
+          const content = part.slice(2, -2);
+          return (
+            <span key={index} className="inline-block text-amber-600 border border-amber-600/30 rounded px-1.5 py-0.5 bg-amber-600/10 mx-0.5 text-xs font-semibold align-middle">
+              <ParsedText text={content} translate={translate} />
+            </span>
+          );
+        } else if (part.startsWith('[*') && part.endsWith('*]')) {
+          const content = part.slice(2, -2);
+          const [key, ...args] = content.split(',');
+          const params = args.reduce((acc, arg, i) => {
+            acc[i] = arg.trim();
+            return acc;
+          }, {} as Record<number, string>);
+          
+          const translated = translate(key.trim(), Object.keys(params).length > 0 ? params : undefined);
+          
+          // 如果找不到翻譯或是翻譯結果等於原 key，避免無限遞迴直接輸出
+          if (translated === key.trim() || translated === part) {
+            return <span key={index} className="text-destructive font-mono text-xs mx-0.5 bg-destructive/10 px-1 rounded" title="Missing translation">{part}</span>;
+          }
+          
+          return <ParsedText key={index} text={translated} translate={translate} />;
+        }
+        // 普通文字直接渲染
+        return <span key={index}>{part}</span>;
+      })}
+    </>
+  );
+}
+
 export function GlobalSidebar() {
   // 0. 避免 Hydration Mismatch 的掛載狀態
   const [mounted, setMounted] = useState(false);
@@ -47,12 +95,13 @@ export function GlobalSidebar() {
   // 4. 初始化 i18n 翻譯 Hook
   const t = useTranslations();
 
-  // 5. 處理物件自動降級到 ._ 的 Helper Function
-  const getTranslation = (baseKey: string) => {
+  // 5. 處理物件自動降級到 ._ 的 Helper Function，並支援傳入參數
+  const getTranslation = (baseKey: string, params?: Record<string, string>): string => {
     // 如果有 baseKey._ (例如 Flag.A00001.1._)，優先回傳
-    if (t.has(`${baseKey}._`)) return t(`${baseKey}._` as any);
+    if (t.has(`${baseKey}._`)) return t(`${baseKey}._` as any, params) as string;
     // 否則回傳 baseKey 本身
-    return t(baseKey as any);
+    if (t.has(baseKey as any)) return t(baseKey as any, params) as string;
+    return baseKey; // 找不到翻譯時回傳原本的 key
   };
 
   // 3. Sync 1: URL -> Zustand (處理初始載入與瀏覽器上一頁/下一頁)
@@ -136,15 +185,17 @@ export function GlobalSidebar() {
                     {data.data.map((item: StateItem, index: number) => (
                           <div key={index} className="p-3 bg-background rounded-md border shadow-sm">
                             <div className="font-bold text-sm text-foreground flex items-center gap-2">
-                              <span className="inline-block bg-muted text-muted-foreground px-1.5 py-0.5 rounded text-xs">
+                              <span className="inline-block bg-muted text-muted-foreground px-1.5 py-0.5 rounded text-xs shrink-0">
                                 State {index}
                               </span>
-                              {/* 使用自訂的 Helper 來支援 ._ 屬性 */}
-                              {getTranslation(`${category}.${id}.${index}`)}
+                              {/* 使用文字解析器來支援 [%...%] 與 [*...*] 標籤 */}
+                              <div className="leading-relaxed">
+                                <ParsedText text={getTranslation(`${category}.${id}.${index}`)} translate={getTranslation} />
+                              </div>
                             </div>
-                            <div className="text-sm text-muted-foreground mt-2">
-                              {/* Desc 也是一樣，不過你的結構 Desc 通常是直接屬性，用原生的 t 即可，但保險起見我們也用 getTranslation */}
-                              {getTranslation(`${category}.${id}.${index}.Desc`)}
+                            <div className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                              {/* Desc 也是一樣，放入 ParsedText 進行遞迴解析 */}
+                              <ParsedText text={getTranslation(`${category}.${id}.${index}.Desc`)} translate={getTranslation} />
                             </div>
                             {item.script && item.script.length > 0 && (
                               <div className="mt-3 text-xs">

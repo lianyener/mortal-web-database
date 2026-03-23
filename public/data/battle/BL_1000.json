@@ -1,1 +1,1 @@
-{"type":"001","friend":{"name":["{@EnemyTeam.500}"],"people":50},"enemy":{"name":["{@EnemyTeam.001}"],"people":50},"neutral":{"name":[],"people":""},"end":["{@Custom.Defeat}","{@Custom.PlayerDie}"],"rel":{"pre":{}},"backRel":{"post":{"Script":["S8300_01_01"]}}}
+{"type":"001","friend":{"name":["[*EnemyTeam.500*]"],"people":50},"enemy":{"name":["[*EnemyTeam.001*]"],"people":50},"neutral":{"name":[],"people":""},"end":["[*Custom.Defeat*]","[*Custom.PlayerDie*]"],"rel":{"pre":{}},"backRel":{"post":{"Script":["S8300_01_01"]}}}

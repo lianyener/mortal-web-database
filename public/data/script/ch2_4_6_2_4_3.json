@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"{@Label.End,20003}"}],"rel":{"pre":{},"intra":{"Character":["brother2","special832","master"]},"post":{"Library":["20003"]}},"remark":[],"backRel":{"post":{"Script":["ch2_4_6_2_4_2"]}}}
+{"content":[{"form":"effect","type":"merge","text":"[*Label.End,20003*]"}],"rel":{"pre":{},"intra":{"Character":["brother2","special832","master"]},"post":{"Library":["20003"]}},"remark":[],"backRel":{"post":{"Script":["ch2_4_6_2_4_2"]}}}

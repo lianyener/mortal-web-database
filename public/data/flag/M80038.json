@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"{@Flag.M80038.0.0}","1":"{@Flag.M80038.0.1}"}}],"init":0,"backRel":{"pre":{"Script":["ch8_4_9_2"]},"post":{"Script":["S0702_01_01"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.M80038.0.0*]","1":"[*Flag.M80038.0.1*]"}}],"init":0,"backRel":{"pre":{"Script":["ch8_4_9_2"]},"post":{"Script":["S0702_01_01"]}}}

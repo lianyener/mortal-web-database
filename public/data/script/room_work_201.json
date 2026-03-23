@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◇{@Custom.ShowPicture} / {@PlayerStat.mental}-15 / {@PlayerStat.disposition}-5"},{"form":"effect","type":"merge","text":"◎{@Custom.Free}:{@Label.Free,free}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[]}
+{"content":[{"form":"effect","type":"merge","text":"◇[*Custom.ShowPicture*] / [*PlayerStat.mental*]-15 / [*PlayerStat.disposition*]-5"},{"form":"effect","type":"merge","text":"◎[*Custom.Free*]:[*Label.Free,free*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[]}

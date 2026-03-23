@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"{@Flag.S9904_02.0.0}","1":"{@Flag.S9904_02.0.1}"}}],"init":0,"backRel":{"pre":{"Script":["ch5_3_3"]},"post":{"Script":["S9904_01"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.S9904_02.0.0*]","1":"[*Flag.S9904_02.0.1*]"}}],"init":0,"backRel":{"pre":{"Script":["ch5_3_3"]},"post":{"Script":["S9904_01"]}}}

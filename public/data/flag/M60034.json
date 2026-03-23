@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"{@Flag.M60034.0.0}","1":"{@Flag.M60034.0.1}"}}],"init":0,"backRel":{"post":{"Script":["ch6_6_2_break_start_01"]},"pre":{"Script":["ch7_5_3_1","ch8_6_3"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.M60034.0.0*]","1":"[*Flag.M60034.0.1*]"}}],"init":0,"backRel":{"post":{"Script":["ch6_6_2_break_start_01"]},"pre":{"Script":["ch7_5_3_1","ch8_6_3"]}}}

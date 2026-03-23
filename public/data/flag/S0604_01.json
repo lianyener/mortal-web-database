@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"{@Flag.S0604_01.0.0}","1":"{@Flag.S0604_01.0.1}"}}],"init":0,"backRel":{"pre":{"Script":["door_001_01"]},"post":{"Script":["door_001_01"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.S0604_01.0.0*]","1":"[*Flag.S0604_01.0.1*]"}}],"init":0,"backRel":{"pre":{"Script":["door_001_01"]},"post":{"Script":["door_001_01"]}}}

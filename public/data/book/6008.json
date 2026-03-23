@@ -1,1 +1,1 @@
-{"cost":1000,"martial":true,"type":"Fist","level":5,"condition":["{@System.NA}","{@System.NA}","{@System.NA}","{@System.NA}","{@System.NA}"],"learned":["{@PlayerStat.dexterity}","{@PlayerStat.m-fist}"],"rel":{"pre":{},"post":{}},"backRel":{"post":{"Script":["talk_girl5_01"]}}}
+{"cost":1000,"martial":true,"type":"Fist","level":5,"condition":["[*System.NA*]","[*System.NA*]","[*System.NA*]","[*System.NA*]","[*System.NA*]"],"learned":["[*PlayerStat.dexterity*]","[*PlayerStat.m-fist*]"],"rel":{"pre":{},"post":{}},"backRel":{"post":{"Script":["talk_girl5_01"]}}}

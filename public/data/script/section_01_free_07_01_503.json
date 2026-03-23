@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"{@System.Combat}{@Label.Combat,CL_5100_03} / ◎{@Custom.CombatNextScript}{@Label.Script,section_01_free_07_101_01}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["section_01_free_07_101_01"],"Combat":["CL_5100_03"]}},"remark":[]}
+{"content":[{"form":"effect","type":"merge","text":"[*System.Combat*][*Label.Combat,CL_5100_03*] / ◎[*Custom.CombatNextScript*][*Label.Script,section_01_free_07_101_01*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["section_01_free_07_101_01"],"Combat":["CL_5100_03"]}},"remark":[]}

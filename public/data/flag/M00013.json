@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"{@Flag.M00013.0.0}","1":"{@Flag.M00013.0.1}"}}],"init":0,"backRel":{"pre":{"Script":["kitchen_work_903","S0208_04_03"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.M00013.0.0*]","1":"[*Flag.M00013.0.1*]"}}],"init":0,"backRel":{"pre":{"Script":["kitchen_work_903","S0208_04_03"]}}}

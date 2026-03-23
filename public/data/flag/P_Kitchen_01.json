@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"{@Flag.P_Kitchen_01.0.0}","1":"{@Flag.P_Kitchen_01.0.1}"}}],"init":0,"backRel":{"pre":{"Mission":["Kitchen"],"Script":["free"]},"post":{"Script":["ch7_5_2_3"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.P_Kitchen_01.0.0*]","1":"[*Flag.P_Kitchen_01.0.1*]"}}],"init":0,"backRel":{"pre":{"Mission":["Kitchen"],"Script":["free"]},"post":{"Script":["ch7_5_2_3"]}}}

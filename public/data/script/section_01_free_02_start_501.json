@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎{@Custom.NextScript}{@Label.Script,talk_girl5_01}"}],"rel":{"pre":{},"intra":{},"post":{"Script":["talk_girl5_01"]}},"remark":[]}
+{"content":[{"form":"effect","type":"merge","text":"◎[*Custom.NextScript*][*Label.Script,talk_girl5_01*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["talk_girl5_01"]}},"remark":[]}

@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"-1":"{@Flag.M20009.0.-1}"}}],"init":0,"backRel":{"pre":{"Mission":["S0012_01"]},"post":{"Script":["alchemy_work_501","center_free_501","center_free_502","forge_work_501","S0012_01_03","S0012_01_02"]}}}
+{"data":[{"script":[],"value":{"-1":"[*Flag.M20009.0.-1*]"}}],"init":0,"backRel":{"pre":{"Mission":["S0012_01"]},"post":{"Script":["alchemy_work_501","center_free_502","center_free_501","forge_work_501","S0012_01_03","S0012_01_02"]}}}
