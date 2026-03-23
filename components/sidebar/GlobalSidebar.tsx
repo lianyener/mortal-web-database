@@ -6,6 +6,7 @@ import { useQueryStates, parseAsString } from 'nuqs';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useTranslations } from 'next-intl';
+import { ParsedText } from '@/components/shared/ParsedText';
 import {
   Sheet,
   SheetContent,
@@ -18,54 +19,6 @@ import {
 interface StateItem {
   script?: string[];
   [key: string]: unknown;
-}
-
-// 遞迴解析與渲染文字內容的元件
-function ParsedText({ 
-  text, 
-  translate 
-}: { 
-  text: string, 
-  translate: (key: string, params?: Record<string, string>) => string 
-}) {
-  if (!text) return null;
-
-  // 匹配 [%條件式%] 或 [*翻譯參照*]
-  const regex = /(\[%[\s\S]*?%\]|\[\*[\s\S]*?\*\])/g;
-  const parts = text.split(regex);
-
-  return (
-    <>
-      {parts.map((part, index) => {
-        if (part.startsWith('[%') && part.endsWith('%]')) {
-          const content = part.slice(2, -2);
-          return (
-            <span key={index} className="inline-block text-amber-600 border border-amber-600/30 rounded px-1.5 py-0.5 bg-amber-600/10 mx-0.5 text-xs font-semibold align-middle">
-              <ParsedText text={content} translate={translate} />
-            </span>
-          );
-        } else if (part.startsWith('[*') && part.endsWith('*]')) {
-          const content = part.slice(2, -2);
-          const [key, ...args] = content.split(',');
-          const params = args.reduce((acc, arg, i) => {
-            acc[i] = arg.trim();
-            return acc;
-          }, {} as Record<number, string>);
-          
-          const translated = translate(key.trim(), Object.keys(params).length > 0 ? params : undefined);
-          
-          // 如果找不到翻譯或是翻譯結果等於原 key，避免無限遞迴直接輸出
-          if (translated === key.trim() || translated === part) {
-            return <span key={index} className="text-destructive font-mono text-xs mx-0.5 bg-destructive/10 px-1 rounded" title="Missing translation">{part}</span>;
-          }
-          
-          return <ParsedText key={index} text={translated} translate={translate} />;
-        }
-        // 普通文字直接渲染
-        return <span key={index}>{part}</span>;
-      })}
-    </>
-  );
 }
 
 export function GlobalSidebar() {
