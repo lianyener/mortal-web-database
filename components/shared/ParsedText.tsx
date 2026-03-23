@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSidebarStore } from '@/store/useSidebarStore';
-import { useQueryStates, parseAsString } from 'nuqs';
+import { useRouter } from 'next/navigation';
 
 export function ParsedText({
   text,
@@ -13,10 +13,8 @@ export function ParsedText({
   const openSidebar = useSidebarStore(state => state.openSidebar);
   const closeSidebar = useSidebarStore(state => state.closeSidebar);
 
-  // 用來切換主頁面劇本的 nuqs
-  const [, setQuery] = useQueryStates({
-    script: parseAsString
-  });
+  // 取得 Next.js 的 Router 實例，用來切換不同頁面
+  const router = useRouter();
 
   if (!text) return null;
 
@@ -63,8 +61,13 @@ export function ParsedText({
               switch (category) {
                 case 'Script':
                 case 'Free':
-                  // 劇本：不開側邊欄，直接切換主頁面的劇本，並關閉可能已開啟的側邊欄
-                  setQuery({ script: targetId });
+                  // 跳轉到獨立的 script 頁面
+                  router.push(`/script?id=${targetId}`);
+                  closeSidebar();
+                  break;
+                case 'Position':
+                  // 跳轉到獨立的 position 頁面，並帶上指定的 ID
+                  router.push(`/position?id=${targetId}`);
                   closeSidebar();
                   break;
                 // 可在此處繼續新增其他類別的 switch 處理...
