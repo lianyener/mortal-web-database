@@ -38,6 +38,8 @@ export default async function RootLayout({
     <html
       lang="en"
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+      // 忽略因瀏覽器擴充功能(如翻譯、防毒套件)在 <html> 注入屬性所導致的 Hydration 警告
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
         {/* 明確給予 locale，防止純靜態匯出在 Client 端抓不到語系而崩潰 */}

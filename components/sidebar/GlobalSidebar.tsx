@@ -30,7 +30,7 @@ export function GlobalSidebar() {
   const [query, setQuery] = useQueryStates(
     {
       sidebar: parseAsString, // 對應 ?sidebar=...
-      id: parseAsString,      // 對應 ?id=...
+      sidebarId: parseAsString, // 避免與主頁面的 id 衝突，改為 ?sidebarId=...
     },
     {
       // 使用 push 可以在網址列產生一筆新的歷史紀錄
@@ -61,10 +61,10 @@ export function GlobalSidebar() {
   useEffect(() => {
     if (!mounted) return; // 確保在 Client 端完整掛載後才執行同步
 
-    if (query.sidebar && query.id) {
+    if (query.sidebar && query.sidebarId) {
       // 若 URL 有參數，但 Zustand 狀態未開啟或不一致，則覆寫 Zustand
-      if (query.sidebar !== category || query.id !== id || !isOpen) {
-        openSidebar(query.sidebar, query.id);
+      if (query.sidebar !== category || query.sidebarId !== id || !isOpen) {
+        openSidebar(query.sidebar, query.sidebarId);
       }
     } else if (isOpen) {
       // 若 URL 沒有參數但側邊欄開啟著，代表可能是按了上一頁，關閉側邊欄
@@ -72,7 +72,7 @@ export function GlobalSidebar() {
     }
     // 刻意不將 Zustand 狀態放入 dependencies，此 Effect 僅由 URL 變化驅動
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.sidebar, query.id, mounted]);
+  }, [query.sidebar, query.sidebarId, mounted]);
 
   // 4. Sync 2: Zustand -> URL (處理使用者點擊標籤觸發 Store 更新)
   useEffect(() => {
@@ -82,12 +82,12 @@ export function GlobalSidebar() {
     if (!isOpen && !category && !id) return;
 
     if (isOpen && category && id) {
-      if (query.sidebar !== category || query.id !== id) {
-        setQuery({ sidebar: category, id: id });
+      if (query.sidebar !== category || query.sidebarId !== id) {
+        setQuery({ sidebar: category, sidebarId: id });
       }
     } else if (!isOpen) {
-      if (query.sidebar || query.id) {
-        setQuery({ sidebar: null, id: null });
+      if (query.sidebar || query.sidebarId) {
+        setQuery({ sidebar: null, sidebarId: null });
       }
     }
     // 此 Effect 僅由 Zustand 變化驅動
@@ -104,9 +104,14 @@ export function GlobalSidebar() {
   // 避免 Server-Side Rendering 時報錯 (Hydration Mismatch)
   if (!mounted) return null;
 
+  // 加入 modal={false} 屬性，取消滾動條鎖定，防止關閉時跳回網頁頂端
   return (
-    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-      <SheetContent className="w-full sm:max-w-md md:max-w-lg overflow-y-auto">
+    <Sheet open={isOpen} onOpenChange={handleOpenChange} modal={false}>
+      <SheetContent 
+        className="w-full sm:max-w-md md:max-w-lg overflow-y-auto"
+        // 防止點擊側邊欄外部（主畫面連結）時觸發自動關閉，讓它可以無縫更新內容
+        onInteractOutside={(e) => e.preventDefault()}
+      >
         <SheetHeader>
           <SheetTitle className="text-xl font-bold">
             {category} 資訊

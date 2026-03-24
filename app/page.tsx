@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function HomePage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-6">
-      <div className="max-w-md w-full space-y-8 text-center">
+      <div className="max-w-3xl w-full space-y-8 text-center">
         <h1 className="text-4xl font-extrabold tracking-tight text-primary">Mortal Web Database</h1>
         <p className="text-muted-foreground text-lg">
           請選擇您要探索的資料庫系統

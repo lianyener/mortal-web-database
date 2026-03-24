@@ -126,4 +126,11 @@
   html {
     @apply font-sans;
   }
+
+  /* 強制隱藏側邊欄 (Sheet) 的黑色背景遮罩，並允許點擊穿透 */
+  /* 搭配 Sheet 的 modal={false} 使用，能達到「平推」效果且完全不干擾主頁面閱讀 */
+  [data-radix-portal] > div > .bg-black\/80 {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 }

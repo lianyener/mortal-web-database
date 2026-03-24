@@ -9,10 +9,6 @@ export function ParsedText({
   text: string,
   translate: (key: string, params?: Record<string, string>) => string
 }) {
-  // 取得開啟與關閉側邊欄的函式
-  const openSidebar = useSidebarStore(state => state.openSidebar);
-  const closeSidebar = useSidebarStore(state => state.closeSidebar);
-
   // 取得 Next.js 的 Router 實例，用來切換不同頁面
   const router = useRouter();
 
@@ -36,7 +32,9 @@ export function ParsedText({
           const content = part.slice(2, -2);
           const [key, ...args] = content.split(',');
           const params = args.reduce((acc, arg, i) => {
-            acc[i] = arg.trim();
+            // 【修改】將參數也丟給 translate 嘗試翻譯
+            // 如果是 Key (例如 System.Number_1) 會變成 "一"；如果是一般字串或數字，找不到翻譯則會維持原樣
+            acc[i] = translate(arg.trim());
             return acc;
           }, {} as Record<number, string>);
 
@@ -58,30 +56,36 @@ export function ParsedText({
             const targetId = args[0].trim(); // 第一個參數即為 ID
 
             const handleClick = () => {
+              // 取得當下的側邊欄狀態 (使用 getState 避免大量 re-render)
+              const sidebarState = useSidebarStore.getState();
+              
+              // 如果側邊欄目前是開啟的，把參數保留下來，防止主頁面切換時側邊欄被重置關閉
+              const sidebarParams = (sidebarState.isOpen && sidebarState.category && sidebarState.id)
+                ? `&sidebar=${sidebarState.category}&sidebarId=${sidebarState.id}`
+                : '';
+
               switch (category) {
                 case 'Script':
                 case 'Free':
-                  // 跳轉到獨立的 script 頁面
-                  router.push(`/script?id=${targetId}`);
-                  closeSidebar();
+                  // 跳轉到獨立的 script 頁面，並保留側邊欄狀態
+                  router.push(`/script?id=${targetId}${sidebarParams}`);
                   break;
                 case 'Position':
-                  // 跳轉到獨立的 position 頁面，並帶上指定的 ID
-                  router.push(`/position?id=${targetId}`);
-                  closeSidebar();
+                  // 跳轉到獨立的 position 頁面，並保留側邊欄狀態
+                  router.push(`/position?id=${targetId}${sidebarParams}`);
                   break;
                 // 可在此處繼續新增其他類別的 switch 處理...
                 case 'Flag':
                 case 'RelationshipFlag':
-                  openSidebar('Flag', targetId.split('.')[0]);
+                  sidebarState.openSidebar('Flag', targetId.split('.')[0]);
                   break;
                 case 'Relationship':
-                  openSidebar('Character', targetId);
+                  sidebarState.openSidebar('Character', targetId);
                   break;
                 case 'Achievement':
                 case 'Dead':
                 case 'End':
-                  openSidebar('Library', targetId);
+                  sidebarState.openSidebar('Library', targetId);
                   break;
                 case 'Buff':
                 case 'Debuff':
@@ -89,7 +93,7 @@ export function ParsedText({
                   break;
                 default:
                   // 預設行為：開啟側邊欄 (讀取 public/data/category/targetId.json)
-                  openSidebar(category, targetId);
+                  sidebarState.openSidebar(category, targetId);
                   break;
               }
             };

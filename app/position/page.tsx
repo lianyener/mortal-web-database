@@ -7,6 +7,7 @@ import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useTranslations } from 'next-intl';
 import { ParsedText } from '@/components/shared/ParsedText';
 import Link from 'next/link';
+import { useSidebarStore } from '@/store/useSidebarStore';
 
 function PositionContent() {
   const [mounted, setMounted] = useState(false);
@@ -30,13 +31,16 @@ function PositionContent() {
   // 相容兩種結構：如果檔案直接是地點物件就用 data，如果是包在大 JSON 裡就用 data[query.id]
   const targetPosition = data?.[query.id] || data;
 
+  // 取得側邊欄開啟狀態，用來動態縮放主畫面寬度
+  const isOpen = useSidebarStore(state => state.isOpen);
+
   if (!mounted) return null;
 
   return (
-    <main className="min-h-screen bg-background text-foreground pb-20">
+    <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'lg:pr-[512px]' : ''}`}>
       {/* 頂部固定導覽列 */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b px-6 py-4 mb-8 shadow-sm">
-        <div className="max-w-3xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h1 className="text-xl font-bold text-primary">地點與行為 (Position)</h1>
           <div className="flex items-center gap-2">
             <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">測試 ID:</label>
@@ -52,7 +56,7 @@ function PositionContent() {
       </div>
 
       {/* 主要閱讀區塊 */}
-      <div className="max-w-3xl mx-auto px-6 space-y-6">
+      <div className="max-w-5xl mx-auto px-6 space-y-6">
         {isLoading && <div className="text-center text-muted-foreground py-10 tracking-widest animate-pulse">載入資料中...</div>}
         {isError && <div className="text-center text-destructive py-10 bg-destructive/10 rounded-md">無法載入資料。</div>}
 
