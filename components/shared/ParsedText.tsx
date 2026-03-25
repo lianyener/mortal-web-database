@@ -24,7 +24,7 @@ export function ParsedText({
         if (part.startsWith('[%') && part.endsWith('%]')) {
           const content = part.slice(2, -2);
           return (
-            <span key={index} className="inline-block text-amber-600 border border-amber-600/30 rounded px-1.5 py-0.5 bg-amber-600/10 mx-0.5 text-xs font-semibold align-middle">
+            <span key={index} className="inline-block rounded px-1 mx-0.5 bg-amber-600/10 font-semibold">
               <ParsedText text={content} translate={translate} />
             </span>
           );
@@ -55,7 +55,10 @@ export function ParsedText({
             const category = cleanKey.replace('Label.', ''); // 取得 X (例如 Script, Flag)
             const targetId = args[0].trim(); // 第一個參數即為 ID
 
-            const handleClick = () => {
+            const handleClick = (e: React.MouseEvent) => {
+              // 阻止事件冒泡，避免點擊標籤時意外觸發外層容器的 onClick (例如劇本分歧的展開/收縮)
+              e.stopPropagation();
+
               // 取得當下的側邊欄狀態 (使用 getState 避免大量 re-render)
               const sidebarState = useSidebarStore.getState();
               
@@ -99,7 +102,7 @@ export function ParsedText({
             };
 
             return (
-              <button key={index} onClick={handleClick} className="inline-flex items-center mx-0.5 text-primary hover:text-primary/80 font-bold underline decoration-primary/30 underline-offset-4 hover:decoration-primary transition-colors cursor-pointer" title={`開啟 ${category} 資訊`}>
+              <button key={index} onClick={handleClick} className="inline-flex items-center font-bold text-inherit transition-colors hover:text-current/80 cursor-pointer" title={`開啟 ${category} 資訊`}>
                 {contentNode}
               </button>
             );
