@@ -118,7 +118,7 @@ function ScriptContent() {
                                     </div>
                                 </div>
                                 <div className="bg-card border rounded-xl p-4 sm:p-6 shadow-sm overflow-x-auto">
-                                    <div className="flex flex-col gap-1 min-w-max sm:min-w-0">
+                                    <div className="flex flex-col min-w-max sm:min-w-0">
                                         {contentArray.map((node: any, idx: number) => (
                                             <ScriptNode
                                                 key={idx} node={node}
@@ -135,9 +135,13 @@ function ScriptContent() {
                         {(targetScript.rel || targetScript.backRel) && (
                             <div className="flex flex-col gap-4 mt-2">
                                 <h2 className="text-lg font-bold border-b border-border/50 pb-2">{getTranslation('Web.Relations')}</h2>
-                                <div className="flex flex-col md:flex-row gap-4 items-start">
-                                    <RelationBlock title={getTranslation('Web.Rel')} data={targetScript.rel} getTranslation={getTranslation} />
-                                    <RelationBlock title={getTranslation('Web.BackRel')} data={targetScript.backRel} getTranslation={getTranslation} />
+                                <div className="flex flex-col gap-4">
+                                    {targetScript.rel && Object.entries(targetScript.rel).map(([phase, types]) => (
+                                        <RelationCard key={`rel-${phase}`} mainType="Rel" phase={phase} types={types} getTranslation={getTranslation} />
+                                    ))}
+                                    {targetScript.backRel && Object.entries(targetScript.backRel).map(([phase, types]) => (
+                                        <RelationCard key={`backRel-${phase}`} mainType="BackRel" phase={phase} types={types} getTranslation={getTranslation} />
+                                    ))}
                                 </div>
                             </div>
                         )}
@@ -150,32 +154,42 @@ function ScriptContent() {
     );
 }
 
-// 關聯區塊渲染組件
-function RelationBlock({ title, data, getTranslation }: { title: string, data: any, getTranslation: any }) {
-    if (!data || Object.keys(data).length === 0) return null;
-    // 檢查各階段是否真的有內容
-    const hasContent = Object.values(data).some((types: any) => types && Object.keys(types).length > 0);
+// 關聯區塊渲染組件 (改為直式卡片，並依據 Phase 拆分)
+function RelationCard({ mainType, phase, types, getTranslation }: { mainType: string, phase: string, types: any, getTranslation: any }) {
+    if (!types || Object.keys(types).length === 0) return null;
+    // 檢查該階段是否真的有內容
+    const hasContent = Object.values(types).some((ids: any) => Array.isArray(ids) && ids.length > 0);
     if (!hasContent) return null;
 
+    // 組合標題 Key，例如 Web.Rel.Pre 或 Web.BackRel.Post
+    const phaseKey = phase.charAt(0).toUpperCase() + phase.slice(1);
+    const titleKey = `Web.${mainType}.${phaseKey}`;
+    // 如果沒有翻譯，提供一個好看的預設值
+    const title = getTranslation(titleKey) !== titleKey ? getTranslation(titleKey) : `${mainType} - ${phaseKey}`;
+
     return (
-        <div className="bg-card border rounded-xl p-4 shadow-sm flex-1 w-full">
-            <h3 className="text-md font-bold text-primary mb-3 border-b pb-2">{title}</h3>
-            <div className="space-y-3 text-sm">
-                {Object.entries(data).map(([phase, types]: [string, any]) => {
-                    if (!types || Object.keys(types).length === 0) return null;
+        <div className="bg-card border rounded-xl p-4 sm:p-5 shadow-sm w-full">
+            <h3 className="text-md font-bold text-primary mb-4 border-b border-border/50 pb-2">{title}</h3>
+            <div className="flex flex-col gap-3 text-sm">
+                {Object.entries(types).map(([type, ids]: [string, any]) => {
+                    if (!Array.isArray(ids) || ids.length === 0) return null;
+
+                    // 嘗試翻譯類型 (例如 Web.Combat)
+                    const typeLabel = getTranslation(`Web.${type}`) !== `Web.${type}` ? getTranslation(`Web.${type}`) : type;
+
                     return (
-                        <div key={phase} className="flex flex-col sm:flex-row gap-2 sm:gap-4 border-b border-border/40 pb-2 last:border-0 last:pb-0">
-                            <span className="font-semibold text-muted-foreground w-12 shrink-0 capitalize">{phase}</span>
-                            <div className="flex flex-col gap-2">
-                                {Object.entries(types).map(([type, ids]: [string, any]) => (
-                                    <div key={type} className="flex flex-wrap items-center gap-1.5">
-                                        <span className="text-[11px] bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded font-mono">
-                                            {type}
-                                        </span>
-                                        {/* 這裡我們巧妙利用 ParsedText 丟入 [*Label.Type, ID*] 來觸發解析器自動產生點擊跳轉連結 */}
-                                        {Array.isArray(ids) ? ids.map((id: string) => (
-                                            <ParsedText key={id} text={`[*Label.${type},${id}*]`} translate={getTranslation} />
-                                        )) : null}
+                        <div key={type} className="flex flex-col sm:flex-row gap-2 sm:gap-4 border-b border-border/40 pb-3 last:border-0 last:pb-0">
+                            <span className="font-semibold text-muted-foreground w-24 shrink-0 mt-0.5">{typeLabel}</span>
+                            {/* 使用 Grid 網格系統強制對齊，解決長短不一造成的凌亂感 */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 flex-1">
+                                {ids.map((id: string) => (
+                                    <div key={id} className="flex items-start overflow-hidden">
+                                        {/* 補回遺失的點點項目符號 */}
+                                        <span className="text-muted-foreground/50 mr-1.5 shrink-0 text-sm mt-0.5">•</span>
+                                        {/* 利用 [&_button]:強制覆寫內部按鈕樣式，讓它變成佔滿全寬的區塊並截斷，且不影響其他地方的設定 */}
+                                        <div className="flex-1 min-w-0 [&_button]:block [&_button]:w-full [&_button]:text-left [&_button]:truncate" title={id}>
+                                            <ParsedText text={`[*Label.${type},${id}*]`} translate={getTranslation} />
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -200,21 +214,33 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
     if (!node) return null;
 
     if (node.form === 'effect') {
+        // 將文字以 ' / ' 切開，並使用 flex-wrap 排版
+        // whitespace-nowrap 確保單一項目即使很長也不會被從中間斷行
+        const textStr = typeof node.text === 'string' ? node.text : '';
+        const effectItems = textStr.split(' / ');
+
         return (
-            <div className="py-1.5 px-3 text-foreground/90 text-[15px] border-primary/20 hover:bg-muted/30 transition-colors">
-                <ParsedText text={getTranslation(node.text)} translate={getTranslation} />
+            <div className="px-3 py-1 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
+                <div className="flex flex-wrap items-center gap-y-1 gap-x-2">
+                    {effectItems.map((item: string, idx: number) => (
+                        <div key={idx} className="flex items-center whitespace-nowrap">
+                            <ParsedText text={getTranslation(item)} translate={getTranslation} />
+                            {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2 select-none">/</span>}
+                        </div>
+                    ))}
+                </div>
             </div>
         );
     }
 
     if (node.form === 'branch') {
         return (
-            <div className="my-1">
-                <div className="font-bold text-primary text-[15px] flex items-center gap-2 py-1.5 px-2">
+            <div>
+                <div className="flex items-center px-2 py-0.5 gap-1 font-bold text-primary text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
                     <ParsedText text={getTranslation(node.text)} translate={getTranslation} />
                 </div>
 
-                <div className="flex flex-col gap-2 mt-1 pl-1">
+                <div className="flex flex-col pl-1 mx-2">
                     {node.branches?.map((branch: any) => (
                         <BranchOption
                             key={branch.index} branch={branch} getTranslation={getTranslation}
@@ -242,20 +268,20 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
     return (
         <div className="flex flex-col">
             <div
-                className="font-semibold text-amber-600 text-sm py-1 px-2 flex flex-wrap items-center gap-2 cursor-pointer hover:bg-muted/50 rounded-md transition-colors select-none"
+                className="flex flex-wrap items-center px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md cursor-pointer hover:bg-muted/80 transition-colors select-none"
                 onClick={() => setIsExpanded(!isExpanded)}
             >
-                <span className="text-muted-foreground w-4 text-center text-xs shrink-0">{isExpanded ? '▼' : '▶'}</span>
-                <span className="text-muted-foreground shrink-0 font-mono">{branch.index}.</span>
-                <div className="flex-1"><ParsedText text={getTranslation(branch.text)} translate={getTranslation} /></div>
+                <span className="shrink-0 w-4 text-muted-foreground text-sm text-center">{isExpanded ? '▼' : '▶'}</span>
+                <span className="shrink-0 text-muted-foreground font-mono">{branch.index}.</span>
+                <div className=""><ParsedText text={getTranslation(branch.text)} translate={getTranslation} /></div>
                 {branch.condition && (
-                    <span className="text-[11px] bg-destructive/10 text-destructive border border-destructive/20 px-1.5 py-0.5 rounded flex items-center font-mono">
-                        <span className="mr-1">🔒</span><ParsedText text={getTranslation(branch.condition)} translate={getTranslation} />
+                    <span className="flex items-center px-1.5">
+                        <span className="-mr-0.5">🔒</span><ParsedText text={getTranslation(branch.condition)} translate={getTranslation} />
                     </span>
                 )}
             </div>
             {isExpanded && (
-                <div className="pl-4 ml-4 border-l-[1.5px] border-border/60 flex flex-col gap-1 mt-1 mb-2">
+                <div className="flex flex-col pl-4 ml-4 mb-2 border-l-2 border-border/80">
                     {branch.content?.map((subNode: any, idx: number) => (
                         <ScriptNode key={idx} node={subNode} getTranslation={getTranslation} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} />
                     ))}
