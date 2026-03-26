@@ -103,8 +103,13 @@ export function GlobalSidebar() {
     <Sheet open={isOpen} onOpenChange={handleOpenChange} modal={false}>
       <SheetContent 
         className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl overflow-y-auto"
-        // 防止點擊側邊欄外部（主畫面連結）時觸發自動關閉，讓它可以無縫更新內容
-        onInteractOutside={(e) => e.preventDefault()}
+        // 在桌面版 (>= 768px) 防止點擊外部關閉，允許無縫更新
+        // 在手機版 (< 768px) 恢復預設行為，點擊外部區域時自動關閉側邊欄
+        onInteractOutside={(e) => {
+          if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+            e.preventDefault();
+          }
+        }}
       >
         <SheetHeader>
           <SheetTitle className="text-xl font-bold">
@@ -352,7 +357,6 @@ function SidebarRelationCard({ mainType, phase, types, getTranslation }: { mainT
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5 flex-1">
                 {ids.map((id: string) => (
                   <div key={id} className="flex items-start overflow-hidden">
-                    <span className="text-muted-foreground/50 mr-1.5 shrink-0 text-[10px] mt-1">•</span>
                     {/* 同樣加入 [&_button]: 覆寫樣式 */}
                     <div className="flex-1 min-w-0 [&_button]:block [&_button]:w-full [&_button]:text-left [&_button]:truncate" title={id}>
                       <ParsedText text={`[*Label.${type},${id}*]`} translate={getTranslation} />

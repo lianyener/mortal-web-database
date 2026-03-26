@@ -7,6 +7,7 @@ import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useTranslations } from 'next-intl';
 import { ParsedText } from '@/components/shared/ParsedText';
 import { useSidebarStore } from '@/store/useSidebarStore';
+import { ChevronDown, ChevronRight, Lock, CircleArrowRight } from 'lucide-react';
 
 function ScriptContent() {
     // 1. 掛載狀態，防止 Hydration 報錯
@@ -184,8 +185,6 @@ function RelationCard({ mainType, phase, types, getTranslation }: { mainType: st
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 flex-1">
                                 {ids.map((id: string) => (
                                     <div key={id} className="flex items-start overflow-hidden">
-                                        {/* 補回遺失的點點項目符號 */}
-                                        <span className="text-muted-foreground/50 mr-1.5 shrink-0 text-sm mt-0.5">•</span>
                                         {/* 利用 [&_button]:強制覆寫內部按鈕樣式，讓它變成佔滿全寬的區塊並截斷，且不影響其他地方的設定 */}
                                         <div className="flex-1 min-w-0 [&_button]:block [&_button]:w-full [&_button]:text-left [&_button]:truncate" title={id}>
                                             <ParsedText text={`[*Label.${type},${id}*]`} translate={getTranslation} />
@@ -220,8 +219,9 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
         const effectItems = textStr.split(' / ');
 
         return (
-            <div className="px-3 py-1 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
-                <div className="flex flex-wrap items-center gap-y-1 gap-x-2">
+            <div className="flex items-start gap-2 px-3 py-1 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
+                <CircleArrowRight className="size-4 shrink-0 mt-1.5 text-muted-foreground/50" />
+                <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
                     {effectItems.map((item: string, idx: number) => (
                         <div key={idx} className="flex items-center whitespace-nowrap">
                             <ParsedText text={getTranslation(item)} translate={getTranslation} />
@@ -271,12 +271,14 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
                 className="flex flex-wrap items-center px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md cursor-pointer hover:bg-muted/80 transition-colors select-none"
                 onClick={() => setIsExpanded(!isExpanded)}
             >
-                <span className="shrink-0 w-4 text-muted-foreground text-sm text-center">{isExpanded ? '▼' : '▶'}</span>
+                <span className="shrink-0 flex items-center justify-center w-4 text-muted-foreground">
+                    {isExpanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}
+                </span>
                 <span className="shrink-0 text-muted-foreground font-mono">{branch.index}.</span>
                 <div className=""><ParsedText text={getTranslation(branch.text)} translate={getTranslation} /></div>
                 {branch.condition && (
-                    <span className="flex items-center px-1.5">
-                        <span className="-mr-0.5">🔒</span><ParsedText text={getTranslation(branch.condition)} translate={getTranslation} />
+                    <span className="flex items-center px-1.5 gap-1 text-muted-foreground">
+                        <Lock className="size-3.5" /><ParsedText text={getTranslation(branch.condition)} translate={getTranslation} />
                     </span>
                 )}
             </div>
