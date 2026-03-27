@@ -7,7 +7,7 @@ import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useTranslations } from 'next-intl';
 import { ParsedText } from '@/components/shared/ParsedText';
 import { useSidebarStore } from '@/store/useSidebarStore';
-import { ChevronDown, ChevronRight, Lock, CircleArrowRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, Lock, CircleArrowRight, Minus } from 'lucide-react';
 
 function ScriptContent() {
     // 1. 掛載狀態，防止 Hydration 報錯
@@ -265,14 +265,18 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
         if (treeActionId > 0) setIsExpanded(isGlobalExpand);
     }, [treeActionId, isGlobalExpand]);
 
+    // 判斷是否為單一 Effect 內容，如果是則直接在標題右側同行顯示
+    const isSingleEffectContent = branch.content?.length === 1 && branch.content[0].form === 'effect';
+    const effectItems = isSingleEffectContent && typeof branch.content[0].text === 'string' ? branch.content[0].text.split(' / ') : [];
+
     return (
         <div className="flex flex-col">
             <div
-                className="flex flex-wrap items-center px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md cursor-pointer hover:bg-muted/80 transition-colors select-none"
-                onClick={() => setIsExpanded(!isExpanded)}
+                className={`flex flex-wrap items-center px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors select-none ${isSingleEffectContent ? 'hover:bg-muted/80' : 'cursor-pointer hover:bg-muted/80'}`}
+                onClick={() => !isSingleEffectContent && setIsExpanded(!isExpanded)}
             >
                 <span className="shrink-0 flex items-center justify-center w-4 text-muted-foreground">
-                    {isExpanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}
+                    {isSingleEffectContent ? <Minus className="size-4 opacity-50" /> : (isExpanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />)}
                 </span>
                 <span className="shrink-0 text-muted-foreground font-mono">{branch.index}.</span>
                 <div className=""><ParsedText text={getTranslation(branch.text)} translate={getTranslation} /></div>
@@ -281,8 +285,23 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
                         <Lock className="size-3.5" /><ParsedText text={getTranslation(branch.condition)} translate={getTranslation} />
                     </span>
                 )}
+
+                {/* 若為單一 Effect，直接接在右側顯示，並還原字體粗細 (font-normal) */}
+                {isSingleEffectContent && (
+                    <div className="flex items-center gap-1.5 ml-1 text-foreground font-normal">
+                        <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50" />
+                        <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
+                            {effectItems.map((item: string, idx: number) => (
+                                <div key={idx} className="flex items-center whitespace-nowrap">
+                                    <ParsedText text={getTranslation(item)} translate={getTranslation} />
+                                    {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2 select-none">/</span>}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
-            {isExpanded && (
+            {!isSingleEffectContent && isExpanded && (
                 <div className="flex flex-col pl-4 ml-4 mb-2 border-l-2 border-border/80">
                     {branch.content?.map((subNode: any, idx: number) => (
                         <ScriptNode key={idx} node={subNode} getTranslation={getTranslation} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} />
