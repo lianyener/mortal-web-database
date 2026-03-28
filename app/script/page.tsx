@@ -293,10 +293,10 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
                 {/* 收合狀態下，在最右側顯示可能影響的類別 Icon (即使沒有 Icon 也保留佔位符與刪節號提示) */}
                 {!isSingleEffectContent && !isExpanded && (
                     <div
-                        className="ml-auto flex items-center justify-end min-w-[40px] opacity-70 text-sm select-none pl-2"
+                        className="flex items-center min-w-[40px] opacity-50 text-sm select-none pl-1"
                         title={effectsList.length > 0 ? effectsList.map((e: string) => getPlainText(`Web.${e}`)).join(', ') : ''}
                     >
-                        <CircleFadingPlus className="size-4 shrink-0 text-muted-foreground/50 mr-1.5" />
+                        <CircleFadingPlus className="size-4 shrink-0 text-muted-foreground/70 mr-1.5" />
                         <div className="truncate tracking-widest">
                             {effectsList.map((eff: any) => {
                                 const icon = getTranslation(`LabelIcon.${eff}`);
