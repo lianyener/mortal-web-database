@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"[*PlayerStat.mental*]-50 / ◎[*Label.Mission,S9905*][*Custom.SetClear*] / ◎[*Custom.Free*]:[*Label.Free,free*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[],"backRel":{"post":{"Script":["S9905_01"]}}}
+{"content":[{"form":"effect","text":"[*Label.Stat,mental*]-50 / ◎[*Label.Mission,S9905*][*Custom.SetClear*] / ◎[*Custom.Free*]:[*Label.Free,free*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[],"effects":["Stat","Trigger","Free"],"backRel":{"post":{"Script":["S9905_01"]}}}

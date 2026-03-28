@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎[*Custom.NextScript*][*Label.Script,S0023_01*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["S0023_01"]}},"remark":[]}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,S0023_01*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["S0023_01"]}},"remark":[],"effects":["Script"]}

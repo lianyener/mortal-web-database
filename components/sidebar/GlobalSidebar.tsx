@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
-import { useTranslations } from 'next-intl';
 import { ParsedText } from '@/components/shared/ParsedText';
+import { useAppTranslation } from '@/hooks/useAppTranslation';
 import {
   Sheet,
   SheetContent,
@@ -39,17 +39,8 @@ export function GlobalSidebar() {
   // 3. 透過 React Query 抓取資料
   const { data, isLoading, isError } = useItemDetail(category, id);
 
-  // 4. 初始化 i18n 翻譯 Hook
-  const t = useTranslations();
-
-  // 5. 處理物件自動降級到 ._ 的 Helper Function，並支援傳入參數
-  const getTranslation = (baseKey: string, params?: Record<string, string>): string => {
-    // 如果有 baseKey._ (例如 Flag.A00001.1._)，優先回傳
-    if (t.has(`${baseKey}._`)) return t(`${baseKey}._` as any, params) as string;
-    // 否則回傳 baseKey 本身
-    if (t.has(baseKey as any)) return t(baseKey as any, params) as string;
-    return baseKey; // 找不到翻譯時回傳原本的 key
-  };
+  // 4. 統一使用共用的翻譯 Hook
+  const { t, getTranslation } = useAppTranslation();
 
   // 3. Sync 1: URL -> Zustand (處理初始載入與瀏覽器上一頁/下一頁)
   useEffect(() => {
@@ -334,22 +325,25 @@ function SidebarRelations({ data, getTranslation }: { data: any, getTranslation:
 
 // 側邊欄專用的單一階段關聯卡片
 function SidebarRelationCard({ mainType, phase, types, getTranslation }: { mainType: string, phase: string, types: any, getTranslation: any }) {
+  const { getPlainText } = useAppTranslation();
   if (!types || Object.keys(types).length === 0) return null;
   const hasContent = Object.values(types).some((ids: any) => Array.isArray(ids) && ids.length > 0);
   if (!hasContent) return null;
 
   const phaseKey = phase.charAt(0).toUpperCase() + phase.slice(1);
   const titleKey = `Web.${mainType}.${phaseKey}`;
-  const title = getTranslation(titleKey) !== titleKey ? getTranslation(titleKey) : `${mainType} - ${phaseKey}`;
+  const title = getPlainText(titleKey) !== titleKey ? getPlainText(titleKey) : `${mainType} - ${phaseKey}`;
 
   return (
     <div className="bg-card border rounded-lg p-3 shadow-sm text-sm">
-      <div className="font-semibold text-primary mb-3 border-b pb-1.5">{title}</div>
+      <div className="font-semibold text-primary mb-3 border-b pb-1.5">
+        {title}
+      </div>
       <div className="flex flex-col gap-2">
         {Object.entries(types).map(([type, ids]: [string, any]) => {
           if (!Array.isArray(ids) || ids.length === 0) return null;
           
-          const typeLabel = getTranslation(`Web.${type}`) !== `Web.${type}` ? getTranslation(`Web.${type}`) : type;
+          const typeLabel = getPlainText(`Web.${type}`) !== `Web.${type}` ? getPlainText(`Web.${type}`) : type;
 
           return (
             <div key={type} className="flex flex-col sm:flex-row gap-1 sm:gap-3 border-b border-border/40 pb-2 last:border-0 last:pb-0">

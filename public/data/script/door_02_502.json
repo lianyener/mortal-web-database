@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎[*Custom.NextScript*][*Label.Script,door_special_01_01*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["door_special_01_01"]}},"remark":[]}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,door_special_01_01*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["door_special_01_01"]}},"remark":[],"effects":["Script"]}

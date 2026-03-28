@@ -4,8 +4,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
-import { useTranslations } from 'next-intl';
 import { ParsedText } from '@/components/shared/ParsedText';
+import { useAppTranslation } from '@/hooks/useAppTranslation';
 import Link from 'next/link';
 import { useSidebarStore } from '@/store/useSidebarStore';
 
@@ -21,12 +21,7 @@ function PositionContent() {
   // 改為依照網址中的 ID，精確抓取特定的 position 小檔案
   const { data, isLoading, isError } = useItemDetail('position', query.id);
 
-  const t = useTranslations();
-  const getTranslation = (baseKey: string, params?: Record<string, string>): string => {
-    if (t.has(`${baseKey}._`)) return t(`${baseKey}._` as any, params) as string;
-    if (t.has(baseKey as any)) return t(baseKey as any, params) as string;
-    return baseKey;
-  };
+  const { getTranslation } = useAppTranslation();
 
   // 相容兩種結構：如果檔案直接是地點物件就用 data，如果是包在大 JSON 裡就用 data[query.id]
   const targetPosition = data?.[query.id] || data;

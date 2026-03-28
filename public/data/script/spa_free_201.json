@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◇[*Custom.ShowPicture*]"},{"form":"effect","type":"merge","text":"[*Label.Dead,10069*]"}],"rel":{"pre":{},"intra":{},"post":{"Library":["10069"]}},"remark":[]}
+{"content":[{"form":"effect","text":"◇[*Custom.ShowPicture*]"},{"form":"effect","text":"[*Label.Dead,10069*]"}],"rel":{"pre":{},"intra":{},"post":{"Library":["10069"]}},"remark":[],"effects":["Perform","Dead"]}

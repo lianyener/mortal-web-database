@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◇[*Custom.AddStory*]"},{"form":"effect","type":"merge","text":"◎[*Custom.NextScript*][*Label.Script,S0003_01_05*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["S0003_01_05"]}},"remark":[],"backRel":{"post":{"Script":["S0003_01_02"]}}}
+{"content":[{"form":"effect","text":"[*Label.Story*]"},{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,S0003_01_05*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["S0003_01_05"]}},"remark":[],"effects":["Story","Script"],"backRel":{"post":{"Script":["S0003_01_02"]}}}

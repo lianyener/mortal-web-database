@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎[*Custom.NextScript*][*Custom.TravelScript*]"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[],"backRel":{"post":{"Script":["ch2_2_3_1","ch2_2_3_1_travel_03_break_01","travel_result_001_901"]}}}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TravelScript*]"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[],"effects":["Script"],"backRel":{"post":{"Script":["ch2_2_3_1","ch2_2_3_1_travel_03_break_01","travel_result_001_901"]}}}

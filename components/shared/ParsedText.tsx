@@ -77,6 +77,9 @@ export function ParsedText({
                   // 跳轉到獨立的 position 頁面，並保留側邊欄狀態
                   router.push(`/position?id=${targetId}${sidebarParams}`);
                   break;
+                case 'Mission':
+                  sidebarState.openSidebar('Trigger', targetId);
+                  break;
                 // 可在此處繼續新增其他類別的 switch 處理...
                 case 'Flag':
                 case 'RelationshipFlag':
@@ -93,6 +96,7 @@ export function ParsedText({
                 case 'Buff':
                 case 'Debuff':
                 case 'Support':
+                case 'Stat':
                   break;
                 default:
                   // 預設行為：開啟側邊欄 (讀取 public/data/category/targetId.json)

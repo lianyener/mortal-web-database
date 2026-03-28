@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"[*PlayerStat.behaviour*]+1 / [*PlayerStat.mental*]-15"},{"form":"effect","type":"merge","text":"◎[*Custom.NextScript*][*Custom.TravelScript*]"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[]}
+{"content":[{"form":"effect","text":"[*Label.Stat,behaviour*]+1 / [*Label.Stat,mental*]-15"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TravelScript*]"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[],"effects":["Stat","Script"]}

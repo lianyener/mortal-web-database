@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◇[*Custom.AddStory*]"},{"form":"effect","type":"merge","text":"[*Label.End,20021*]"}],"rel":{"pre":{},"intra":{"Character":["special207","girl6"]},"post":{"Library":["20021"]}},"remark":[],"backRel":{"post":{"Script":["ch5_4_7_4_3"]}}}
+{"content":[{"form":"effect","text":"[*Label.Story*]"},{"form":"effect","text":"[*Label.End,20021*]"}],"rel":{"pre":{},"intra":{"Character":["special207","girl6"]},"post":{"Library":["20021"]}},"remark":[],"effects":["Story","End"],"backRel":{"post":{"Script":["ch5_4_7_4_3"]}}}

@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎[*Custom.NextScript*][*Label.Script,talk_brother3*]"}],"rel":{"pre":{},"intra":{"Character":["brother3"]},"post":{"Script":["talk_brother3"]}},"remark":[],"backRel":{"post":{"Script":["talk_brother3"]}}}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,talk_brother3*]"}],"rel":{"pre":{},"intra":{"Character":["brother3"]},"post":{"Script":["talk_brother3"]}},"remark":[],"effects":["Script"],"backRel":{"post":{"Script":["talk_brother3"]}}}

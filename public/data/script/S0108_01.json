@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎[*Label.Mission,S0108*][*Custom.SetClear*] / ◎[*Custom.Free*]:[*Label.Free,free*]"}],"rel":{"pre":{},"intra":{"Character":["special208","brother2"]},"post":{"Script":["free"]}},"remark":[]}
+{"content":[{"form":"effect","text":"◎[*Label.Mission,S0108*][*Custom.SetClear*] / ◎[*Custom.Free*]:[*Label.Free,free*]"}],"rel":{"pre":{},"intra":{"Character":["special208","brother2"]},"post":{"Script":["free"]}},"remark":[],"effects":["Trigger","Free"]}

@@ -3,11 +3,11 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
+import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus } from 'lucide-react';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
-import { useTranslations } from 'next-intl';
+import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { ParsedText } from '@/components/shared/ParsedText';
 import { useSidebarStore } from '@/store/useSidebarStore';
-import { ChevronDown, ChevronRight, Lock, CircleArrowRight, Minus } from 'lucide-react';
 
 function ScriptContent() {
     // 1. 掛載狀態，防止 Hydration 報錯
@@ -27,13 +27,8 @@ function ScriptContent() {
     // 3. 抓取劇本資料
     const { data, isLoading, isError } = useItemDetail('script', query.id);
 
-    // 4. i18n 解析邏輯 (與 Sidebar 共用相同邏輯)
-    const t = useTranslations();
-    const getTranslation = (baseKey: string, params?: Record<string, string>): string => {
-        if (t.has(`${baseKey}._`)) return t(`${baseKey}._` as any, params) as string;
-        if (t.has(baseKey as any)) return t(baseKey as any, params) as string;
-        return baseKey;
-    };
+    // 4. i18n 解析邏輯 (提取 getPlainText 來處理網頁 UI 標籤)
+    const { getTranslation, getPlainText } = useAppTranslation();
 
     // 5. 處理整包 script.json 或單一檔案的資料取得
     const targetScript = data?.[query.id] || data;
@@ -74,26 +69,26 @@ function ScriptContent() {
                         <div className="p-5 border rounded-xl shadow-sm bg-card">
                             <div className="space-y-4">
                                 <div>
-                                    <div className="text-xs text-muted-foreground mb-1">{getTranslation('Web.Id')}</div>
+                                    <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Id')}</div>
                                     <div className="font-mono text-sm text-foreground">
                                         {query.id}
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="text-xs text-muted-foreground mb-1">{getTranslation('Web.Name')}</div>
+                                    <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Name')}</div>
                                     <div className="font-semibold text-lg text-foreground">
                                         <ParsedText text={getTranslation(`Script.Name.${query.id}`)} translate={getTranslation} />
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="text-xs text-muted-foreground mb-1">{getTranslation('Web.Desc')}</div>
+                                    <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Desc')}</div>
                                     <div className="text-sm leading-relaxed">
                                         <ParsedText text={getTranslation(`Script.Desc.${query.id}`)} translate={getTranslation} />
                                     </div>
                                 </div>
                                 {targetScript.remark && (Array.isArray(targetScript.remark) ? targetScript.remark.length > 0 : true) && (
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{getTranslation('Web.Remark')}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Remark')}</div>
                                         <div className="text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 p-3 rounded-md border border-amber-200 dark:border-amber-900/50">
                                             {Array.isArray(targetScript.remark)
                                                 ? targetScript.remark.map((r: string, i: number) => <div key={i}><ParsedText text={getTranslation(r)} translate={getTranslation} /></div>)
@@ -108,13 +103,13 @@ function ScriptContent() {
                         {contentArray.length > 0 && (
                             <div className="flex flex-col gap-4">
                                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                                    <h2 className="text-lg font-bold">{getTranslation('Web.Content')}</h2>
+                                    <h2 className="text-lg font-bold">{getPlainText('Web.Content')}</h2>
                                     <div className="flex items-center gap-2">
                                         <button onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="text-xs bg-muted hover:bg-muted/80 text-foreground px-2 py-1 rounded border shadow-sm transition-colors">
-                                            {getTranslation('Web.ExpandAll')}
+                                            {getPlainText('Web.ExpandAll')}
                                         </button>
                                         <button onClick={() => { setIsGlobalExpand(false); setTreeActionId(v => v + 1); }} className="text-xs bg-muted hover:bg-muted/80 text-foreground px-2 py-1 rounded border shadow-sm transition-colors">
-                                            {getTranslation('Web.CollapseAll')}
+                                            {getPlainText('Web.CollapseAll')}
                                         </button>
                                     </div>
                                 </div>
@@ -135,7 +130,9 @@ function ScriptContent() {
                         {/* 3. 關聯項目 */}
                         {(targetScript.rel || targetScript.backRel) && (
                             <div className="flex flex-col gap-4 mt-2">
-                                <h2 className="text-lg font-bold border-b border-border/50 pb-2">{getTranslation('Web.Relations')}</h2>
+                                <h2 className="text-lg font-bold border-b border-border/50 pb-2">
+                                    {getPlainText('Web.Relations')}
+                                </h2>
                                 <div className="flex flex-col gap-4">
                                     {targetScript.rel && Object.entries(targetScript.rel).map(([phase, types]) => (
                                         <RelationCard key={`rel-${phase}`} mainType="Rel" phase={phase} types={types} getTranslation={getTranslation} />
@@ -157,6 +154,7 @@ function ScriptContent() {
 
 // 關聯區塊渲染組件 (改為直式卡片，並依據 Phase 拆分)
 function RelationCard({ mainType, phase, types, getTranslation }: { mainType: string, phase: string, types: any, getTranslation: any }) {
+    const { getPlainText } = useAppTranslation();
     if (!types || Object.keys(types).length === 0) return null;
     // 檢查該階段是否真的有內容
     const hasContent = Object.values(types).some((ids: any) => Array.isArray(ids) && ids.length > 0);
@@ -166,17 +164,19 @@ function RelationCard({ mainType, phase, types, getTranslation }: { mainType: st
     const phaseKey = phase.charAt(0).toUpperCase() + phase.slice(1);
     const titleKey = `Web.${mainType}.${phaseKey}`;
     // 如果沒有翻譯，提供一個好看的預設值
-    const title = getTranslation(titleKey) !== titleKey ? getTranslation(titleKey) : `${mainType} - ${phaseKey}`;
+    const title = getPlainText(titleKey) !== titleKey ? getPlainText(titleKey) : `${mainType} - ${phaseKey}`;
 
     return (
         <div className="bg-card border rounded-xl p-4 sm:p-5 shadow-sm w-full">
-            <h3 className="text-md font-bold text-primary mb-4 border-b border-border/50 pb-2">{title}</h3>
+            <h3 className="text-md font-bold text-primary mb-4 border-b border-border/50 pb-2">
+                {title}
+            </h3>
             <div className="flex flex-col gap-3 text-sm">
                 {Object.entries(types).map(([type, ids]: [string, any]) => {
                     if (!Array.isArray(ids) || ids.length === 0) return null;
 
-                    // 嘗試翻譯類型 (例如 Web.Combat)
-                    const typeLabel = getTranslation(`Web.${type}`) !== `Web.${type}` ? getTranslation(`Web.${type}`) : type;
+                    // 將翻譯解析為純文字，確保不帶有多餘的標籤
+                    const typeLabel = getPlainText(`Web.${type}`) !== `Web.${type}` ? getPlainText(`Web.${type}`) : type;
 
                     return (
                         <div key={type} className="flex flex-col sm:flex-row gap-2 sm:gap-4 border-b border-border/40 pb-3 last:border-0 last:pb-0">
@@ -187,7 +187,7 @@ function RelationCard({ mainType, phase, types, getTranslation }: { mainType: st
                                     <div key={id} className="flex items-start overflow-hidden">
                                         {/* 利用 [&_button]:強制覆寫內部按鈕樣式，讓它變成佔滿全寬的區塊並截斷，且不影響其他地方的設定 */}
                                         <div className="flex-1 min-w-0 [&_button]:block [&_button]:w-full [&_button]:text-left [&_button]:truncate" title={id}>
-                                            <ParsedText text={`[*Label.${type},${id}*]`} translate={getTranslation} />
+                                            <ParsedText text={`[*Label.${type == 'Mission' ? 'Triggrt' : type},${id}*]`} translate={getTranslation} />
                                         </div>
                                     </div>
                                 ))}
@@ -225,7 +225,7 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
                     {effectItems.map((item: string, idx: number) => (
                         <div key={idx} className="flex items-center whitespace-nowrap">
                             <ParsedText text={getTranslation(item)} translate={getTranslation} />
-                            {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2 select-none">/</span>}
+                            {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}
                         </div>
                     ))}
                 </div>
@@ -258,6 +258,7 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
 // 單獨抽出 Branch 裡面的選項，以便讓每個選項都能獨立收合
 function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: { branch: any, getTranslation: any, treeActionId: number, isGlobalExpand: boolean }) {
     const [isExpanded, setIsExpanded] = useState(isGlobalExpand);
+    const { getPlainText } = useAppTranslation();
 
     // 監聽全域展開/收合訊號
     useEffect(() => {
@@ -269,10 +270,13 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
     const isSingleEffectContent = branch.content?.length === 1 && branch.content[0].form === 'effect';
     const effectItems = isSingleEffectContent && typeof branch.content[0].text === 'string' ? branch.content[0].text.split(' / ') : [];
 
+    // 取得 effects 陣列 (後端已去重，直接使用)
+    const effectsList = Array.isArray(branch.effects) ? branch.effects : [];
+
     return (
         <div className="flex flex-col">
             <div
-                className={`flex flex-wrap items-center px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors select-none ${isSingleEffectContent ? 'hover:bg-muted/80' : 'cursor-pointer hover:bg-muted/80'}`}
+                className={`flex flex-wrap items-center px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors ${isSingleEffectContent ? 'hover:bg-muted/80' : 'cursor-pointer hover:bg-muted/80'}`}
                 onClick={() => !isSingleEffectContent && setIsExpanded(!isExpanded)}
             >
                 <span className="shrink-0 flex items-center justify-center w-4 text-muted-foreground">
@@ -284,6 +288,23 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
                     <span className="flex items-center px-1.5 gap-1 text-muted-foreground">
                         <Lock className="size-3.5" /><ParsedText text={getTranslation(branch.condition)} translate={getTranslation} />
                     </span>
+                )}
+
+                {/* 收合狀態下，在最右側顯示可能影響的類別 Icon (即使沒有 Icon 也保留佔位符與刪節號提示) */}
+                {!isSingleEffectContent && !isExpanded && (
+                    <div
+                        className="ml-auto flex items-center justify-end min-w-[40px] opacity-70 text-sm select-none pl-2"
+                        title={effectsList.length > 0 ? effectsList.map((e: string) => getPlainText(`Web.${e}`)).join(', ') : ''}
+                    >
+                        <CircleFadingPlus className="size-4 shrink-0 text-muted-foreground/50 mr-1.5" />
+                        <div className="truncate tracking-widest">
+                            {effectsList.map((eff: any) => {
+                                const icon = getTranslation(`LabelIcon.${eff}`);
+                                return icon !== `LabelIcon.${eff}` ? icon : '';
+                            }).filter(Boolean).join(' ')}
+                        </div>
+                        <span className="ml-0.5 text-muted-foreground/60 font-bold tracking-tighter">...</span>
+                    </div>
                 )}
 
                 {/* 若為單一 Effect，直接接在右側顯示，並還原字體粗細 (font-normal) */}

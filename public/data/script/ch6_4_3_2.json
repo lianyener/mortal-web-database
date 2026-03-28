@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◎[*Custom.NextScript*][*Custom.Random*][*Label.Position,Ch_6_4_3_2_01*][*System.StoryEvent*]"}],"rel":{"pre":{},"intra":{},"post":{"Position":["Ch_6_4_3_2_01"]}},"remark":[],"backRel":{"post":{"Script":["ch6_4_3_break_start_01"]}}}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.Random*][*Label.Position,Ch_6_4_3_2_01*][*System.StoryEvent*]"}],"rel":{"pre":{},"intra":{},"post":{"Position":["Ch_6_4_3_2_01"]}},"remark":[],"effects":["Script"],"backRel":{"post":{"Script":["ch6_4_3_break_start_01"]}}}

@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◇[*Custom.ShowPicture*] / [*PlayerStat.poison*]+10 / [*PlayerStat.mental*]-25"},{"form":"effect","type":"merge","text":"◎[*Custom.Free*]:[*Label.Free,free*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[]}
+{"content":[{"form":"effect","text":"◇[*Custom.ShowPicture*] / [*Label.Stat,poison*]+10 / [*Label.Stat,mental*]-25"},{"form":"effect","text":"◎[*Custom.Free*]:[*Label.Free,free*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["free"]}},"remark":[],"effects":["Perform","Stat","Free"]}

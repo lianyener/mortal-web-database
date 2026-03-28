@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"merge","text":"◇[*Custom.ShowPicture*] / [*PlayerStat.mental*]+20 / [*PlayerStat.money*]-50"},{"form":"effect","type":"merge","text":"◎[*Custom.NextScript*][*Custom.TempScript*]1"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[]}
+{"content":[{"form":"effect","text":"◇[*Custom.ShowPicture*] / [*Label.Stat,mental*]+20 / [*Label.Stat,money*]-50"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TempScript*]1"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[],"effects":["Perform","Stat","Script"]}
