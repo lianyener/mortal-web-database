@@ -26,7 +26,7 @@ export function ParsedText({
         if (part.startsWith('[%') && part.endsWith('%]')) {
           const content = part.slice(2, -2);
           return (
-            <span key={index} className="inline-block rounded px-1 mx-0.5 bg-amber-600/10 font-semibold">
+            <span key={index} className="inline-block px-1 mx-0.5 text-sm/relaxed font-semibold rounded bg-amber-600/10">
               <ParsedText text={content} translate={translate} />
             </span>
           );

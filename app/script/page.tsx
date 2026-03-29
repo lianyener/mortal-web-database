@@ -215,7 +215,7 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
 
         return (
             <div className="flex items-start gap-2 px-3 py-1 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
-                <CircleArrowRight className="size-4 shrink-0 mt-1.5 text-muted-foreground/50" />
+                <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-[5px]" />
                 <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
                     {effectItems.map((item: string, idx: number) => (
                         <div key={idx} className="flex items-center whitespace-nowrap">
@@ -240,7 +240,6 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
                         <BranchOption
                             key={branch.index} branch={branch} getTranslation={getTranslation}
                             treeActionId={treeActionId} isGlobalExpand={isGlobalExpand}
-                            totalBranches={node.branches.length}
                         />
                     ))}
                 </div>
@@ -252,7 +251,7 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
 }
 
 // 單獨抽出 Branch 裡面的選項，以便讓每個選項都能獨立收合
-function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand, totalBranches }: { branch: any, getTranslation: any, treeActionId: number, isGlobalExpand: boolean, totalBranches?: number }) {
+function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: { branch: any, getTranslation: any, treeActionId: number, isGlobalExpand: boolean }) {
     const [isExpanded, setIsExpanded] = useState(isGlobalExpand);
     const { getPlainText } = useAppTranslation();
 
@@ -269,13 +268,10 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand, to
     // 取得 effects 陣列 (後端已去重，直接使用)
     const effectsList = Array.isArray(branch.effects) ? branch.effects : [];
 
-    // 計算顯示的索引，如果該層級超過 10 個選項，則 1~9 前面補 0 讓排版更整齊對齊
-    const displayIndex = totalBranches && totalBranches >= 10 && branch.index < 10 ? `0${branch.index}` : branch.index;
-
     return (
         <div className="flex flex-col">
             <div
-                className={`flex flex-wrap items-center px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors ${isSingleEffectContent ? 'hover:bg-muted/80' : 'cursor-pointer hover:bg-muted/80'}`}
+                className={`flex items-start px-3 py-1 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors ${isSingleEffectContent ? 'hover:bg-muted/80' : 'cursor-pointer hover:bg-muted/80'}`}
                 onClick={() => {
                     // 若使用者正在反白複製劇本文字，則不觸發展開/收合
                     if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return;
@@ -283,48 +279,59 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand, to
                     if (!isSingleEffectContent) setIsExpanded(!isExpanded);
                 }}
             >
-                <span className="shrink-0 flex items-center justify-center w-4 text-muted-foreground">
-                    {isSingleEffectContent ? <Minus className="size-4 opacity-50" /> : (isExpanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />)}
-                </span>
-                <span className="shrink-0 text-muted-foreground font-mono">{displayIndex}.</span>
-                <div className=""><ParsedText text={getTranslation(branch.text)} translate={getTranslation} /></div>
-                {branch.condition && (
-                    <span className="flex items-center px-1.5 gap-1 text-muted-foreground">
-                        <Lock className="size-3.5" /><ParsedText text={getTranslation(branch.condition)} translate={getTranslation} />
+                {/* 左側固定區塊 (圖示 + 序號) */}
+                {/* 固定寬度讓數字靠右對齊，確保右側彈性區塊的起跑線一致 */}
+                <div className="flex items-center gap-1 shrink-0 w-10.5">
+                    <span className="shrink-0 flex items-center justify-center w-4 text-muted-foreground">
+                        {isSingleEffectContent ? <Minus className="size-4" /> : (isExpanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />)}
                     </span>
-                )}
+                    <span className="shrink-0 flex-1 text-right text-muted-foreground">{branch.index}.</span>
+                </div>
 
-                {/* 收合狀態下，在最右側顯示可能影響的類別 Icon (即使沒有 Icon 也保留佔位符與刪節號提示) */}
-                {!isSingleEffectContent && !isExpanded && (
-                    <div
-                        className="flex items-center min-w-[40px] opacity-60 text-sm select-none pl-1 hover:opacity-90 transition-opacity"
-                        title={effectsList.length > 0 ? effectsList.map((e: string) => getPlainText(`Web.${e}`)).join(', ') : ''}
-                    >
-                        <CircleFadingPlus className="size-4 shrink-0 text-muted-foreground/70 mr-1.5" />
-                        <div className="truncate tracking-widest">
-                            {effectsList.map((eff: any) => {
-                                const icon = getTranslation(`LabelIcon.${eff}`);
-                                return icon !== `LabelIcon.${eff}` ? icon : '';
-                            }).filter(Boolean).join(' ')}
-                        </div>
-                        <span className="ml-0.5 text-muted-foreground/60 font-bold tracking-tighter">...</span>
-                    </div>
-                )}
+                {/* 右側彈性內容區塊，允許內部折行，折行時會產生整齊的縮排 */}
+                <div className="flex flex-wrap items-center -ml-3.5 gap-x-0.5 gap-y-1 flex-1 min-w-0">
+                    <div className="wrap-break-word ml-3.5 mr-1"><ParsedText text={getTranslation(branch.text)} translate={getTranslation} /></div>
+                    
+                    {branch.condition && (
+                        <span className="flex items-center pl-1 gap-0.5 leading-5 text-muted-foreground rounded border">
+                            <Lock className="size-3.5 shrink-0 text-muted-foreground/70" />
+                            <span><ParsedText text={getTranslation(branch.condition)} translate={getTranslation} /></span>
+                        </span>
+                    )}
 
-                {/* 若為單一 Effect，直接接在右側顯示，並還原字體粗細 (font-normal) */}
-                {isSingleEffectContent && (
-                    <div className="flex items-center gap-1.5 ml-1 text-foreground font-normal">
-                        <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50" />
-                        <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
-                            {effectItems.map((item: string, idx: number) => (
-                                <div key={idx} className="flex items-center whitespace-nowrap">
-                                    <ParsedText text={getTranslation(item)} translate={getTranslation} />
-                                    {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2 select-none">/</span>}
-                                </div>
-                            ))}
+                    {/* 收合狀態下，在最右側顯示可能影響的類別 Icon (即使沒有 Icon 也保留佔位符與刪節號提示) */}
+                    {!isSingleEffectContent && !isExpanded && (
+                        <div
+                            className="flex items-center min-w-[40px] opacity-60 text-sm select-none pl-1 hover:opacity-90 transition-opacity"
+                            title={effectsList.length > 0 ? effectsList.map((e: string) => getPlainText(`Web.${e}`)).join(', ') : ''}
+                        >
+                            <CircleFadingPlus className="size-4 shrink-0 text-muted-foreground/70 mr-1.5" />
+                            <div className="truncate tracking-widest">
+                                {effectsList.map((eff: any) => {
+                                    const icon = getTranslation(`LabelIcon.${eff}`);
+                                    return icon !== `LabelIcon.${eff}` ? icon : '';
+                                }).filter(Boolean).join(' ')}
+                            </div>
+                            <span className="ml-0.5 text-muted-foreground/60 font-bold tracking-tighter">...</span>
                         </div>
-                    </div>
-                )}
+                    )}
+
+                    {/* 若為單一 Effect，直接接在右側顯示，並還原字體粗細 (font-normal) */}
+                    {isSingleEffectContent && (
+                        <div className="flex items-start gap-1.5 ml-1 text-foreground font-normal">
+                            {/* 因為右側也可能折行，設定 items-start 讓圖示對齊文字頂端 */}
+                            <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-[5px]" />
+                            <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1 min-w-0">
+                                {effectItems.map((item: string, idx: number) => (
+                                    <div key={idx} className="flex items-center whitespace-nowrap">
+                                        <ParsedText text={getTranslation(item)} translate={getTranslation} />
+                                        {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2 select-none">/</span>}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
             {!isSingleEffectContent && isExpanded && (
                 <div className="flex flex-col pl-4 ml-4 mb-2 border-l-2 border-border/80">
