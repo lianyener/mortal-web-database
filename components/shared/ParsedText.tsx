@@ -56,6 +56,11 @@ export function ParsedText({
             const targetId = args[0].trim(); // 第一個參數即為 ID
 
             const handleClick = (e: React.MouseEvent) => {
+              // 若使用者正在反白選取文字，則不觸發點擊跳轉 (方便使用者複製)
+              if (typeof window !== 'undefined' && window.getSelection()?.toString().length) {
+                return;
+              }
+
               // 阻止事件冒泡，避免點擊標籤時意外觸發外層容器的 onClick (例如劇本分歧的展開/收縮)
               e.stopPropagation();
 
@@ -89,6 +94,7 @@ export function ParsedText({
                 case 'Debuff':
                 case 'Support':
                 case 'Stat':
+                case 'Enemy':
                   break;
                 default:
                   // 預設行為：開啟側邊欄 (讀取 public/data/category/targetId.json)
@@ -98,9 +104,10 @@ export function ParsedText({
             };
 
             return (
-              <button key={index} onClick={handleClick} className="inline-flex items-center font-bold text-inherit transition-colors hover:text-current/80 cursor-pointer" title={`開啟 ${category} 資訊`}>
+              // 將 button 改為 span，解除瀏覽器對按鈕文字無法反白的限制
+              <span key={index} onClick={handleClick} role="button" tabIndex={0} className="inline-flex items-center font-bold text-inherit transition-colors hover:text-current/80 cursor-pointer" title={`開啟 ${category} 資訊`}>
                 {contentNode}
-              </button>
+              </span>
             );
           }
 

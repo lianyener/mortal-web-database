@@ -3,11 +3,12 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
-import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus } from 'lucide-react';
+import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical } from 'lucide-react';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { ParsedText } from '@/components/shared/ParsedText';
 import { useSidebarStore } from '@/store/useSidebarStore';
+import { Button } from '@/components/ui/button';
 
 function ScriptContent() {
     // 1. 掛載狀態，防止 Hydration 報錯
@@ -60,8 +61,8 @@ function ScriptContent() {
 
             {/* 主要閱讀區塊 */}
             <div className="max-w-5xl mx-auto px-6 space-y-6">
-                {isLoading && <div className="text-center text-muted-foreground py-10 tracking-widest animate-pulse">載入劇本中...</div>}
-                {isError && <div className="text-center text-destructive py-10 bg-destructive/10 rounded-md">無法載入劇本資料。</div>}
+                {isLoading && <div className="text-center text-muted-foreground py-10 tracking-widest animate-pulse">Loading...</div>}
+                {isError && <div className="text-center text-destructive py-10 bg-destructive/10 rounded-md">Loading Failed.</div>}
 
                 {targetScript ? (
                     <div className="flex flex-col gap-8">
@@ -70,7 +71,7 @@ function ScriptContent() {
                             <div className="space-y-4">
                                 <div>
                                     <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Id')}</div>
-                                    <div className="font-mono text-sm text-foreground">
+                                    <div className="text-sm text-foreground">
                                         {query.id}
                                     </div>
                                 </div>
@@ -89,7 +90,7 @@ function ScriptContent() {
                                 {targetScript.remark && (Array.isArray(targetScript.remark) ? targetScript.remark.length > 0 : true) && (
                                     <div>
                                         <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Remark')}</div>
-                                        <div className="text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 p-3 rounded-md border border-amber-200 dark:border-amber-900/50">
+                                        <div className="px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50">
                                             {Array.isArray(targetScript.remark)
                                                 ? targetScript.remark.map((r: string, i: number) => <div key={i}><ParsedText text={getTranslation(r)} translate={getTranslation} /></div>)
                                                 : <ParsedText text={getTranslation(targetScript.remark)} translate={getTranslation} />}
@@ -105,15 +106,17 @@ function ScriptContent() {
                                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
                                     <h2 className="text-lg font-bold">{getPlainText('Web.Content')}</h2>
                                     <div className="flex items-center gap-2">
-                                        <button onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="text-xs bg-muted hover:bg-muted/80 text-foreground px-2 py-1 rounded border shadow-sm transition-colors">
+                                        <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
+                                            <UnfoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
                                             {getPlainText('Web.ExpandAll')}
-                                        </button>
-                                        <button onClick={() => { setIsGlobalExpand(false); setTreeActionId(v => v + 1); }} className="text-xs bg-muted hover:bg-muted/80 text-foreground px-2 py-1 rounded border shadow-sm transition-colors">
+                                        </Button>
+                                        <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(false); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
+                                            <FoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
                                             {getPlainText('Web.CollapseAll')}
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
-                                <div className="bg-card border rounded-xl p-4 sm:p-6 shadow-sm overflow-x-auto">
+                                <div className="bg-card border rounded-xl p-4 sm:p-6 shadow-sm overflow-x-auto font-(family-name:--font-script)">
                                     <div className="flex flex-col min-w-max sm:min-w-0">
                                         {contentArray.map((node: any, idx: number) => (
                                             <ScriptNode
@@ -145,7 +148,7 @@ function ScriptContent() {
                         )}
                     </div>
                 ) : (
-                    targetScript && <div className="text-center text-muted-foreground py-10">此劇本沒有內容或找不到對應的 ID。</div>
+                    targetScript && <div className="text-center text-muted-foreground py-10">{getPlainText('Web.ScriptNotFound')}</div>
                 )}
             </div>
         </main>
@@ -185,8 +188,8 @@ function RelationCard({ mainType, phase, types, getTranslation }: { mainType: st
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 flex-1">
                                 {ids.map((id: string) => (
                                     <div key={id} className="flex items-start overflow-hidden">
-                                        {/* 利用 [&_button]:強制覆寫內部按鈕樣式，讓它變成佔滿全寬的區塊並截斷，且不影響其他地方的設定 */}
-                                        <div className="flex-1 min-w-0 [&_button]:block [&_button]:w-full [&_button]:text-left [&_button]:truncate" title={id}>
+                                        {/* 利用 [&_[role=button]]:強制覆寫內部按鈕樣式，讓它變成佔滿全寬的區塊並截斷，且不影響其他地方的設定 */}
+                                        <div className="flex-1 min-w-0 **:[[role=button]]:block **:[[role=button]]:w-full **:[[role=button]]:text-left **:[[role=button]]:truncate" title={id}>
                                             <ParsedText text={`[*Label.${type},${id}*]`} translate={getTranslation} />
                                         </div>
                                     </div>
@@ -245,6 +248,7 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
                         <BranchOption
                             key={branch.index} branch={branch} getTranslation={getTranslation}
                             treeActionId={treeActionId} isGlobalExpand={isGlobalExpand}
+                            totalBranches={node.branches.length}
                         />
                     ))}
                 </div>
@@ -256,7 +260,7 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
 }
 
 // 單獨抽出 Branch 裡面的選項，以便讓每個選項都能獨立收合
-function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: { branch: any, getTranslation: any, treeActionId: number, isGlobalExpand: boolean }) {
+function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand, totalBranches }: { branch: any, getTranslation: any, treeActionId: number, isGlobalExpand: boolean, totalBranches?: number }) {
     const [isExpanded, setIsExpanded] = useState(isGlobalExpand);
     const { getPlainText } = useAppTranslation();
 
@@ -273,16 +277,24 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
     // 取得 effects 陣列 (後端已去重，直接使用)
     const effectsList = Array.isArray(branch.effects) ? branch.effects : [];
 
+    // 計算顯示的索引，如果該層級超過 10 個選項，則 1~9 前面補 0 讓排版更整齊對齊
+    const displayIndex = totalBranches && totalBranches >= 10 && branch.index < 10 ? `0${branch.index}` : branch.index;
+
     return (
         <div className="flex flex-col">
             <div
                 className={`flex flex-wrap items-center px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors ${isSingleEffectContent ? 'hover:bg-muted/80' : 'cursor-pointer hover:bg-muted/80'}`}
-                onClick={() => !isSingleEffectContent && setIsExpanded(!isExpanded)}
+                onClick={() => {
+                    // 若使用者正在反白複製劇本文字，則不觸發展開/收合
+                    if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return;
+                    
+                    if (!isSingleEffectContent) setIsExpanded(!isExpanded);
+                }}
             >
                 <span className="shrink-0 flex items-center justify-center w-4 text-muted-foreground">
                     {isSingleEffectContent ? <Minus className="size-4 opacity-50" /> : (isExpanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />)}
                 </span>
-                <span className="shrink-0 text-muted-foreground font-mono">{branch.index}.</span>
+                <span className="shrink-0 text-muted-foreground font-mono">{displayIndex}.</span>
                 <div className=""><ParsedText text={getTranslation(branch.text)} translate={getTranslation} /></div>
                 {branch.condition && (
                     <span className="flex items-center px-1.5 gap-1 text-muted-foreground">

@@ -351,8 +351,8 @@ function SidebarRelationCard({ mainType, phase, types, getTranslation }: { mainT
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5 flex-1">
                 {ids.map((id: string) => (
                   <div key={id} className="flex items-start overflow-hidden">
-                    {/* 同樣加入 [&_button]: 覆寫樣式 */}
-                    <div className="flex-1 min-w-0 [&_button]:block [&_button]:w-full [&_button]:text-left [&_button]:truncate" title={id}>
+                    {/* 同樣加入 [&_[role=button]]: 覆寫樣式 */}
+                    <div className="flex-1 min-w-0 **:[[role=button]]:block **:[[role=button]]:w-full **:[[role=button]]:text-left **:[[role=button]]:truncate" title={id}>
                       <ParsedText text={`[*Label.${type},${id}*]`} translate={getTranslation} />
                     </div>
                   </div>
