@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.Kitchen_Work_M_02.0.0*]","1":"[*Flag.Kitchen_Work_M_02.0.1*]"}}],"init":0,"backRel":{"post":{"Script":["kitchen_work_902"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.Kitchen_Work_M_02.0.0*]","1":"[*Flag.Kitchen_Work_M_02.0.1*]"}}],"init":0,"rel":{"post":{"Position":["Kitchen_Work_001"]},"pre":{"Script":["kitchen_work_902"]}}}

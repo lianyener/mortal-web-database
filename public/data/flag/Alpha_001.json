@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.Alpha_001.0.0*]","1":"[*Flag.Alpha_001.0.1*]"}}],"init":0,"backRel":{"pre":{"Script":["ch1_1"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.Alpha_001.0.0*]","1":"[*Flag.Alpha_001.0.1*]"}}],"init":0,"rel":{"post":{"Script":["ch1_1"]}}}

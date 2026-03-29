@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,ch1_1_break_option*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["ch1_1_break_option"]}},"remark":[],"effects":["Script"]}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,ch1_1_break_option*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["ch1_1_break_option"]},"from":{"Trigger":["M0001"],"Mission":["main"]}},"remark":[],"effects":["Script"]}

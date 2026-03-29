@@ -1,1 +1,1 @@
-{"mission":"main","trigger":"M6002_01","active":true,"minTime":{"year":"3","month":"12","stage":"1"},"maxTime":{"year":"","month":"","stage":""},"condition":["[*Custom.TriggerSet,Main*]"],"script":"","content":[],"remark":[],"rel":{"pre":{},"post":{}},"type":"Main","orderKey":"3-12-1-1-M6002_01","backRel":{"post":{"Script":["ch7_4_3_3"]}}}
+{"trigger":["M6002_01_01"],"init":"M6002_01_01","rel":{"to":{"Trigger":["M6002_01_01"]}}}

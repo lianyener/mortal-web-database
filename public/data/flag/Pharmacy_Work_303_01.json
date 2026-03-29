@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{}}],"init":0,"backRel":{"post":{"Script":["pharmacy_work_303","pharmacy_work_404"]}}}
+{"data":[{"script":[],"value":{}}],"init":0,"rel":{"pre":{"Script":["pharmacy_work_303","pharmacy_work_404"]}}}

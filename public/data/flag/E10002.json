@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.E10002.0.0*]","1":"[*Flag.E10002.0.1*]"}}],"init":0,"backRel":{"post":{"Script":["ch0_1","ch4_3_8_4_01"]},"pre":{"Script":["talk_brother3_05_03"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.E10002.0.0*]","1":"[*Flag.E10002.0.1*]"}}],"init":0,"rel":{"post":{"Position":["Center_Free_001","Mall_Work_001"],"Script":["talk_brother3_05_03"]},"pre":{"Script":["ch0_1","ch4_3_8_4_01"]}}}

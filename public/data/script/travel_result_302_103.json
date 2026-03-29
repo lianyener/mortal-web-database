@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"[*Label.Stat,mental*]+20 / [*Label.Stat,money*]-1500"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TravelScript*]"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[],"effects":["Stat","Script"]}
+{"content":[{"form":"effect","text":"[*Label.Stat,mental*]+20 / [*Label.Stat,money*]-1500"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TravelScript*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Position":["Travel_302"]}},"remark":[],"effects":["Stat","Script"]}

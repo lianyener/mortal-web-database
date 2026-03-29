@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◇[*Custom.ShowPicture*]"},{"form":"effect","text":"[*Label.Dead,10069*]"}],"rel":{"pre":{},"intra":{},"post":{"Library":["10069"]}},"remark":[],"effects":["Perform","Dead"]}
+{"content":[{"form":"effect","text":"◇[*Custom.ShowPicture*]"},{"form":"effect","text":"[*Label.Dead,10069*]"}],"rel":{"pre":{},"post":{"Dead":["10069"]},"intra":{},"to":{},"from":{"Position":["Spa_Free_001"]}},"remark":[],"effects":["Perform","Dead"]}

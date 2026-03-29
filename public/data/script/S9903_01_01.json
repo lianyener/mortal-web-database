@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"[*Label.Dead,10009*]"}],"rel":{"pre":{},"intra":{"Character":["master","brother1","brother2"]},"post":{"Library":["10009"]}},"remark":[],"effects":["Dead"],"backRel":{"post":{"Script":["S9903_01"]}}}
+{"content":[{"form":"effect","text":"[*Label.Dead,10009*]"}],"rel":{"pre":{},"post":{"Dead":["10009"]},"intra":{"Character":["master","brother1","brother2"]},"to":{},"from":{"Script":["S9903_01"],"Trigger":["S9903_01","S9903_02","S9903_03"],"Mission":["S9903"]}},"remark":[],"effects":["Dead"]}

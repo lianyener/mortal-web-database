@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"remark","text":"※[*System.NA*]"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[],"effects":[]}
+{"content":[{"form":"effect","type":"Remark","text":"※[*System.NA*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Trigger":["S0110_01"],"Mission":["S0110"]}},"remark":[],"effects":[]}

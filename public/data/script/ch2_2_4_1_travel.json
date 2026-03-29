@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TravelScript*]"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[],"effects":["Script"],"backRel":{"post":{"Script":["ch2_2_4_1"]}}}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TravelScript*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Script":["ch2_2_4_1"],"Trigger":["M2004_01"],"Mission":["main"]}},"remark":[],"effects":["Script"]}

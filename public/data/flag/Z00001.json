@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.Z00001.0.0*]","1":"[*Flag.Z00001.0.1*]"}}],"init":0,"backRel":{"post":{"Script":["act1","ch1_1"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.Z00001.0.0*]","1":"[*Flag.Z00001.0.1*]"}}],"init":0,"rel":{"pre":{"Script":["act1","ch1_1"]}}}

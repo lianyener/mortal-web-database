@@ -1,1 +1,1 @@
-{"cost":0,"backRel":{"pre":{"Equip":["Melee_10"]},"post":{"Script":["ch6_9_2_3"]}}}
+{"cost":0,"rel":{"post":{"Equip":["Melee_10"]},"pre":{"Script":["ch6_9_2_3"]}}}

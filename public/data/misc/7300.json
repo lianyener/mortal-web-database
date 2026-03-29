@@ -1,1 +1,1 @@
-{"cost":20000,"backRel":{"pre":{"Script":["ch8_3_2_3_2"]},"post":{"Script":["S0208_04_03"]}}}
+{"cost":20000,"rel":{"post":{"Script":["ch8_3_2_3_2"]},"pre":{"Script":["S0208_04_03"]}}}

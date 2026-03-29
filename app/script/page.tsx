@@ -187,7 +187,7 @@ function RelationCard({ mainType, phase, types, getTranslation }: { mainType: st
                                     <div key={id} className="flex items-start overflow-hidden">
                                         {/* 利用 [&_button]:強制覆寫內部按鈕樣式，讓它變成佔滿全寬的區塊並截斷，且不影響其他地方的設定 */}
                                         <div className="flex-1 min-w-0 [&_button]:block [&_button]:w-full [&_button]:text-left [&_button]:truncate" title={id}>
-                                            <ParsedText text={`[*Label.${type == 'Mission' ? 'Triggrt' : type},${id}*]`} translate={getTranslation} />
+                                            <ParsedText text={`[*Label.${type},${id}*]`} translate={getTranslation} />
                                         </div>
                                     </div>
                                 ))}

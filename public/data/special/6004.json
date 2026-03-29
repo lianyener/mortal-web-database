@@ -1,1 +1,1 @@
-{"cost":0,"backRel":{"pre":{"Equip":["Medi_01"]},"post":{"Script":["talk_brother4_option_02_01_03"]}}}
+{"cost":0,"rel":{"post":{"Equip":["Medi_01"]},"pre":{"Script":["talk_brother4_option_02_01_03"]}}}

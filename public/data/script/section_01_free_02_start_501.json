@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,talk_girl5_01*]"}],"rel":{"pre":{},"intra":{},"post":{"Script":["talk_girl5_01"]}},"remark":[],"effects":["Script"]}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,talk_girl5_01*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["talk_girl5_01"]},"from":{"Position":["Section_01_02_Start"]}},"remark":[],"effects":["Script"]}

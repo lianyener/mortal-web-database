@@ -1,1 +1,1 @@
-{"backRel":{"pre":{"Mission":["S0203_01"]},"post":{"Script":["S0018_06","S0202_01"]}}}
+{"rel":{"post":{"Trigger":["S0203_01"]},"pre":{"Script":["S0018_06","S0202_01"]}}}

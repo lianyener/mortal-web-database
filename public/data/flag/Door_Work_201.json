@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{}}],"init":0,"backRel":{"pre":{"Script":["door_work_201"]},"post":{"Script":["door_work_201"]}}}
+{"data":[{"script":[],"value":{}}],"init":0,"rel":{"post":{"Position":["Door_Work_001"],"Script":["door_work_201"]},"pre":{"Script":["door_work_201"]}}}

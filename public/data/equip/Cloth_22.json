@@ -1,1 +1,1 @@
-{"type":"","faction":1,"evolution":[{"name":"[*Equip.Name.Cloth_01*]","condition":[]}],"rel":{"pre":{},"post":{"Equip":["Cloth_01"]}},"backRel":{"post":{"Equip":["Cloth_01"]}}}
+{"type":"","faction":1,"evolution":[{"name":"[*Equip.Name.Cloth_01*]","condition":[]}],"rel":{"pre":{"Equip":["Cloth_01"]},"post":{"Equip":["Cloth_01"]}}}

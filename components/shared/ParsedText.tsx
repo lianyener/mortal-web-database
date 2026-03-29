@@ -77,9 +77,6 @@ export function ParsedText({
                   // 跳轉到獨立的 position 頁面，並保留側邊欄狀態
                   router.push(`/position?id=${targetId}${sidebarParams}`);
                   break;
-                case 'Mission':
-                  sidebarState.openSidebar('Trigger', targetId);
-                  break;
                 // 可在此處繼續新增其他類別的 switch 處理...
                 case 'Flag':
                 case 'RelationshipFlag':
@@ -87,11 +84,6 @@ export function ParsedText({
                   break;
                 case 'Relationship':
                   sidebarState.openSidebar('Character', targetId);
-                  break;
-                case 'Achievement':
-                case 'Dead':
-                case 'End':
-                  sidebarState.openSidebar('Library', targetId);
                   break;
                 case 'Buff':
                 case 'Debuff':

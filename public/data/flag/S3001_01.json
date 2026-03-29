@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.S3001_01.0.0*]","1":"[*Flag.S3001_01.0.1*]"}}],"init":0,"backRel":{"pre":{"Mission":["S3002_01"]},"post":{"Script":["S3001_01"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.S3001_01.0.0*]","1":"[*Flag.S3001_01.0.1*]"}}],"init":0,"rel":{"post":{"Trigger":["S3002_01"]},"pre":{"Script":["S3001_01"]}}}

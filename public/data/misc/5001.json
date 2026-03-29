@@ -1,1 +1,1 @@
-{"cost":50,"backRel":{"post":{"Script":["ch1_2_2","ch7_5_4_2_2_break_start_01","food_menu_001","mall_work_904"]},"pre":{"Script":["ch2_4_3_break_start_01","ch3_3_2_1_break_start_02","food_menu_001","room_001_break_option","section_02_free_start_02","talk_brother4"]}}}
+{"cost":50,"rel":{"pre":{"Script":["ch1_2_2","ch7_5_4_2_2_break_start_01","food_menu_001","mall_work_904"]},"post":{"Script":["ch2_4_3_break_start_01","ch3_3_2_1_break_start_02","food_menu_001","room_001_break_option","section_02_free_start_02","talk_brother4"]}}}

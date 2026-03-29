@@ -1,1 +1,1 @@
-{"backRel":{"pre":{"Mission":["M7002_01"]},"post":{"Script":["ch7_5_6_2"]}}}
+{"rel":{"post":{"Trigger":["M7002_01"]},"pre":{"Script":["ch7_5_6_2"]}}}

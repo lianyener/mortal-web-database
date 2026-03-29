@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◇[*Custom.ShowPicture*] / [*Label.Stat,mental*]+40"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TempScript*]1"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[],"effects":["Perform","Stat","Script"]}
+{"content":[{"form":"effect","text":"◇[*Custom.ShowPicture*] / [*Label.Stat,mental*]+40"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TempScript*]1"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Position":["Section_02_00"]}},"remark":[],"effects":["Perform","Stat","Script"]}

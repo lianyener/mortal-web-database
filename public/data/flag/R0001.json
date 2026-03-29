@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{}}],"init":0,"backRel":{"pre":{"Combat":["CL_1814_02"]},"post":{"Combat":["CL_1814_02"]}}}
+{"data":[{"script":[],"value":{}}],"init":0,"rel":{"post":{"Combat":["CL_1814_02"]},"pre":{"Combat":["CL_1814_02"]}}}

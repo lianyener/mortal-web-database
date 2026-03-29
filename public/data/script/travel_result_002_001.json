@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"[*Label.Stat,mental*]+20"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TravelScript*]"}],"rel":{"pre":{},"intra":{},"post":{}},"remark":[],"effects":["Stat","Script"]}
+{"content":[{"form":"effect","text":"[*Label.Stat,mental*]+20"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TravelScript*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Position":["Travel_002"]}},"remark":[],"effects":["Stat","Script"]}
