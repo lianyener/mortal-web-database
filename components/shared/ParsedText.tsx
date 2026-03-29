@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useRouter } from 'next/navigation';
+import { useAppTranslation } from '@/hooks/useAppTranslation';
 
 export function ParsedText({
   text,
@@ -11,6 +12,7 @@ export function ParsedText({
 }) {
   // 取得 Next.js 的 Router 實例，用來切換不同頁面
   const router = useRouter();
+  const { getPlainText } = useAppTranslation();
 
   if (!text) return null;
 
@@ -95,6 +97,7 @@ export function ParsedText({
                 case 'Support':
                 case 'Stat':
                 case 'Enemy':
+                case 'Story':
                   break;
                 default:
                   // 預設行為：開啟側邊欄 (讀取 public/data/category/targetId.json)
@@ -103,9 +106,11 @@ export function ParsedText({
               }
             };
 
+            const titleText = targetId ? `${getPlainText(`Web.${category}`)}: ${targetId}` : getPlainText(`Web.${category}`);
+
             return (
               // 將 button 改為 span，解除瀏覽器對按鈕文字無法反白的限制
-              <span key={index} onClick={handleClick} role="button" tabIndex={0} className="inline-flex items-center font-bold text-inherit transition-colors hover:text-current/80 cursor-pointer" title={`開啟 ${category} 資訊`}>
+              <span key={index} onClick={handleClick} role="button" tabIndex={0} className="inline-flex items-center font-bold text-inherit transition-colors hover:text-current/80 cursor-pointer" title={titleText}>
                 {contentNode}
               </span>
             );

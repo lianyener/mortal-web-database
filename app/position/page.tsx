@@ -8,13 +8,14 @@ import { ParsedText } from '@/components/shared/ParsedText';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import Link from 'next/link';
 import { useSidebarStore } from '@/store/useSidebarStore';
+import { TopNavbar } from '@/components/layout/TopNavbar';
 
 function PositionContent() {
   const [mounted, setMounted] = useState(false);
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
 
-  const [query, setQuery] = useQueryStates({
+  const [query] = useQueryStates({
     id: parseAsString.withDefault('Alchemy_Work_001'),
   });
 
@@ -32,23 +33,9 @@ function PositionContent() {
   if (!mounted) return null;
 
   return (
-    <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'lg:pr-[512px]' : ''}`}>
+    <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'md:pr-[512px] lg:pr-[576px]' : ''}`}>
       {/* 頂部固定導覽列 */}
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b px-6 py-4 mb-8 shadow-sm">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h1 className="text-xl font-bold text-primary">地點與行為 (Position)</h1>
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">測試 ID:</label>
-            <input
-              type="text"
-              value={query.id}
-              onChange={(e) => setQuery({ id: e.target.value })}
-              className="px-3 py-1.5 text-sm border rounded bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-48"
-              placeholder="例如 Alchemy_Work_001"
-            />
-          </div>
-        </div>
-      </div>
+      <TopNavbar />
 
       {/* 主要閱讀區塊 */}
       <div className="max-w-5xl mx-auto px-6 space-y-6">

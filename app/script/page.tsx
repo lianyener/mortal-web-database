@@ -9,6 +9,7 @@ import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { ParsedText } from '@/components/shared/ParsedText';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { Button } from '@/components/ui/button';
+import { TopNavbar } from '@/components/layout/TopNavbar';
 
 function ScriptContent() {
     // 1. 掛載狀態，防止 Hydration 報錯
@@ -21,7 +22,7 @@ function ScriptContent() {
     const [isGlobalExpand, setIsGlobalExpand] = useState(true);
 
     // 2. 為了和 position 統一，使用 ?id=... 作為查詢參數
-    const [query, setQuery] = useQueryStates({
+    const [query] = useQueryStates({
         id: parseAsString.withDefault('ch1_1'),
     });
 
@@ -41,23 +42,9 @@ function ScriptContent() {
     if (!mounted) return null;
 
     return (
-        <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'lg:pr-[512px]' : ''}`}>
+        <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'md:pr-[512px] lg:pr-[576px]' : ''}`}>
             {/* 頂部固定導覽列 */}
-            <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b px-6 py-4 mb-8 shadow-sm">
-                <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <h1 className="text-xl font-bold text-primary">劇本閱讀器</h1>
-                    <div className="flex items-center gap-2">
-                        <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">測試 ID:</label>
-                        <input
-                            type="text"
-                            value={query.id}
-                            onChange={(e) => setQuery({ id: e.target.value })}
-                            className="px-3 py-1.5 text-sm border rounded bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-48"
-                            placeholder="例如 act1, ch0_1..."
-                        />
-                    </div>
-                </div>
-            </div>
+            <TopNavbar />
 
             {/* 主要閱讀區塊 */}
             <div className="max-w-5xl mx-auto px-6 space-y-6">
@@ -67,36 +54,41 @@ function ScriptContent() {
                 {targetScript ? (
                     <div className="flex flex-col gap-8">
                         {/* 1. 基本資訊面板 */}
-                        <div className="p-5 border rounded-xl shadow-sm bg-card">
-                            <div className="space-y-4">
-                                <div>
-                                    <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Id')}</div>
-                                    <div className="text-sm text-foreground">
-                                        {query.id}
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Name')}</div>
-                                    <div className="font-semibold text-lg text-foreground">
-                                        <ParsedText text={getTranslation(`Script.Name.${query.id}`)} translate={getTranslation} />
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Desc')}</div>
-                                    <div className="text-sm leading-relaxed">
-                                        <ParsedText text={getTranslation(`Script.Desc.${query.id}`)} translate={getTranslation} />
-                                    </div>
-                                </div>
-                                {targetScript.remark && (Array.isArray(targetScript.remark) ? targetScript.remark.length > 0 : true) && (
+                        <div className="flex flex-col gap-4">
+                            <div className="flex items-center border-b border-border/50 pb-2">
+                                <h2 className="text-lg font-bold">{getPlainText('Web.ScriptData')}</h2>
+                            </div>
+                            <div className="p-5 border rounded-xl shadow-sm bg-card">
+                                <div className="space-y-4">
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Remark')}</div>
-                                        <div className="px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50">
-                                            {Array.isArray(targetScript.remark)
-                                                ? targetScript.remark.map((r: string, i: number) => <div key={i}><ParsedText text={getTranslation(r)} translate={getTranslation} /></div>)
-                                                : <ParsedText text={getTranslation(targetScript.remark)} translate={getTranslation} />}
+                                        <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Id')}</div>
+                                        <div className="text-sm text-foreground">
+                                            {query.id}
                                         </div>
                                     </div>
-                                )}
+                                    <div>
+                                        <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Name')}</div>
+                                        <div className="font-semibold text-lg text-foreground">
+                                            <ParsedText text={getTranslation(`Script.Name.${query.id}`)} translate={getTranslation} />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Desc')}</div>
+                                        <div className="text-sm leading-relaxed">
+                                            <ParsedText text={getTranslation(`Script.Desc.${query.id}`)} translate={getTranslation} />
+                                        </div>
+                                    </div>
+                                    {targetScript.remark && (Array.isArray(targetScript.remark) ? targetScript.remark.length > 0 : true) && (
+                                        <div>
+                                            <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Remark')}</div>
+                                            <div className="px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50">
+                                                {Array.isArray(targetScript.remark)
+                                                    ? targetScript.remark.map((r: string, i: number) => <div key={i}><ParsedText text={getTranslation(r)} translate={getTranslation} /></div>)
+                                                    : <ParsedText text={getTranslation(targetScript.remark)} translate={getTranslation} />}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
