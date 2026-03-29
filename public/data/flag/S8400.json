@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.S8400.0.0*]","1":"[*Flag.S8400.0.1*]"}}],"init":0,"rel":{"post":{"Script":["ch1_2_3","ch1_2_1","ch1_2_2"]},"pre":{"Script":["S8400_02"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.S8400.0.0*]","1":"[*Flag.S8400.0.1*]"}}],"init":0,"rel":{"post":{"Script":["ch1_2_1","ch1_2_2","ch1_2_3"]},"pre":{"Script":["S8400_02"]}}}

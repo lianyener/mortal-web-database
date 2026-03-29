@@ -46,7 +46,7 @@ export function TopNavbar() {
                 { titleKey: 'Web.Mission', href: null },
                 { titleKey: 'Web.Trigger', href: null },
                 { titleKey: 'Web.Position', href: '/position?id=Alchemy_Work_001' },
-                { titleKey: 'Web.Script', href: '/script?id=ch1_1' },
+                { titleKey: 'Web.Script', href: '/script' },
                 { titleKey: 'Web.Combat', href: null },
                 { titleKey: 'Web.Battle', href: null },
             ]
