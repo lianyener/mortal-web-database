@@ -1,63 +1,45 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
 import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, Search } from 'lucide-react';
-import Link from 'next/link';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
-import { ParsedText } from '@/components/shared/ParsedText';
+import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
-import { Button } from '@/components/ui/button';
+import { ParsedText } from '@/components/shared/ParsedText';
 import { TopNavbar } from '@/components/layout/TopNavbar';
+import { Button } from '@/components/ui/button';
 
 function ScriptContent() {
-    // 1. 掛載狀態，防止 Hydration 報錯
+
     const [mounted, setMounted] = useState(false);
     // eslint-disable-next-line react-hooks/set-state-in-effect
     useEffect(() => setMounted(true), []);
 
-    // 全域展開/收合用的控制狀態
+    // 全域分岐收合控制狀態
     const [treeActionId, setTreeActionId] = useState(0);
     const [isGlobalExpand, setIsGlobalExpand] = useState(true);
 
-    // 2. 為了和 position 統一，使用 ?id=... 作為查詢參數
+    // 網址參數
     const [query] = useQueryStates({
-        id: parseAsString,
+        id: parseAsString.withDefault('index'),
     });
 
-    // 判斷目前是否為列表模式
-    const isListView = !query.id;
+    // 判斷啟用列表模式
+    const isListView = (query.id === 'index');
 
-    // 3. 直接讀取 /data/script.json，避開 useItemDetail 的預設路徑邏輯
-    const [allScripts, setAllScripts] = useState<any>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
+    // 透過 useItemDetail 取得資料
+    const { data, isLoading, isError } = useItemDetail('script', query.id);
 
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setIsLoading(true);
-        fetch('/data/script.json')
-            .then(res => {
-                if (!res.ok) throw new Error('Failed to fetch script');
-                return res.json();
-            })
-            .then(data => {
-                setAllScripts(data);
-                setIsError(false);
-            })
-            .catch(() => setIsError(true))
-            .finally(() => setIsLoading(false));
-    }, []);
+    // 目標劇本資料
+    const contentArray = data?.content || [];
 
-    // 4. i18n 解析邏輯 (提取 getPlainText 來處理網頁 UI 標籤)
+    // i18n解析邏輯
     const { translateTerm, translateParagraph } = useAppTranslation();
 
-    // 5. 處理整包 script.json 或單一檔案的資料取得
-    const targetScript = !isListView && query.id ? allScripts?.[query.id] : null;
-    const contentArray = targetScript?.content || [];
-
-    // 取得側邊欄開啟狀態，用來動態縮放主畫面寬度
+    // 側邊欄開啟狀態
     const isOpen = useSidebarStore(state => state.isOpen);
 
     if (!mounted) return null;
@@ -69,18 +51,19 @@ function ScriptContent() {
 
             {/* 主要閱讀區塊 */}
             <div className="max-w-5xl mx-auto px-6 space-y-6">
-                {isLoading && <div className="text-center text-muted-foreground py-10 tracking-widest animate-pulse">Loading...</div>}
-                {isError && <div className="text-center text-destructive py-10 bg-destructive/10 rounded-md">Loading Failed.</div>}
+                {isLoading && <div className="text-center text-muted-foreground py-10 tracking-widest animate-pulse">{translateTerm('Web.Loading', { 0: translateTerm('Web.Script') })}</div>}
+                {isError && <div className="text-center text-destructive py-10 bg-destructive/10 rounded-md">{translateTerm('Web.LoadError', { 0: translateTerm('Web.Script') })}</div>}
 
                 {/* 列表模式 */}
-                {!isLoading && !isError && isListView && allScripts && (
-                    <ScriptList data={allScripts} translateTerm={translateTerm} translateParagraph={translateParagraph} />
+                {!isLoading && !isError && isListView && data && (
+                    <ScriptList data={data} />
                 )}
 
-                {/* 單一劇本閱讀模式 */}
-                {!isLoading && !isError && !isListView && targetScript ? (
+                {/* 單一劇本模式 */}
+                {!isLoading && !isError && !isListView && data ? (
                     <div className="flex flex-col gap-8">
-                        {/* 1. 基本資訊面板 */}
+
+                        {/* 基本資訊面板 */}
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center gap-3 border-b border-border/50 pb-2">
                                 <Link href="/script" className="flex items-center text-sm font-semibold text-muted-foreground hover:text-primary transition-colors bg-muted/50 hover:bg-muted px-2 py-1 rounded-md">
@@ -109,13 +92,13 @@ function ScriptContent() {
                                             <ParsedText text={translateTerm(`Script.Desc.${query.id}`)} translate={translateTerm} />
                                         </div>
                                     </div>
-                                    {targetScript.remark && (Array.isArray(targetScript.remark) ? targetScript.remark.length > 0 : true) && (
+                                    {data.remark && (Array.isArray(data.remark) ? data.remark.length > 0 : true) && (
                                         <div>
                                             <div className="text-xs text-muted-foreground mb-1">{translateParagraph('Web.Remark')}</div>
                                             <div className="px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50">
-                                                {Array.isArray(targetScript.remark)
-                                                    ? targetScript.remark.map((r: string, i: number) => <div key={i}><ParsedText text={translateTerm(r)} translate={translateTerm} /></div>)
-                                                    : <ParsedText text={translateTerm(targetScript.remark)} translate={translateTerm} />}
+                                                {Array.isArray(data.remark)
+                                                    ? data.remark.map((r: string, i: number) => <div key={i}><ParsedText text={translateTerm(r)} translate={translateTerm} /></div>)
+                                                    : <ParsedText text={translateTerm(data.remark)} translate={translateTerm} />}
                                             </div>
                                         </div>
                                     )}
@@ -154,16 +137,16 @@ function ScriptContent() {
                         )}
 
                         {/* 3. 關聯項目 */}
-                        {(targetScript.rel || targetScript.backRel) && (
+                        {(data.rel || data.backRel) && (
                             <div className="flex flex-col gap-4 mt-2">
                                 <h2 className="text-lg font-bold border-b border-border/50 pb-2">
                                     {translateParagraph('Web.Relations')}
                                 </h2>
                                 <div className="flex flex-col gap-4">
-                                    {targetScript.rel && Object.entries(targetScript.rel).map(([phase, types]) => (
+                                    {data.rel && Object.entries(data.rel).map(([phase, types]) => (
                                         <RelationCard key={`rel-${phase}`} mainType="Rel" phase={phase} types={types} getTranslation={translateTerm} />
                                     ))}
-                                    {targetScript.backRel && Object.entries(targetScript.backRel).map(([phase, types]) => (
+                                    {data.backRel && Object.entries(data.backRel).map(([phase, types]) => (
                                         <RelationCard key={`backRel-${phase}`} mainType="BackRel" phase={phase} types={types} getTranslation={translateTerm} />
                                     ))}
                                 </div>
@@ -172,7 +155,7 @@ function ScriptContent() {
                     </div>
                 ) : null}
 
-                {!isLoading && !isError && !isListView && !targetScript && (
+                {!isLoading && !isError && !isListView && !data && (
                     <div className="text-center text-muted-foreground py-10">{translateParagraph('Web.ScriptNotFound')}</div>
                 )}
             </div>
@@ -182,7 +165,7 @@ function ScriptContent() {
 
 // 關聯區塊渲染組件 (改為直式卡片，並依據 Phase 拆分)
 function RelationCard({ mainType, phase, types, getTranslation }: { mainType: string, phase: string, types: any, getTranslation: any }) {
-    const { getPlainText } = useAppTranslation();
+    const { translateTerm } = useAppTranslation();
     if (!types || Object.keys(types).length === 0) return null;
     // 檢查該階段是否真的有內容
     const hasContent = Object.values(types).some((ids: any) => Array.isArray(ids) && ids.length > 0);
@@ -192,7 +175,7 @@ function RelationCard({ mainType, phase, types, getTranslation }: { mainType: st
     const phaseKey = phase.charAt(0).toUpperCase() + phase.slice(1);
     const titleKey = `Web.${mainType}.${phaseKey}`;
     // 如果沒有翻譯，提供一個好看的預設值
-    const title = getPlainText(titleKey) !== titleKey ? getPlainText(titleKey) : `${mainType} - ${phaseKey}`;
+    const title = translateTerm(titleKey) !== titleKey ? translateTerm(titleKey) : `${mainType} - ${phaseKey}`;
 
     return (
         <div className="bg-card border rounded-xl p-4 sm:p-5 shadow-sm w-full">
@@ -204,7 +187,7 @@ function RelationCard({ mainType, phase, types, getTranslation }: { mainType: st
                     if (!Array.isArray(ids) || ids.length === 0) return null;
 
                     // 將翻譯解析為純文字，確保不帶有多餘的標籤
-                    const typeLabel = getPlainText(`Web.${type}`) !== `Web.${type}` ? getPlainText(`Web.${type}`) : type;
+                    const typeLabel = translateTerm(`Web.${type}`) !== `Web.${type}` ? translateTerm(`Web.${type}`) : type;
 
                     return (
                         <div key={type} className="flex flex-col sm:flex-row gap-2 sm:gap-4 border-b border-border/40 pb-3 last:border-0 last:pb-0">
@@ -231,15 +214,14 @@ function RelationCard({ mainType, phase, types, getTranslation }: { mainType: st
 // ==========================================
 // 劇本列表元件 (DataTable)
 // ==========================================
-interface ScriptListProps {
-    data: Record<string, any> | any[];
-    translateTerm: (key: string, params?: Record<string, string | number | Date>) => string;
-    translateParagraph: (key: string) => string;
-}
-
-function ScriptList({ data, translateTerm, translateParagraph }: ScriptListProps) {
+function ScriptList({ data }: { data: Record<string, any> | any[] }) {
     const [searchInput, setSearchInput] = useState('');
-    const [activeSearch, setActiveSearch] = useState('');
+    const [searchTarget, setSearchTarget] = useState('');
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 100;
+
+    // i18n解析邏輯
+    const { translateTerm, translateParagraph } = useAppTranslation();
 
     // 1. 【修復卡頓】使用 useMemo 將 list 緩存，避免每次打字輸入觸發渲染時都產生全新陣列，導致下方 searchableList 快取失效
     const list = useMemo(() => {
@@ -252,76 +234,75 @@ function ScriptList({ data, translateTerm, translateParagraph }: ScriptListProps
 
     // 2. 執行搜尋：改為手動觸發，徹底消除打字時的卡頓
     const handleSearch = () => {
-        setActiveSearch(searchInput);
+        setSearchTarget(searchInput);
+        setPage(1); // 搜尋時重置分頁
     };
 
-    // 3. 預先計算所有劇本的搜尋字串 (快取處理，避免每次搜尋都重新遍歷巨大的 JSON 樹)
-    const searchableList = useMemo(() => {
+    // 3. 非同步建置搜尋快取，避免阻塞路由跳轉 (Navigation) 時的初次渲染
+    const [searchableList, setSearchableList] = useState<any[]>([]);
+    const [isBuildingCache, setIsBuildingCache] = useState(false);
 
-        // 遞迴函式，用於從劇本節點中提取所有可搜尋的純文字
-        const extractContent = (node: any): string => {
-            if (!node) return '';
-            if (typeof node === 'string') return translateParagraph(node) + ' ';
+    useEffect(() => {
+        if (!list || list.length === 0) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setIsBuildingCache(true);
 
-            let allText = '';
+        // 利用 setTimeout 讓出主執行緒，確保 Next.js 頁面跳轉能瞬間完成，再於背景處理巨大的陣列走訪
+        const timer = setTimeout(() => {
+            const mapped = list.map((item: any) => {
+                const id = item.id || '';
+                const idText = id.toLowerCase();
+                const nameText = translateTerm(`Script.Name.${id}`).toLowerCase();
+                const descText = translateTerm(`Script.Desc.${id}`).toLowerCase();
+                const keywordText = translateTerm(`Script.Keyword.${id}`).toLowerCase();
 
-            if (node.text) {
-                allText += `${node.text}&${translateParagraph(node.text)}#`;
-            }
-            if (node.condition) {
-                allText += `${node.condition}&${translateParagraph(node.condition)}#`;
-            }
-
-            if (Array.isArray(node.branches)) {
-                for (const subNode of node.branches) {
-                    allText += extractContent(subNode);
+                let contentText = '';
+                if (item.searchText) {
+                    contentText = translateParagraph(item.searchText).toLowerCase();
                 }
-            }
-            if (Array.isArray(node.content)) {
-                for (const subNode of node.content) {
-                    allText += extractContent(subNode);
-                }
-            }
-            return allText;
-        };
 
-        return list.map((item: any) => {
+                return {
+                    ...item,
+                    _searchString: `${idText} ${nameText} ${descText} ${keywordText} ${contentText}`
+                };
+            });
+            setSearchableList(mapped);
+            setIsBuildingCache(false);
+        }, 10);
 
-            const id = item.id;
-            const idText = id.toLowerCase();
-            const nameText = translateTerm(`Script.Name.${id}`).toLowerCase();
-            const descText = translateTerm(`Script.Desc.${id}`).toLowerCase();
-            const keywordText = translateTerm(`Script.Keyword.${id}`).toLowerCase();
-
-            let contentText = '';
-            if (Array.isArray(item.content)) {
-                contentText = item.content.map((n: any) => extractContent(n)).join('').toLowerCase();
-            }
-
-            return {
-                ...item,
-                _searchString: `${idText} ${nameText} ${descText} ${keywordText} ${contentText}`
-            };
-        });
+        return () => clearTimeout(timer);
     }, [list, translateParagraph, translateTerm]);
 
     // 4. 實際過濾清單：只要比對預先算好的 _searchString 即可
     const filteredList = useMemo(() => {
-        if (!activeSearch) return searchableList;
-        const searchLower = activeSearch.trim().toLowerCase();
+        const sourceList = searchableList.length > 0 ? searchableList : list;
+        if (!searchTarget) return sourceList;
+        const searchLower = searchTarget.trim().toLowerCase();
 
         // 支援多關鍵字以空白分隔
         const searchTerms = searchLower.split(/\s+/).filter(Boolean);
 
-        return searchableList.filter((item: any) => {
-            return searchTerms.every(term => item._searchString.includes(term));
+        return sourceList.filter((item: any) => {
+            // 如果快取還沒建好，降級使用即時比對
+            const targetString = item._searchString || `${item.id} ${translateTerm(`Script.Name.${item.id}`)} ${translateTerm(`Script.Desc.${item.id}`)} ${translateTerm(`Script.Keyword.${item.id}`)}`.toLowerCase();
+            return searchTerms.every(term => targetString.includes(term));
         });
-    }, [searchableList, activeSearch]);
+    }, [searchableList, list, searchTarget, translateTerm]);
+
+    // 5. 分頁顯示資料，避免一次渲染上萬個 DOM 節點導致畫面卡死
+    const displayList = useMemo(() => {
+        return filteredList.slice(0, page * itemsPerPage);
+    }, [filteredList, page]);
+
+    const hasMore = displayList.length < filteredList.length;
 
     return (
         <div className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
-                <h2 className="text-lg font-bold">{translateTerm('Web.ScriptList')}</h2>
+                <div className="flex items-center gap-2">
+                    <h2 className="text-lg font-bold">{translateTerm('Web.ScriptList')}</h2>
+                    {isBuildingCache && <span className="text-xs text-muted-foreground animate-pulse">(準備搜尋索引中...)</span>}
+                </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                     <input
                         type="text"
@@ -348,7 +329,7 @@ function ScriptList({ data, translateTerm, translateParagraph }: ScriptListProps
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border/50">
-                            {filteredList.map((item: any) => (
+                            {displayList.map((item: any) => (
                                 <tr key={item.id} className="hover:bg-muted/30 transition-colors group">
                                     <td className="px-4 py-3 font-mono text-primary">
                                         <Link href={`/script?id=${item.id}`} className="hover:underline">{item.id}</Link>
@@ -373,6 +354,18 @@ function ScriptList({ data, translateTerm, translateParagraph }: ScriptListProps
                         </tbody>
                     </table>
                 </div>
+                {/* 載入更多按鈕 */}
+                {hasMore && (
+                    <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
+                        <Button
+                            variant="outline"
+                            onClick={() => setPage(p => p + 1)}
+                            className="w-full sm:w-auto min-w-[200px]"
+                        >
+                            載入更多 ({displayList.length} / {filteredList.length})
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -436,7 +429,7 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
 // 單獨抽出 Branch 裡面的選項，以便讓每個選項都能獨立收合
 function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: { branch: any, getTranslation: any, treeActionId: number, isGlobalExpand: boolean }) {
     const [isExpanded, setIsExpanded] = useState(isGlobalExpand);
-    const { getPlainText } = useAppTranslation();
+    const { translateTerm } = useAppTranslation();
 
     // 監聽全域展開/收合訊號
     useEffect(() => {
@@ -486,7 +479,7 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
                     {!isSingleEffectContent && !isExpanded && (
                         <div
                             className="flex items-center min-w-[40px] opacity-60 text-sm select-none pl-1 hover:opacity-90 transition-opacity"
-                            title={effectsList.length > 0 ? effectsList.map((e: string) => getPlainText(`Web.${e}`)).join(', ') : ''}
+                            title={effectsList.length > 0 ? effectsList.map((e: string) => translateTerm(`Web.${e}`)).join(', ') : ''}
                         >
                             <CircleFadingPlus className="size-4 shrink-0 text-muted-foreground/70 mr-1.5" />
                             <div className="truncate tracking-widest">
