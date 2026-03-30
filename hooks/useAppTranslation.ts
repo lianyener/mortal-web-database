@@ -14,13 +14,13 @@ export function useAppTranslation() {
     // 2. 取得純文字翻譯 (將 [*...*] 標籤遞迴解析為純文字，適用於 title、alt 等不支援 HTML 的屬性)
     const getPlainText = (baseKey: string, params?: TranslationValues): string => {
         let text = getTranslation(baseKey, params);
-        
+
         if (text !== baseKey && typeof text === 'string' && text.includes('[*')) {
             const regex = /\[\*([\s\S]*?)\*\]/g;
             text = text.replace(regex, (match, content) => {
                 const [key, ...args] = content.split(',');
                 const cleanKey = key.trim();
-                
+
                 // 若是 Label 標籤，嘗試抓取該項目的純文字名稱 (Name 或 Title)
                 if (cleanKey.startsWith('Label.') && args.length > 0) {
                     const category = cleanKey.replace('Label.', '');
@@ -31,7 +31,7 @@ export function useAppTranslation() {
                     if (t.has(`${category}.Title.${id}`)) return t(`${category}.Title.${id}`);
                     return id;
                 }
-                
+
                 // 其他標籤，遞迴解析為純文字
                 const resolvedStr = getPlainText(cleanKey);
                 return resolvedStr !== cleanKey ? resolvedStr : match;
@@ -40,5 +40,67 @@ export function useAppTranslation() {
         return text;
     };
 
-    return { t, getTranslation, getPlainText };
+    // 翻譯用詞
+    const translateTerm = (text: string, params?: TranslationValues): string => {
+
+        // 防呆
+        if (!text) return '';
+
+        // 嘗試處理自動降階
+        if (t.has(`${text}._`)) text = t(`${text}._`, params);
+
+        // 嘗試正常翻譯
+        else if (t.has(text)) text = t(text, params);
+
+        // 無可用翻譯回傳本身
+        else return text;
+
+        // 處理巢狀翻譯並回傳
+        return translateParagraph(text);
+    };
+
+    // 翻譯段落
+    const translateParagraph = (text: string): string => {
+
+        // 防呆
+        if (!text) return '';
+
+        // 初始化變數
+        const regexStatment = /\[%([\w.,*{}\[\]]+)%\]/g
+        const regexTerm = /\[\*([\w.,*{}\[\]]+)\*\]/g;
+
+        // 移除比較式外框
+        text = text.replace(regexStatment, (_, content) => {
+            return content;
+        });
+
+        // 針對內部用詞進行翻譯
+        text = text.replace(regexTerm, (_, content) => {
+
+            // 取得鍵值及參數
+            const [key, ...args] = content.split(',');
+
+            if (args.length > 0) {
+
+                // 參數陣列轉換為參數物件
+                const params = args.reduce((acc: Record<number, string>, arg: string, i: number) => {
+
+                    // 嘗試翻譯變數
+                    acc[i] = translateTerm(arg.trim());
+                    return acc;
+                });
+
+                // 回傳翻譯結果
+                return translateTerm(key.trim(), params);
+            }
+
+            // 回傳翻譯結果
+            return translateTerm(content);
+        });
+
+        // 回傳結果
+        return text;
+    };
+
+    return { t, translateTerm, translateParagraph, getTranslation, getPlainText };
 }

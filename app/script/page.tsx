@@ -74,7 +74,7 @@ function ScriptContent() {
 
                 {/* 列表模式 */}
                 {!isLoading && !isError && isListView && allScripts && (
-                    <ScriptList data={allScripts} getTranslation={getTranslation} getPlainText={getPlainText} />
+                    <ScriptList data={allScripts} translateTerm={getTranslation} translateParagraph={getPlainText} />
                 )}
 
                 {/* 單一劇本閱讀模式 */}
@@ -84,7 +84,7 @@ function ScriptContent() {
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center gap-3 border-b border-border/50 pb-2">
                                 <Link href="/script" className="flex items-center text-sm font-semibold text-muted-foreground hover:text-primary transition-colors bg-muted/50 hover:bg-muted px-2 py-1 rounded-md">
-                                    <ChevronRight className="size-4 rotate-180 mr-0.5" />返回
+                                    <ChevronRight className="size-4 rotate-180 mr-0.5" />{getPlainText('Web.Return')}
                                 </Link>
                                 <div className="w-px h-4 bg-border/80"></div>
                                 <h2 className="text-lg font-bold">{getPlainText('Web.ScriptData')}</h2>
@@ -171,7 +171,7 @@ function ScriptContent() {
                         )}
                     </div>
                 ) : null}
-                
+
                 {!isLoading && !isError && !isListView && !targetScript && (
                     <div className="text-center text-muted-foreground py-10">{getPlainText('Web.ScriptNotFound')}</div>
                 )}
@@ -231,13 +231,20 @@ function RelationCard({ mainType, phase, types, getTranslation }: { mainType: st
 // ==========================================
 // 劇本列表元件 (DataTable)
 // ==========================================
-function ScriptList({ data, getTranslation, getPlainText }: { data: any, getTranslation: any, getPlainText: any }) {
+interface ScriptListProps {
+    data: Record<string, any> | any[];
+    translateTerm: (key: string, params?: Record<string, string | number | Date>) => string;
+    translateParagraph: (key: string) => string;
+}
+
+function ScriptList({ data, translateTerm, translateParagraph }: ScriptListProps) {
     const [searchInput, setSearchInput] = useState('');
     const [activeSearch, setActiveSearch] = useState('');
 
     // 1. 【修復卡頓】使用 useMemo 將 list 緩存，避免每次打字輸入觸發渲染時都產生全新陣列，導致下方 searchableList 快取失效
     const list = useMemo(() => {
-        return Array.isArray(data) ? data : Object.entries(data || {}).map(([id, val]: any) => ({
+        if (!data) return [];
+        return Array.isArray(data) ? data : Object.entries(data).map(([id, val]: any) => ({
             id,
             ...(typeof val === 'object' ? val : {})
         }));
@@ -248,84 +255,79 @@ function ScriptList({ data, getTranslation, getPlainText }: { data: any, getTran
         setActiveSearch(searchInput);
     };
 
+    const regexTerm = /\[\*([\w.,*{}\[\]]+)\*\]/g;
     // 3. 預先計算所有劇本的搜尋字串 (快取處理，避免每次搜尋都重新遍歷巨大的 JSON 樹)
     const searchableList = useMemo(() => {
-        // 解析文字並自動將內嵌標籤 (如 [*Label.Relationship,brother3*]) 轉譯
-        const processText = (val: string) => {
-            if (!val) return '';
-            let res = '';
-
-            const tags = val.match(/\[\*[\s\S]*?\*\]/g);
-            if (tags) {
-                tags.forEach((tag: string) => {
-                    const inner = tag.slice(2, -2).trim();
-                    res += inner + ' ' + getPlainText(inner) + ' ';
-                });
-            }
-            return res;
-        };
 
         // 遞迴函式，用於從劇本節點中提取所有可搜尋的純文字
-        const extractTextFromNode = (node: any): string => {
+        const extractContent = (node: any): string => {
             if (!node) return '';
-            // 如果節點本身直接是字串，直接翻譯回傳
-            if (typeof node === 'string') return processText(node);
+            if (typeof node === 'string') return translateParagraph(node) + ' ';
 
             let allText = '';
 
             if (node.text) {
-                allText += processText(node.text);
+                const text = node.text.replace(regexTerm, (_: any, content: string) => {
+                    const [key, ...args] = content.split(',');
+                    if (args.length > 0) {
+                        const params = args.reduce((acc: Record<number, string>, arg: string, i: number) => {
+
+                            // 嘗試翻譯變數
+                            acc[i] = translateTerm(arg.trim());
+                            return acc;
+                        }, {} as Record<number, string>);
+
+                        // 回傳翻譯結果
+                        return translateTerm(key.trim(), params);
+                    }
+                    return translateTerm(key);
+                });
+                console.log(text);
+                // allText += `${node.text}&${translateParagraph(node.text)}#`;
             }
-            if (node.condition) {
-                allText += processText(node.condition);
-            }
+            if (node.condition) allText += `${node.condition}&${translateParagraph(node.condition)}#`;
+
             if (Array.isArray(node.branches)) {
-                for (const branch of node.branches) {
-                    allText += extractTextFromNode(branch);
+                for (const subNode of node.branches) {
+                    allText += extractContent(subNode);
                 }
             }
             if (Array.isArray(node.content)) {
                 for (const subNode of node.content) {
-                    allText += extractTextFromNode(subNode);
+                    allText += extractContent(subNode);
                 }
             }
             return allText;
         };
 
         return list.map((item: any) => {
-            const idMatch = item.id?.toLowerCase() || '';
-            
-            const nameText = getPlainText(`Script.Name.${item.id}`);
-            const nameMatch = nameText !== `Script.Name.${item.id}` ? nameText.toLowerCase() : '';
-            
-            // 使用 processText 確保敘述內的標籤也能被翻譯
-            const descText = getPlainText(`Script.Desc.${item.id}`);
-            
-            const keywordText = getPlainText(`Script.Keyword.${item.id}`);
-            const keywordMatch = keywordText !== `Script.Keyword.${item.id}` ? keywordText.toLowerCase() : '';
+
+            const id = item.id;
+            const idText = id.toLowerCase();
+            const nameText = translateTerm(`Script.Name.${id}`).toLowerCase();
+            const descText = translateTerm(`Script.Desc.${id}`).toLowerCase();
+            const keywordText = translateTerm(`Script.Keyword.${id}`).toLowerCase();
 
             let contentText = '';
             if (Array.isArray(item.content)) {
-                // 使用箭頭函式包覆，避免 map 傳入預設的 index 導致解析出現不可預期的錯誤
-                contentText = item.content.map((n: any) => extractTextFromNode(n)).join(' ').toLowerCase();
+                contentText = item.content.map((n: any) => extractContent(n)).join('').toLowerCase();
             }
 
             return {
                 ...item,
-                // 將所有可搜尋的文本串接成一個字串存起來，方便後續快速比對
-                _searchString: `${idMatch} ${nameMatch} ${descText} ${keywordMatch} ${contentText}`
+                _searchString: `${idText} ${nameText} ${descText} ${keywordText} ${contentText}`
             };
         });
-    }, [list, getPlainText]); // 只有當 list 或多國語系函式更新時才重新計算
+    }, [list, translateParagraph, translateTerm]);
 
     // 4. 實際過濾清單：只要比對預先算好的 _searchString 即可
     const filteredList = useMemo(() => {
         if (!activeSearch) return searchableList;
         const searchLower = activeSearch.trim().toLowerCase();
-        
-        // 支援多關鍵字以空白分隔 (AND 搜尋，例如輸入「師傅 結局」)
+
+        // 支援多關鍵字以空白分隔
         const searchTerms = searchLower.split(/\s+/).filter(Boolean);
-        
+
         return searchableList.filter((item: any) => {
             return searchTerms.every(term => item._searchString.includes(term));
         });
@@ -334,11 +336,11 @@ function ScriptList({ data, getTranslation, getPlainText }: { data: any, getTran
     return (
         <div className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
-                <h2 className="text-lg font-bold">{getPlainText('Web.ScriptList') !== 'Web.ScriptList' ? getPlainText('Web.ScriptList') : '劇本列表'}</h2>
+                <h2 className="text-lg font-bold">{translateTerm('Web.ScriptList')}</h2>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                     <input
                         type="text"
-                        placeholder="搜尋 ID, 名稱, 關鍵字..."
+                        placeholder="ID, Name, Keyword..."
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                         onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
@@ -346,7 +348,7 @@ function ScriptList({ data, getTranslation, getPlainText }: { data: any, getTran
                     />
                     <Button variant="secondary" size="sm" onClick={handleSearch} className="h-8 px-3">
                         <Search className="size-4 mr-1.5 opacity-70" />
-                        {getPlainText('Web.Search') !== 'Web.Search' ? getPlainText('Web.Search') : '搜尋'}
+                        {translateTerm('Web.Search')}
                     </Button>
                 </div>
             </div>
@@ -355,9 +357,9 @@ function ScriptList({ data, getTranslation, getPlainText }: { data: any, getTran
                     <table className="w-full text-sm text-left whitespace-nowrap">
                         <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
                             <tr>
-                                <th className="px-4 py-3 font-semibold w-24">{getPlainText('Web.Id')}</th>
-                                <th className="px-4 py-3 font-semibold min-w-[150px]">{getPlainText('Web.Name')}</th>
-                                <th className="px-4 py-3 font-semibold min-w-[200px] w-full">{getPlainText('Web.Desc')}</th>
+                                <th className="px-4 py-3 font-semibold w-24">{translateTerm('Web.Id')}</th>
+                                <th className="px-4 py-3 font-semibold min-w-[150px]">{translateTerm('Web.Name')}</th>
+                                <th className="px-4 py-3 font-semibold min-w-[200px] w-full">{translateTerm('Web.Desc')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border/50">
@@ -368,19 +370,22 @@ function ScriptList({ data, getTranslation, getPlainText }: { data: any, getTran
                                     </td>
                                     <td className="px-4 py-3 font-bold whitespace-normal">
                                         <Link href={`/script?id=${item.id}`} className="hover:text-primary transition-colors">
-                                            <ParsedText text={getTranslation(`Script.Name.${item.id}`)} translate={getTranslation} />
+                                            <ParsedText text={translateTerm(`Script.Name.${item.id}`)} translate={translateTerm} />
                                         </Link>
                                     </td>
-                                    <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={getPlainText(`Script.Desc.${item.id}`)}>
+                                    <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`Script.Desc.${item.id}`)}>
                                         <div className="line-clamp-2">
-                                            <ParsedText text={getTranslation(`Script.Desc.${item.id}`)} translate={getTranslation} />
+                                            <ParsedText text={translateTerm(`Script.Desc.${item.id}`)} translate={translateTerm} />
+                                        </div>
+                                        <div className="text-xs text-red-500 font-mono mt-2 break-all bg-red-50 p-1 rounded">
+                                            Debug: {item._searchString}
                                         </div>
                                     </td>
                                 </tr>
                             ))}
                             {filteredList.length === 0 && (
                                 <tr>
-                                    <td colSpan={3} className="px-4 py-12 text-center text-muted-foreground">查無劇本資料</td>
+                                    <td colSpan={3} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.NoData')}</td>
                                 </tr>
                             )}
                         </tbody>
@@ -393,7 +398,7 @@ function ScriptList({ data, getTranslation, getPlainText }: { data: any, getTran
 
 export default function ScriptPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-muted-foreground tracking-widest animate-pulse">準備中...</div>}>
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-muted-foreground tracking-widest animate-pulse">Loading...</div>}>
             <ScriptContent />
         </Suspense>
     );
@@ -471,7 +476,7 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
                 onClick={() => {
                     // 若使用者正在反白複製劇本文字，則不觸發展開/收合
                     if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return;
-                    
+
                     if (!isSingleEffectContent) setIsExpanded(!isExpanded);
                 }}
             >
@@ -487,7 +492,7 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
                 {/* 右側彈性內容區塊，允許內部折行，折行時會產生整齊的縮排 */}
                 <div className="flex flex-wrap items-center -ml-3.5 gap-x-0.5 gap-y-1 flex-1 min-w-0">
                     <div className="wrap-break-word ml-3.5 mr-1"><ParsedText text={getTranslation(branch.text)} translate={getTranslation} /></div>
-                    
+
                     {branch.condition && (
                         <span className="flex items-center pl-1 gap-0.5 leading-5 text-muted-foreground rounded border">
                             <Lock className="size-3.5 shrink-0 text-muted-foreground/70" />
