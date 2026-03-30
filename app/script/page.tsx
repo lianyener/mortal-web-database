@@ -4,13 +4,22 @@
 import Link from 'next/link';
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
-import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, Search } from 'lucide-react';
+import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, Search, TableProperties } from 'lucide-react';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { ParsedText } from '@/components/shared/ParsedText';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
+import { ButtonGroup } from "@/components/ui/button-group"
+
+export default function ScriptPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-muted-foreground tracking-widest animate-pulse">Loading...</div>}>
+            <ScriptContent />
+        </Suspense>
+    );
+}
 
 function ScriptContent() {
 
@@ -51,54 +60,66 @@ function ScriptContent() {
 
             {/* 主要閱讀區塊 */}
             <div className="max-w-5xl mx-auto px-6 space-y-6">
-                {isLoading && <div className="text-center text-muted-foreground py-10 tracking-widest animate-pulse">{translateTerm('Web.Loading', { 0: translateTerm('Web.Script') })}</div>}
-                {isError && <div className="text-center text-destructive py-10 bg-destructive/10 rounded-md">{translateTerm('Web.LoadError', { 0: translateTerm('Web.Script') })}</div>}
+                {isLoading && (
+                    <div className="text-center text-muted-foreground py-10 tracking-widest animate-pulse">
+                        {translateTerm('Web.Loading', { 0: translateTerm('Web.Script') })}
+                    </div>
+                )}
+                {isError && (
+                    <div className="text-center text-destructive py-10 bg-destructive/10 rounded-md">
+                        {translateTerm('Web.LoadError', { 0: translateTerm('Web.Script') })}
+                    </div>
+                )}
 
                 {/* 列表模式 */}
                 {!isLoading && !isError && isListView && data && (
-                    <ScriptList data={data} />
+                    <DataList data={data} />
                 )}
 
-                {/* 單一劇本模式 */}
+                {/* 單一劇本內容模式 */}
                 {!isLoading && !isError && !isListView && data ? (
                     <div className="flex flex-col gap-8">
 
-                        {/* 基本資訊面板 */}
+                        {/* 1. 基本資訊面板 */}
                         <div className="flex flex-col gap-4">
-                            <div className="flex items-center gap-3 border-b border-border/50 pb-2">
-                                <Link href="/script" className="flex items-center text-sm font-semibold text-muted-foreground hover:text-primary transition-colors bg-muted/50 hover:bg-muted px-2 py-1 rounded-md">
-                                    <ChevronRight className="size-4 rotate-180 mr-0.5" />{translateParagraph('Web.Return')}
-                                </Link>
-                                <div className="w-px h-4 bg-border/80"></div>
-                                <h2 className="text-lg font-bold">{translateParagraph('Web.ScriptData')}</h2>
+                            <div className="flex items-center justify-between border-b border-border/50 pb-2">
+                                <h2 className="text-lg font-bold">{translateTerm('Web.ScriptData')}</h2>
+                                <div className="flex items-center">
+                                    <Button asChild variant="outline" size="sm" className="h-8 px-2.5 text-xs">
+                                        <Link href="/script">
+                                            <TableProperties className="mr-1.5 size-3.5 rotate-180 text-muted-foreground" />
+                                            {translateTerm('Web.ReturnList')}
+                                        </Link>
+                                    </Button>
+                                </div>
                             </div>
                             <div className="p-5 border rounded-xl shadow-sm bg-card">
                                 <div className="space-y-4">
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{translateParagraph('Web.Id')}</div>
-                                        <div className="text-sm text-foreground">
+                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
+                                        <div className="font-semibold text-foreground">
                                             {query.id}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{translateParagraph('Web.Name')}</div>
-                                        <div className="font-semibold text-lg text-foreground">
-                                            <ParsedText text={translateTerm(`Script.Name.${query.id}`)} translate={translateTerm} />
+                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
+                                        <div className="font-semibold text-foreground">
+                                            {translateTerm(`Script.Name.${query.id}`)}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{translateParagraph('Web.Desc')}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc')}</div>
                                         <div className="text-sm leading-relaxed">
-                                            <ParsedText text={translateTerm(`Script.Desc.${query.id}`)} translate={translateTerm} />
+                                            {translateTerm(`Script.Desc.${query.id}`) || translateTerm('System.NA')}
                                         </div>
                                     </div>
                                     {data.remark && (Array.isArray(data.remark) ? data.remark.length > 0 : true) && (
                                         <div>
-                                            <div className="text-xs text-muted-foreground mb-1">{translateParagraph('Web.Remark')}</div>
+                                            <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Remark')}</div>
                                             <div className="px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50">
                                                 {Array.isArray(data.remark)
-                                                    ? data.remark.map((r: string, i: number) => <div key={i}><ParsedText text={translateTerm(r)} translate={translateTerm} /></div>)
-                                                    : <ParsedText text={translateTerm(data.remark)} translate={translateTerm} />}
+                                                    ? data.remark.map((r: string, i: number) => <div key={i}>{translateParagraph(r)}</div>)
+                                                    : translateParagraph(data.remark)}
                                             </div>
                                         </div>
                                     )}
@@ -110,24 +131,26 @@ function ScriptContent() {
                         {contentArray.length > 0 && (
                             <div className="flex flex-col gap-4">
                                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                                    <h2 className="text-lg font-bold">{translateParagraph('Web.Content')}</h2>
+                                    <h2 className="text-lg font-bold">{translateTerm('Web.Content')}</h2>
                                     <div className="flex items-center gap-2">
-                                        <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
-                                            <UnfoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
-                                            {translateParagraph('Web.ExpandAll')}
-                                        </Button>
-                                        <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(false); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
-                                            <FoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
-                                            {translateParagraph('Web.CollapseAll')}
-                                        </Button>
+                                        <ButtonGroup>
+                                            <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
+                                                <UnfoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
+                                                {translateTerm('Web.ExpandAll')}
+                                            </Button>
+                                            <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(false); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
+                                                <FoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
+                                                {translateTerm('Web.CollapseAll')}
+                                            </Button>
+                                        </ButtonGroup>
                                     </div>
                                 </div>
-                                <div className="bg-card border rounded-xl p-4 sm:p-6 shadow-sm overflow-x-auto font-(family-name:--font-script)">
+                                <div className="bg-card border rounded-xl p-5 shadow-sm overflow-x-auto font-(family-name:--font-script)">
                                     <div className="flex flex-col min-w-max sm:min-w-0">
                                         {contentArray.map((node: any, idx: number) => (
-                                            <ScriptNode
+                                            <DataContent
                                                 key={idx} node={node}
-                                                getTranslation={translateTerm}
+                                                translateTerm={translateTerm}
                                                 treeActionId={treeActionId} isGlobalExpand={isGlobalExpand}
                                             />
                                         ))}
@@ -140,7 +163,7 @@ function ScriptContent() {
                         {(data.rel || data.backRel) && (
                             <div className="flex flex-col gap-4 mt-2">
                                 <h2 className="text-lg font-bold border-b border-border/50 pb-2">
-                                    {translateParagraph('Web.Relations')}
+                                    {translateTerm('Web.Relations')}
                                 </h2>
                                 <div className="flex flex-col gap-4">
                                     {data.rel && Object.entries(data.rel).map(([phase, types]) => (
@@ -156,7 +179,7 @@ function ScriptContent() {
                 ) : null}
 
                 {!isLoading && !isError && !isListView && !data && (
-                    <div className="text-center text-muted-foreground py-10">{translateParagraph('Web.ScriptNotFound')}</div>
+                    <div className="text-center text-muted-foreground py-10">{translateTerm('Web.ScriptNotFound')}</div>
                 )}
             </div>
         </main>
@@ -214,14 +237,12 @@ function RelationCard({ mainType, phase, types, getTranslation }: { mainType: st
 // ==========================================
 // 劇本列表元件 (DataTable)
 // ==========================================
-function ScriptList({ data }: { data: Record<string, any> | any[] }) {
+function DataList({ data }: { data: Record<string, any> | any[] }) {
+    const { translateTerm, translateParagraph } = useAppTranslation();
     const [searchInput, setSearchInput] = useState('');
     const [searchTarget, setSearchTarget] = useState('');
     const [page, setPage] = useState(1);
     const itemsPerPage = 100;
-
-    // i18n解析邏輯
-    const { translateTerm, translateParagraph } = useAppTranslation();
 
     // 1. 【修復卡頓】使用 useMemo 將 list 緩存，避免每次打字輸入觸發渲染時都產生全新陣列，導致下方 searchableList 快取失效
     const list = useMemo(() => {
@@ -244,7 +265,6 @@ function ScriptList({ data }: { data: Record<string, any> | any[] }) {
 
     useEffect(() => {
         if (!list || list.length === 0) return;
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsBuildingCache(true);
 
         // 利用 setTimeout 讓出主執行緒，確保 Next.js 頁面跳轉能瞬間完成，再於背景處理巨大的陣列走訪
@@ -271,7 +291,8 @@ function ScriptList({ data }: { data: Record<string, any> | any[] }) {
         }, 10);
 
         return () => clearTimeout(timer);
-    }, [list, translateParagraph, translateTerm]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [list]);
 
     // 4. 實際過濾清單：只要比對預先算好的 _searchString 即可
     const filteredList = useMemo(() => {
@@ -287,7 +308,8 @@ function ScriptList({ data }: { data: Record<string, any> | any[] }) {
             const targetString = item._searchString || `${item.id} ${translateTerm(`Script.Name.${item.id}`)} ${translateTerm(`Script.Desc.${item.id}`)} ${translateTerm(`Script.Keyword.${item.id}`)}`.toLowerCase();
             return searchTerms.every(term => targetString.includes(term));
         });
-    }, [searchableList, list, searchTarget, translateTerm]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchableList, list, searchTarget]);
 
     // 5. 分頁顯示資料，避免一次渲染上萬個 DOM 節點導致畫面卡死
     const displayList = useMemo(() => {
@@ -371,16 +393,10 @@ function ScriptList({ data }: { data: Record<string, any> | any[] }) {
     );
 }
 
-export default function ScriptPage() {
-    return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-muted-foreground tracking-widest animate-pulse">Loading...</div>}>
-            <ScriptContent />
-        </Suspense>
-    );
-}
-
-// 遞迴處理你的 Effect 與 Branch 結構
-function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { node: any, getTranslation: any, treeActionId: number, isGlobalExpand: boolean }) {
+// ==========================================
+// 劇本內容元件 (Tree)
+// ==========================================
+function DataContent({ node, translateTerm, treeActionId, isGlobalExpand }: { node: any, translateTerm: any, treeActionId: number, isGlobalExpand: boolean }) {
     if (!node) return null;
 
     if (node.form === 'effect') {
@@ -395,7 +411,7 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
                 <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
                     {effectItems.map((item: string, idx: number) => (
                         <div key={idx} className="flex items-center whitespace-nowrap">
-                            <ParsedText text={getTranslation(item)} translate={getTranslation} />
+                            <ParsedText text={translateTerm(item)} translate={translateTerm} />
                             {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}
                         </div>
                     ))}
@@ -408,13 +424,13 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
         return (
             <div>
                 <div className="flex flex-wrap items-center px-2 py-0.5 gap-0.5 font-bold text-primary text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
-                    <ParsedText text={getTranslation(node.text)} translate={getTranslation} />
+                    <ParsedText text={translateTerm(node.text)} translate={translateTerm} />
                 </div>
 
                 <div className="flex flex-col pl-1 mx-2">
                     {node.branches?.map((branch: any) => (
                         <BranchOption
-                            key={branch.index} branch={branch} getTranslation={getTranslation}
+                            key={branch.index} branch={branch}
                             treeActionId={treeActionId} isGlobalExpand={isGlobalExpand}
                         />
                     ))}
@@ -427,7 +443,7 @@ function ScriptNode({ node, getTranslation, treeActionId, isGlobalExpand }: { no
 }
 
 // 單獨抽出 Branch 裡面的選項，以便讓每個選項都能獨立收合
-function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: { branch: any, getTranslation: any, treeActionId: number, isGlobalExpand: boolean }) {
+function BranchOption({ branch, treeActionId, isGlobalExpand }: { branch: any, treeActionId: number, isGlobalExpand: boolean }) {
     const [isExpanded, setIsExpanded] = useState(isGlobalExpand);
     const { translateTerm } = useAppTranslation();
 
@@ -466,12 +482,12 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
 
                 {/* 右側彈性內容區塊，允許內部折行，折行時會產生整齊的縮排 */}
                 <div className="flex flex-wrap items-center -ml-3.5 gap-x-0.5 gap-y-1 flex-1 min-w-0">
-                    <div className="wrap-break-word ml-3.5 mr-1"><ParsedText text={getTranslation(branch.text)} translate={getTranslation} /></div>
+                    <div className="wrap-break-word ml-3.5 mr-1"><ParsedText text={translateTerm(branch.text)} translate={translateTerm} /></div>
 
                     {branch.condition && (
                         <span className="flex items-center pl-1 gap-0.5 leading-5 text-muted-foreground rounded border">
                             <Lock className="size-3.5 shrink-0 text-muted-foreground/70" />
-                            <span><ParsedText text={getTranslation(branch.condition)} translate={getTranslation} /></span>
+                            <span><ParsedText text={translateTerm(branch.condition)} translate={translateTerm} /></span>
                         </span>
                     )}
 
@@ -484,7 +500,7 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
                             <CircleFadingPlus className="size-4 shrink-0 text-muted-foreground/70 mr-1.5" />
                             <div className="truncate tracking-widest">
                                 {effectsList.map((eff: any) => {
-                                    const icon = getTranslation(`LabelIcon.${eff}`);
+                                    const icon = translateTerm(`LabelIcon.${eff}`);
                                     return icon !== `LabelIcon.${eff}` ? icon : '';
                                 }).filter(Boolean).join(' ')}
                             </div>
@@ -500,7 +516,7 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
                             <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1 min-w-0">
                                 {effectItems.map((item: string, idx: number) => (
                                     <div key={idx} className="flex items-center whitespace-nowrap">
-                                        <ParsedText text={getTranslation(item)} translate={getTranslation} />
+                                        <ParsedText text={translateTerm(item)} translate={translateTerm} />
                                         {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2 select-none">/</span>}
                                     </div>
                                 ))}
@@ -512,7 +528,7 @@ function BranchOption({ branch, getTranslation, treeActionId, isGlobalExpand }: 
             {!isSingleEffectContent && isExpanded && (
                 <div className="flex flex-col pl-4 ml-4 mb-2 border-l-2 border-border/80">
                     {branch.content?.map((subNode: any, idx: number) => (
-                        <ScriptNode key={idx} node={subNode} getTranslation={getTranslation} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} />
+                        <DataContent key={idx} node={subNode} translateTerm={translateTerm} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} />
                     ))}
                 </div>
             )}
