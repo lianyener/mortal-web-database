@@ -66,13 +66,11 @@ export function useAppTranslation() {
         if (!text) return '';
 
         // 初始化變數
-        const regexStatment = /\[%([\w.,*{}\[\]]+)%\]/g
-        const regexTerm = /\[\*([\w.,*{}\[\]]+)\*\]/g;
+        const regexStatment = /\[%([\s\S]+?)%\]/g
+        const regexTerm = /\[\*([\s\S]+?)\*\]/g;
 
         // 移除比較式外框
-        text = text.replace(regexStatment, (_, content) => {
-            return content;
-        });
+        text = text.replace(regexStatment, (_, content) => content);
 
         // 針對內部用詞進行翻譯
         text = text.replace(regexTerm, (_, content) => {
@@ -88,7 +86,7 @@ export function useAppTranslation() {
                     // 嘗試翻譯變數
                     acc[i] = translateTerm(arg.trim());
                     return acc;
-                });
+                }, {} as Record<number, string>);
 
                 // 回傳翻譯結果
                 return translateTerm(key.trim(), params);

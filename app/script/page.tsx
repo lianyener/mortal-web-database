@@ -51,7 +51,7 @@ function ScriptContent() {
     }, []);
 
     // 4. i18n 解析邏輯 (提取 getPlainText 來處理網頁 UI 標籤)
-    const { getTranslation, getPlainText } = useAppTranslation();
+    const { translateTerm, translateParagraph } = useAppTranslation();
 
     // 5. 處理整包 script.json 或單一檔案的資料取得
     const targetScript = !isListView && query.id ? allScripts?.[query.id] : null;
@@ -74,7 +74,7 @@ function ScriptContent() {
 
                 {/* 列表模式 */}
                 {!isLoading && !isError && isListView && allScripts && (
-                    <ScriptList data={allScripts} translateTerm={getTranslation} translateParagraph={getPlainText} />
+                    <ScriptList data={allScripts} translateTerm={translateTerm} translateParagraph={translateParagraph} />
                 )}
 
                 {/* 單一劇本閱讀模式 */}
@@ -84,38 +84,38 @@ function ScriptContent() {
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center gap-3 border-b border-border/50 pb-2">
                                 <Link href="/script" className="flex items-center text-sm font-semibold text-muted-foreground hover:text-primary transition-colors bg-muted/50 hover:bg-muted px-2 py-1 rounded-md">
-                                    <ChevronRight className="size-4 rotate-180 mr-0.5" />{getPlainText('Web.Return')}
+                                    <ChevronRight className="size-4 rotate-180 mr-0.5" />{translateParagraph('Web.Return')}
                                 </Link>
                                 <div className="w-px h-4 bg-border/80"></div>
-                                <h2 className="text-lg font-bold">{getPlainText('Web.ScriptData')}</h2>
+                                <h2 className="text-lg font-bold">{translateParagraph('Web.ScriptData')}</h2>
                             </div>
                             <div className="p-5 border rounded-xl shadow-sm bg-card">
                                 <div className="space-y-4">
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Id')}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{translateParagraph('Web.Id')}</div>
                                         <div className="text-sm text-foreground">
                                             {query.id}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Name')}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{translateParagraph('Web.Name')}</div>
                                         <div className="font-semibold text-lg text-foreground">
-                                            <ParsedText text={getTranslation(`Script.Name.${query.id}`)} translate={getTranslation} />
+                                            <ParsedText text={translateTerm(`Script.Name.${query.id}`)} translate={translateTerm} />
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Desc')}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{translateParagraph('Web.Desc')}</div>
                                         <div className="text-sm leading-relaxed">
-                                            <ParsedText text={getTranslation(`Script.Desc.${query.id}`)} translate={getTranslation} />
+                                            <ParsedText text={translateTerm(`Script.Desc.${query.id}`)} translate={translateTerm} />
                                         </div>
                                     </div>
                                     {targetScript.remark && (Array.isArray(targetScript.remark) ? targetScript.remark.length > 0 : true) && (
                                         <div>
-                                            <div className="text-xs text-muted-foreground mb-1">{getPlainText('Web.Remark')}</div>
+                                            <div className="text-xs text-muted-foreground mb-1">{translateParagraph('Web.Remark')}</div>
                                             <div className="px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50">
                                                 {Array.isArray(targetScript.remark)
-                                                    ? targetScript.remark.map((r: string, i: number) => <div key={i}><ParsedText text={getTranslation(r)} translate={getTranslation} /></div>)
-                                                    : <ParsedText text={getTranslation(targetScript.remark)} translate={getTranslation} />}
+                                                    ? targetScript.remark.map((r: string, i: number) => <div key={i}><ParsedText text={translateTerm(r)} translate={translateTerm} /></div>)
+                                                    : <ParsedText text={translateTerm(targetScript.remark)} translate={translateTerm} />}
                                             </div>
                                         </div>
                                     )}
@@ -127,15 +127,15 @@ function ScriptContent() {
                         {contentArray.length > 0 && (
                             <div className="flex flex-col gap-4">
                                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                                    <h2 className="text-lg font-bold">{getPlainText('Web.Content')}</h2>
+                                    <h2 className="text-lg font-bold">{translateParagraph('Web.Content')}</h2>
                                     <div className="flex items-center gap-2">
                                         <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
                                             <UnfoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
-                                            {getPlainText('Web.ExpandAll')}
+                                            {translateParagraph('Web.ExpandAll')}
                                         </Button>
                                         <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(false); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
                                             <FoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
-                                            {getPlainText('Web.CollapseAll')}
+                                            {translateParagraph('Web.CollapseAll')}
                                         </Button>
                                     </div>
                                 </div>
@@ -144,7 +144,7 @@ function ScriptContent() {
                                         {contentArray.map((node: any, idx: number) => (
                                             <ScriptNode
                                                 key={idx} node={node}
-                                                getTranslation={getTranslation}
+                                                getTranslation={translateTerm}
                                                 treeActionId={treeActionId} isGlobalExpand={isGlobalExpand}
                                             />
                                         ))}
@@ -157,14 +157,14 @@ function ScriptContent() {
                         {(targetScript.rel || targetScript.backRel) && (
                             <div className="flex flex-col gap-4 mt-2">
                                 <h2 className="text-lg font-bold border-b border-border/50 pb-2">
-                                    {getPlainText('Web.Relations')}
+                                    {translateParagraph('Web.Relations')}
                                 </h2>
                                 <div className="flex flex-col gap-4">
                                     {targetScript.rel && Object.entries(targetScript.rel).map(([phase, types]) => (
-                                        <RelationCard key={`rel-${phase}`} mainType="Rel" phase={phase} types={types} getTranslation={getTranslation} />
+                                        <RelationCard key={`rel-${phase}`} mainType="Rel" phase={phase} types={types} getTranslation={translateTerm} />
                                     ))}
                                     {targetScript.backRel && Object.entries(targetScript.backRel).map(([phase, types]) => (
-                                        <RelationCard key={`backRel-${phase}`} mainType="BackRel" phase={phase} types={types} getTranslation={getTranslation} />
+                                        <RelationCard key={`backRel-${phase}`} mainType="BackRel" phase={phase} types={types} getTranslation={translateTerm} />
                                     ))}
                                 </div>
                             </div>
@@ -173,7 +173,7 @@ function ScriptContent() {
                 ) : null}
 
                 {!isLoading && !isError && !isListView && !targetScript && (
-                    <div className="text-center text-muted-foreground py-10">{getPlainText('Web.ScriptNotFound')}</div>
+                    <div className="text-center text-muted-foreground py-10">{translateParagraph('Web.ScriptNotFound')}</div>
                 )}
             </div>
         </main>
@@ -255,7 +255,6 @@ function ScriptList({ data, translateTerm, translateParagraph }: ScriptListProps
         setActiveSearch(searchInput);
     };
 
-    const regexTerm = /\[\*([\w.,*{}\[\]]+)\*\]/g;
     // 3. 預先計算所有劇本的搜尋字串 (快取處理，避免每次搜尋都重新遍歷巨大的 JSON 樹)
     const searchableList = useMemo(() => {
 
@@ -267,25 +266,11 @@ function ScriptList({ data, translateTerm, translateParagraph }: ScriptListProps
             let allText = '';
 
             if (node.text) {
-                const text = node.text.replace(regexTerm, (_: any, content: string) => {
-                    const [key, ...args] = content.split(',');
-                    if (args.length > 0) {
-                        const params = args.reduce((acc: Record<number, string>, arg: string, i: number) => {
-
-                            // 嘗試翻譯變數
-                            acc[i] = translateTerm(arg.trim());
-                            return acc;
-                        }, {} as Record<number, string>);
-
-                        // 回傳翻譯結果
-                        return translateTerm(key.trim(), params);
-                    }
-                    return translateTerm(key);
-                });
-                console.log(text);
-                // allText += `${node.text}&${translateParagraph(node.text)}#`;
+                allText += `${node.text}&${translateParagraph(node.text)}#`;
             }
-            if (node.condition) allText += `${node.condition}&${translateParagraph(node.condition)}#`;
+            if (node.condition) {
+                allText += `${node.condition}&${translateParagraph(node.condition)}#`;
+            }
 
             if (Array.isArray(node.branches)) {
                 for (const subNode of node.branches) {
@@ -376,9 +361,6 @@ function ScriptList({ data, translateTerm, translateParagraph }: ScriptListProps
                                     <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`Script.Desc.${item.id}`)}>
                                         <div className="line-clamp-2">
                                             <ParsedText text={translateTerm(`Script.Desc.${item.id}`)} translate={translateTerm} />
-                                        </div>
-                                        <div className="text-xs text-red-500 font-mono mt-2 break-all bg-red-50 p-1 rounded">
-                                            Debug: {item._searchString}
                                         </div>
                                     </td>
                                 </tr>
