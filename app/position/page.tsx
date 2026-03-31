@@ -50,19 +50,19 @@ function PositionContent() {
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">時期 (period)</div>
                   <div className="font-semibold text-sm">
-                    <ParsedText text={getTranslation(targetPosition.period)} translate={getTranslation} />
+                    <ParsedText text={getTranslation(targetPosition.period)} />
                   </div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">位置 (position)</div>
                   <div className="font-semibold text-sm">
-                    <ParsedText text={getTranslation(targetPosition.position)} translate={getTranslation} />
+                    <ParsedText text={getTranslation(targetPosition.position)} />
                   </div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">行為 (action)</div>
                   <div className="font-semibold text-sm">
-                    <ParsedText text={getTranslation(targetPosition.action)} translate={getTranslation} />
+                    <ParsedText text={getTranslation(targetPosition.action)} />
                   </div>
                 </div>
               </div>
@@ -79,7 +79,7 @@ function PositionContent() {
                         <span className="bg-primary/10 text-primary px-2 py-0.5 rounded text-xs font-mono">
                           {eventId}
                         </span>
-                        <ParsedText text={getTranslation(eventData.name)} translate={getTranslation} />
+                        <ParsedText text={getTranslation(eventData.name)} />
                       </div>
                       {eventData.script && (
                         <Link
@@ -98,7 +98,7 @@ function PositionContent() {
                           <div className="font-semibold text-muted-foreground mb-1 flex items-center gap-1"><span className="text-xs">🔒</span>觸發條件</div>
                           <div className="space-y-1 pl-1">
                             {eventData.condition.map((cond: string, i: number) => (
-                              <div key={i}><ParsedText text={getTranslation(cond)} translate={getTranslation} /></div>
+                              <div key={i}><ParsedText text={getTranslation(cond)} /></div>
                             ))}
                           </div>
                         </div>
@@ -110,7 +110,7 @@ function PositionContent() {
                           <span className="font-semibold text-muted-foreground">出現機率/權重:</span>
                           {eventData.rate.map((rate: string, i: number) => (
                             <span key={i} className="bg-muted px-2 py-0.5 rounded text-foreground font-mono">
-                              <ParsedText text={getTranslation(rate)} translate={getTranslation} />
+                              <ParsedText text={getTranslation(rate)} />
                             </span>
                           ))}
                         </div>

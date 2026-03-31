@@ -3,88 +3,78 @@ import { useSidebarStore } from '@/store/useSidebarStore';
 import { useRouter } from 'next/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 
-export function ParsedText({
-  text,
-  translate
-}: {
-  text: string,
-  translate: (key: string, params?: Record<string, string>) => string
-}) {
-  // 取得 Next.js 的 Router 實例，用來切換不同頁面
+export function ParsedText({ text }: { text: string }) {
+
   const router = useRouter();
-  const { getPlainText } = useAppTranslation();
+  const { translateTerm, translateParagraph } = useAppTranslation();
 
   if (!text) return null;
 
   // 匹配 [%條件式%] 或 [*翻譯參照*]
-  const regex = /(\[%[\s\S]*?%\]|\[\*[\s\S]*?\*\])/g;
-  const parts = text.split(regex);
+  const regexPart = /(\[%[\s\S]*?%\]|\[\*[\s\S]*?\*\])/g;
+  const regexLabel = /^Label\.(\w+)?(?:,(.+))?$/;
+  const parts = text.split(regexPart);
 
   return (
     <>
       {parts.map((part, index) => {
+
+        // 條件式加框
         if (part.startsWith('[%') && part.endsWith('%]')) {
           const content = part.slice(2, -2);
           return (
             <span key={index} className="inline-block px-1 mx-0.5 text-sm/relaxed font-semibold rounded bg-amber-600/10">
-              <ParsedText text={content} translate={translate} />
+              {/* 遞迴處理內部文字 */}
+              <ParsedText text={content} />
             </span>
           );
-        } else if (part.startsWith('[*') && part.endsWith('*]')) {
+        }
+
+        // 用詞翻譯
+        else if (part.startsWith('[*') && part.endsWith('*]')) {
+
           const content = part.slice(2, -2);
-          const [key, ...args] = content.split(',');
-          const params = args.reduce((acc, arg, i) => {
-            // 【修改】將參數也丟給 translate 嘗試翻譯
-            // 如果是 Key (例如 System.Number_1) 會變成 "一"；如果是一般字串或數字，找不到翻譯則會維持原樣
-            acc[i] = translate(arg.trim());
-            return acc;
-          }, {} as Record<number, string>);
-
-          const cleanKey = key.trim();
-          const translated = translate(cleanKey, Object.keys(params).length > 0 ? params : undefined);
-
+          const translated = translateParagraph(part);
           let contentNode: React.ReactNode;
-          if (translated === cleanKey || translated === part) {
-            // 找不到翻譯時，仍保留原本文字作為節點內容
-            contentNode = <span className="text-destructive font-mono text-xs bg-destructive/10 px-1 rounded" title="Missing translation">{part}</span>;
+          if (translated === content) {
+            contentNode = <span className="text-destructive text-xs bg-destructive/10 px-1 rounded" title="Missing translation">{part}</span>;
           } else {
-            // 遞迴解析翻譯後的文字
-            contentNode = <ParsedText text={translated} translate={translate} />;
+            contentNode = translated;
           }
 
-          // 【修改】只針對 Label.X 的格式轉換為超連結，並且擁有對應的參數 ID
-          if (cleanKey.startsWith('Label.') && args.length > 0) {
-            const category = cleanKey.replace('Label.', ''); // 取得 X (例如 Script, Flag)
-            const targetId = args[0].trim(); // 第一個參數即為 ID
+          // 處理額外標籤
+          const match = content.match(regexLabel);
+          if (match) {
+            const category = match[1];
+            const targetId = (match[2] ?? '').split(',')[0];
 
+            // 設定點擊事件
             const handleClick = (e: React.MouseEvent) => {
-              // 若使用者正在反白選取文字，則不觸發點擊跳轉 (方便使用者複製)
-              if (typeof window !== 'undefined' && window.getSelection()?.toString().length) {
-                return;
-              }
 
-              // 阻止事件冒泡，避免點擊標籤時意外觸發外層容器的 onClick (例如劇本分歧的展開/收縮)
+              // 選取文字時不觸發跳轉
+              if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return;
+
+              // 阻止事件冒泡
               e.stopPropagation();
 
-              // 取得當下的側邊欄狀態 (使用 getState 避免大量 re-render)
+              // 側邊欄狀態
               const sidebarState = useSidebarStore.getState();
-              
-              // 如果側邊欄目前是開啟的，把參數保留下來，防止主頁面切換時側邊欄被重置關閉
               const sidebarParams = (sidebarState.isOpen && sidebarState.category && sidebarState.id)
                 ? `&sidebar=${sidebarState.category}&sidebarId=${sidebarState.id}`
                 : '';
 
+              // 依分類處理點擊行為
               switch (category) {
+                // 跳轉獨立頁面
                 case 'Script':
                 case 'Free':
-                  // 跳轉到獨立的 script 頁面，並保留側邊欄狀態
                   router.push(`/script?id=${targetId}${sidebarParams}`);
                   break;
                 case 'Position':
-                  // 跳轉到獨立的 position 頁面，並保留側邊欄狀態
                   router.push(`/position?id=${targetId}${sidebarParams}`);
                   break;
-                // 可在此處繼續新增其他類別的 switch 處理...
+
+                // 開啟側邊欄
                 case 'Flag':
                 case 'RelationshipFlag':
                   sidebarState.openSidebar('Flag', targetId.split('.')[0]);
@@ -100,25 +90,55 @@ export function ParsedText({
                 case 'Story':
                   break;
                 default:
-                  // 預設行為：開啟側邊欄 (讀取 public/data/category/targetId.json)
                   sidebarState.openSidebar(category, targetId);
                   break;
               }
             };
 
-            const titleText = targetId ? `${getPlainText(`Web.${category}`)}: ${targetId}` : getPlainText(`Web.${category}`);
+            //
+            let isLink = true;
+            switch (category) {
+                case 'Buff':
+                case 'Debuff':
+                case 'Support':
+                case 'Stat':
+                case 'Enemy':
+                case 'Story':
+                isLink = false;
+                break;
+            }
+
+            // 設定提示詞 (文面顯示ID提示名稱，反之提示ID)
+            let titleText = ':';
+            switch (category) {
+              case 'Script':
+              case 'Free':
+                titleText += translateTerm(`Script.Name.${targetId}`);
+                break;
+              case 'Combat':
+              case 'Battle':
+                titleText += translateTerm(`${category}.Name.${targetId}`);
+                break;
+              default:
+                titleText += targetId;
+                break;
+            }
+            if (!targetId) titleText = '';
+            titleText = `${translateTerm(`Web.${category}`, undefined, true)}${titleText}`;
 
             return (
-              // 將 button 改為 span，解除瀏覽器對按鈕文字無法反白的限制
-              <span key={index} onClick={handleClick} role="button" tabIndex={0} className="inline-flex items-center font-bold text-inherit transition-colors hover:text-current/80 cursor-pointer" title={titleText}>
+              <span key={index} onClick={handleClick} role="button" tabIndex={0} title={titleText}
+                className={`inline-flex items-center font-bold text-inherit transition-colors hover:text-current/80 ${isLink ? 'cursor-pointer' : ''}`}>
                 {contentNode}
               </span>
             );
           }
 
+          // 標籤以外用詞
           return <React.Fragment key={index}>{contentNode}</React.Fragment>;
         }
-        // 普通文字直接渲染
+
+        // 普通文字
         return <span key={index}>{part}</span>;
       })}
     </>

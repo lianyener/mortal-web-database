@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useTranslations, TranslationValues } from 'next-intl';
 
 export function useAppTranslation() {
@@ -38,65 +39,71 @@ export function useAppTranslation() {
         return text;
     };
 
-    // 翻譯用詞
-    const translateTerm = (text: string, params?: TranslationValues): string => {
+    // 快取常用之翻譯物件
+    const { translateTerm, translateParagraph } = useMemo(() => {
 
-        // 防呆
-        if (!text) return '';
+        // 翻譯用詞
+        const tTerm = (text: string, params?: TranslationValues, defaultText: boolean = false): string => {
 
-        // 嘗試處理自動降階
-        if (t.has(`${text}._`)) text = t(`${text}._`, params);
+            // 防呆
+            if (!text) return '';
 
-        // 嘗試正常翻譯
-        else if (t.has(text)) text = t(text, params);
+            // 嘗試處理自動降階
+            if (t.has(`${text}._`)) text = t(`${text}._`, params);
 
-        // 無可用翻譯回傳本身
-        else return text;
+            // 嘗試正常翻譯
+            else if (t.has(text)) text = t(text, params);
 
-        // 處理巢狀翻譯並回傳
-        return translateParagraph(text);
-    };
+            // 無可用翻譯回傳本身或最後一個KEY
+            else return defaultText ? text.split('.').pop()! : text;
 
-    // 翻譯段落
-    const translateParagraph = (text: string): string => {
+            // 處理巢狀翻譯並回傳
+            return tParagraph(text);
+        };
 
-        // 防呆
-        if (!text) return '';
+        // 翻譯段落
+        const tParagraph = (text: string): string => {
 
-        // 初始化變數
-        const regexStatment = /\[%([\s\S]+?)%\]/g
-        const regexTerm = /\[\*([\s\S]+?)\*\]/g;
+            // 防呆
+            if (!text) return '';
 
-        // 移除比較式外框
-        text = text.replace(regexStatment, (_, content) => content);
+            // 初始化變數
+            const regexStatment = /\[%([\s\S]+?)%\]/g
+            const regexTerm = /\[\*([\s\S]+?)\*\]/g;
 
-        // 針對內部用詞進行翻譯
-        text = text.replace(regexTerm, (_, content) => {
+            // 移除比較式外框
+            text = text.replace(regexStatment, (_, content) => content);
 
-            // 取得鍵值及參數
-            const [key, ...args] = content.split(',');
+            // 針對內部用詞進行翻譯
+            text = text.replace(regexTerm, (_, content) => {
 
-            if (args.length > 0) {
+                // 取得鍵值及參數
+                const [key, ...args] = content.split(',');
 
-                // 參數陣列轉換為參數物件
-                const params = args.reduce((acc: Record<number, string>, arg: string, i: number) => {
+                if (args.length > 0) {
 
-                    // 嘗試翻譯變數
-                    acc[i] = translateTerm(arg.trim());
-                    return acc;
-                }, {} as Record<number, string>);
+                    // 參數陣列轉換為參數物件
+                    const params = args.reduce((acc: Record<number, string>, arg: string, i: number) => {
+
+                        // 嘗試翻譯變數
+                        acc[i] = tTerm(arg.trim());
+                        return acc;
+                    }, {} as Record<number, string>);
+
+                    // 回傳翻譯結果
+                    return tTerm(key.trim(), params);
+                }
 
                 // 回傳翻譯結果
-                return translateTerm(key.trim(), params);
-            }
+                return tTerm(content);
+            });
 
-            // 回傳翻譯結果
-            return translateTerm(content);
-        });
+            // 回傳結果
+            return text;
+        };
 
-        // 回傳結果
-        return text;
-    };
+        return { translateTerm: tTerm, translateParagraph: tParagraph };
+    }, [t]);
 
     return { t, translateTerm, translateParagraph, getTranslation, getPlainText };
 }

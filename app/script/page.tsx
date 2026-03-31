@@ -80,15 +80,15 @@ function ScriptContent() {
                 {!isLoading && !isError && !isListView && data ? (
                     <div className="flex flex-col gap-8">
 
-                        {/* 1. 基本資訊面板 */}
+                        {/* 基本資訊 */}
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                                <h2 className="text-lg font-bold">{translateTerm('Web.ScriptData')}</h2>
+                                <h2 className="text-lg font-bold">{translateTerm('Web.ScriptData', undefined, true)}</h2>
                                 <div className="flex items-center">
                                     <Button asChild variant="outline" size="sm" className="h-8 px-2.5 text-xs">
                                         <Link href="/script">
                                             <TableProperties className="mr-1.5 size-3.5 rotate-180 text-muted-foreground" />
-                                            {translateTerm('Web.ReturnList')}
+                                            {translateTerm('Web.ReturnList', undefined, true)}
                                         </Link>
                                     </Button>
                                 </div>
@@ -96,19 +96,19 @@ function ScriptContent() {
                             <div className="p-5 border rounded-xl shadow-sm bg-card">
                                 <div className="space-y-4">
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id', undefined, true)}</div>
                                         <div className="font-semibold text-foreground">
                                             {query.id}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name', undefined, true)}</div>
                                         <div className="font-semibold text-foreground">
                                             {translateTerm(`Script.Name.${query.id}`)}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc')}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc', undefined, true)}</div>
                                         <div className="text-sm leading-relaxed">
                                             {translateTerm(`Script.Desc.${query.id}`) || translateTerm('System.NA')}
                                         </div>
@@ -127,20 +127,20 @@ function ScriptContent() {
                             </div>
                         </div>
 
-                        {/* 2. 劇本內容區塊 */}
-                        {contentArray.length > 0 && (
+                        {/* 劇本內容 */}
+                        {data.content && data.content.length > 0 && (
                             <div className="flex flex-col gap-4">
                                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                                    <h2 className="text-lg font-bold">{translateTerm('Web.Content')}</h2>
+                                    <h2 className="text-lg font-bold">{translateTerm('Web.Content', undefined, true)}</h2>
                                     <div className="flex items-center gap-2">
                                         <ButtonGroup>
                                             <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
                                                 <UnfoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
-                                                {translateTerm('Web.ExpandAll')}
+                                                {translateTerm('Web.ExpandAll', undefined, true)}
                                             </Button>
                                             <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(false); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
                                                 <FoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
-                                                {translateTerm('Web.CollapseAll')}
+                                                {translateTerm('Web.CollapseAll', undefined, true)}
                                             </Button>
                                         </ButtonGroup>
                                     </div>
@@ -150,7 +150,6 @@ function ScriptContent() {
                                         {contentArray.map((node: any, idx: number) => (
                                             <DataContent
                                                 key={idx} node={node}
-                                                translateTerm={translateTerm}
                                                 treeActionId={treeActionId} isGlobalExpand={isGlobalExpand}
                                             />
                                         ))}
@@ -159,18 +158,15 @@ function ScriptContent() {
                             </div>
                         )}
 
-                        {/* 3. 關聯項目 */}
-                        {(data.rel || data.backRel) && (
+                        {/* 關聯項目 */}
+                        {data.rel && (
                             <div className="flex flex-col gap-4 mt-2">
                                 <h2 className="text-lg font-bold border-b border-border/50 pb-2">
-                                    {translateTerm('Web.Relations')}
+                                    {translateTerm('Web.Relations', undefined, true)}
                                 </h2>
-                                <div className="flex flex-col gap-4">
-                                    {data.rel && Object.entries(data.rel).map(([phase, types]) => (
-                                        <RelationCard key={`rel-${phase}`} mainType="Rel" phase={phase} types={types} getTranslation={translateTerm} />
-                                    ))}
-                                    {data.backRel && Object.entries(data.backRel).map(([phase, types]) => (
-                                        <RelationCard key={`backRel-${phase}`} mainType="BackRel" phase={phase} types={types} getTranslation={translateTerm} />
+                                <div className="flex flex-col gap-3">
+                                    {Object.entries(data.rel).map(([phase, types]) => (
+                                        <DataRelation key={phase} phase={phase} types={types} />
                                     ))}
                                 </div>
                             </div>
@@ -179,58 +175,12 @@ function ScriptContent() {
                 ) : null}
 
                 {!isLoading && !isError && !isListView && !data && (
-                    <div className="text-center text-muted-foreground py-10">{translateTerm('Web.ScriptNotFound')}</div>
+                    <div className="text-center text-muted-foreground py-10">
+                        {translateTerm('Web.NotFound', { 0: translateTerm('Web.Script') })}
+                    </div>
                 )}
             </div>
         </main>
-    );
-}
-
-// 關聯區塊渲染組件 (改為直式卡片，並依據 Phase 拆分)
-function RelationCard({ mainType, phase, types, getTranslation }: { mainType: string, phase: string, types: any, getTranslation: any }) {
-    const { translateTerm } = useAppTranslation();
-    if (!types || Object.keys(types).length === 0) return null;
-    // 檢查該階段是否真的有內容
-    const hasContent = Object.values(types).some((ids: any) => Array.isArray(ids) && ids.length > 0);
-    if (!hasContent) return null;
-
-    // 組合標題 Key，例如 Web.Rel.Pre 或 Web.BackRel.Post
-    const phaseKey = phase.charAt(0).toUpperCase() + phase.slice(1);
-    const titleKey = `Web.${mainType}.${phaseKey}`;
-    // 如果沒有翻譯，提供一個好看的預設值
-    const title = translateTerm(titleKey) !== titleKey ? translateTerm(titleKey) : `${mainType} - ${phaseKey}`;
-
-    return (
-        <div className="bg-card border rounded-xl p-4 sm:p-5 shadow-sm w-full">
-            <h3 className="text-md font-bold text-primary mb-4 border-b border-border/50 pb-2">
-                {title}
-            </h3>
-            <div className="flex flex-col gap-3 text-sm">
-                {Object.entries(types).map(([type, ids]: [string, any]) => {
-                    if (!Array.isArray(ids) || ids.length === 0) return null;
-
-                    // 將翻譯解析為純文字，確保不帶有多餘的標籤
-                    const typeLabel = translateTerm(`Web.${type}`) !== `Web.${type}` ? translateTerm(`Web.${type}`) : type;
-
-                    return (
-                        <div key={type} className="flex flex-col sm:flex-row gap-2 sm:gap-4 border-b border-border/40 pb-3 last:border-0 last:pb-0">
-                            <span className="font-semibold text-muted-foreground w-24 shrink-0 mt-0.5">{typeLabel}</span>
-                            {/* 使用 Grid 網格系統強制對齊，解決長短不一造成的凌亂感 */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 flex-1">
-                                {ids.map((id: string) => (
-                                    <div key={id} className="flex items-start overflow-hidden">
-                                        {/* 利用 [&_[role=button]]:強制覆寫內部按鈕樣式，讓它變成佔滿全寬的區塊並截斷，且不影響其他地方的設定 */}
-                                        <div className="flex-1 min-w-0 **:[[role=button]]:block **:[[role=button]]:w-full **:[[role=button]]:text-left **:[[role=button]]:truncate" title={id}>
-                                            <ParsedText text={`[*Label.${type},${id}*]`} translate={getTranslation} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
     );
 }
 
@@ -244,7 +194,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
     const [page, setPage] = useState(1);
     const itemsPerPage = 100;
 
-    // 1. 【修復卡頓】使用 useMemo 將 list 緩存，避免每次打字輸入觸發渲染時都產生全新陣列，導致下方 searchableList 快取失效
+    // 緩存清單
     const list = useMemo(() => {
         if (!data) return [];
         return Array.isArray(data) ? data : Object.entries(data).map(([id, val]: any) => ({
@@ -253,13 +203,13 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         }));
     }, [data]);
 
-    // 2. 執行搜尋：改為手動觸發，徹底消除打字時的卡頓
+    // 執行搜尋
     const handleSearch = () => {
         setSearchTarget(searchInput);
-        setPage(1); // 搜尋時重置分頁
+        setPage(1);
     };
 
-    // 3. 非同步建置搜尋快取，避免阻塞路由跳轉 (Navigation) 時的初次渲染
+    // 非同步建置搜尋快取，避免阻塞路由跳轉時的初次渲染
     const [searchableList, setSearchableList] = useState<any[]>([]);
     const [isBuildingCache, setIsBuildingCache] = useState(false);
 
@@ -267,7 +217,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         if (!list || list.length === 0) return;
         setIsBuildingCache(true);
 
-        // 利用 setTimeout 讓出主執行緒，確保 Next.js 頁面跳轉能瞬間完成，再於背景處理巨大的陣列走訪
+        // 讓出主執行緒
         const timer = setTimeout(() => {
             const mapped = list.map((item: any) => {
                 const id = item.id || '';
@@ -294,7 +244,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [list]);
 
-    // 4. 實際過濾清單：只要比對預先算好的 _searchString 即可
+    // 過濾清單
     const filteredList = useMemo(() => {
         const sourceList = searchableList.length > 0 ? searchableList : list;
         if (!searchTarget) return sourceList;
@@ -304,6 +254,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         const searchTerms = searchLower.split(/\s+/).filter(Boolean);
 
         return sourceList.filter((item: any) => {
+
             // 如果快取還沒建好，降級使用即時比對
             const targetString = item._searchString || `${item.id} ${translateTerm(`Script.Name.${item.id}`)} ${translateTerm(`Script.Desc.${item.id}`)} ${translateTerm(`Script.Keyword.${item.id}`)}`.toLowerCase();
             return searchTerms.every(term => targetString.includes(term));
@@ -311,33 +262,33 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchableList, list, searchTarget]);
 
-    // 5. 分頁顯示資料，避免一次渲染上萬個 DOM 節點導致畫面卡死
+    // 分頁顯示資料
     const displayList = useMemo(() => {
         return filteredList.slice(0, page * itemsPerPage);
     }, [filteredList, page]);
-
     const hasMore = displayList.length < filteredList.length;
 
     return (
         <div className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
                 <div className="flex items-center gap-2">
-                    <h2 className="text-lg font-bold">{translateTerm('Web.ScriptList')}</h2>
-                    {isBuildingCache && <span className="text-xs text-muted-foreground animate-pulse">(準備搜尋索引中...)</span>}
+                    <h2 className="text-lg font-bold">{translateTerm('Web.ScriptList', undefined, true)}</h2>
+                    {isBuildingCache && <span className="text-xs text-muted-foreground animate-pulse">({translateTerm('Web.BuildingCache')})</span>}
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <input
-                        type="text"
-                        placeholder="ID, Name, Keyword..."
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
-                        className="px-3 py-1.5 text-sm border rounded-md bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary flex-1 sm:w-64"
-                    />
-                    <Button variant="secondary" size="sm" onClick={handleSearch} className="h-8 px-3">
-                        <Search className="size-4 mr-1.5 opacity-70" />
-                        {translateTerm('Web.Search')}
-                    </Button>
+                    <ButtonGroup className="flex-1">
+                        <input
+                            type="text"
+                            placeholder={translateTerm('Web.SearchPlaceholder')}
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+                            className="px-3 text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors sm:w-64"
+                        />
+                        <Button variant="outline" size="sm" onClick={handleSearch} className="px-2">
+                            <Search className="size-4 opacity-70" />
+                        </Button>
+                    </ButtonGroup>
                 </div>
             </div>
             <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
@@ -350,28 +301,26 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                                 <th className="px-4 py-3 font-semibold min-w-[200px] w-full">{translateTerm('Web.Desc')}</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-border/50">
+                        <tbody className="divide-y divide-border/70">
                             {displayList.map((item: any) => (
-                                <tr key={item.id} className="hover:bg-muted/30 transition-colors group">
+                                <tr key={item.id} className="hover:bg-muted/50 transition-colors group">
                                     <td className="px-4 py-3 font-mono text-primary">
                                         <Link href={`/script?id=${item.id}`} className="hover:underline">{item.id}</Link>
                                     </td>
                                     <td className="px-4 py-3 font-bold whitespace-normal">
                                         <Link href={`/script?id=${item.id}`} className="hover:text-primary transition-colors">
-                                            <ParsedText text={translateTerm(`Script.Name.${item.id}`)} translate={translateTerm} />
+                                            {translateTerm(`Script.Name.${item.id}`)}
                                         </Link>
                                     </td>
                                     <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`Script.Desc.${item.id}`)}>
                                         <div className="line-clamp-2">
-                                            <ParsedText text={translateTerm(`Script.Desc.${item.id}`)} translate={translateTerm} />
+                                            {translateTerm(`Script.Desc.${item.id}`)}
                                         </div>
                                     </td>
                                 </tr>
                             ))}
                             {filteredList.length === 0 && (
-                                <tr>
-                                    <td colSpan={3} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.NoData')}</td>
-                                </tr>
+                                <tr><td colSpan={3} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.NoData')}</td></tr>
                             )}
                         </tbody>
                     </table>
@@ -379,12 +328,8 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                 {/* 載入更多按鈕 */}
                 {hasMore && (
                     <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
-                        <Button
-                            variant="outline"
-                            onClick={() => setPage(p => p + 1)}
-                            className="w-full sm:w-auto min-w-[200px]"
-                        >
-                            載入更多 ({displayList.length} / {filteredList.length})
+                        <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-[200px]">
+                            {translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})
                         </Button>
                     </div>
                 )}
@@ -396,22 +341,24 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
 // ==========================================
 // 劇本內容元件 (Tree)
 // ==========================================
-function DataContent({ node, translateTerm, treeActionId, isGlobalExpand }: { node: any, translateTerm: any, treeActionId: number, isGlobalExpand: boolean }) {
+function DataContent({ node, treeActionId, isGlobalExpand }: { node: any, treeActionId: number, isGlobalExpand: boolean }) {
+    const { translateTerm } = useAppTranslation();
     if (!node) return null;
 
+    // Effect內容
     if (node.form === 'effect') {
-        // 將文字以 ' / ' 切開，並使用 flex-wrap 排版
-        // whitespace-nowrap 確保單一項目即使很長也不會被從中間斷行
+
+        // 切分項目
         const textStr = typeof node.text === 'string' ? node.text : '';
         const effectItems = textStr.split(' / ');
 
         return (
-            <div className="flex items-start gap-2 px-3 py-1 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
+            <div className="flex items-start gap-2 px-3 py-0.5 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
                 <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-[5px]" />
                 <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
                     {effectItems.map((item: string, idx: number) => (
                         <div key={idx} className="flex items-center whitespace-nowrap">
-                            <ParsedText text={translateTerm(item)} translate={translateTerm} />
+                            <ParsedText text={item} />
                             {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}
                         </div>
                     ))}
@@ -420,30 +367,31 @@ function DataContent({ node, translateTerm, treeActionId, isGlobalExpand }: { no
         );
     }
 
+    // 分岐內容
     if (node.form === 'branch') {
         return (
             <div>
+                {/* 分岐種類文字(檢定/選項/轉盤...) */}
                 <div className="flex flex-wrap items-center px-2 py-0.5 gap-0.5 font-bold text-primary text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
-                    <ParsedText text={translateTerm(node.text)} translate={translateTerm} />
+                    <ParsedText text={node.text} />
                 </div>
 
+                {/* 分岐項目 */}
                 <div className="flex flex-col pl-1 mx-2">
                     {node.branches?.map((branch: any) => (
-                        <BranchOption
-                            key={branch.index} branch={branch}
-                            treeActionId={treeActionId} isGlobalExpand={isGlobalExpand}
-                        />
+                        <BranchItem key={branch.index} branch={branch} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} />
                     ))}
                 </div>
             </div>
         );
     }
 
-    return <div className="p-3 text-xs font-mono bg-destructive/10 text-destructive rounded border">未知節點: {JSON.stringify(node)}</div>;
+    // 未知節點
+    return <div className="px-3 py-0.5 text-sm/loose bg-destructive/10 text-destructive rounded-md border">{translateTerm('Web.UnknownNode')}: {JSON.stringify(node)}</div>;
 }
 
-// 單獨抽出 Branch 裡面的選項，以便讓每個選項都能獨立收合
-function BranchOption({ branch, treeActionId, isGlobalExpand }: { branch: any, treeActionId: number, isGlobalExpand: boolean }) {
+// 分岐項目
+function BranchItem({ branch, treeActionId, isGlobalExpand }: { branch: any, treeActionId: number, isGlobalExpand: boolean }) {
     const [isExpanded, setIsExpanded] = useState(isGlobalExpand);
     const { translateTerm } = useAppTranslation();
 
@@ -453,17 +401,17 @@ function BranchOption({ branch, treeActionId, isGlobalExpand }: { branch: any, t
         if (treeActionId > 0) setIsExpanded(isGlobalExpand);
     }, [treeActionId, isGlobalExpand]);
 
-    // 判斷是否為單一 Effect 內容，如果是則直接在標題右側同行顯示
+    // 單一Effect內容直接在右側同行顯示
     const isSingleEffectContent = branch.content?.length === 1 && branch.content[0].form === 'effect';
     const effectItems = isSingleEffectContent && typeof branch.content[0].text === 'string' ? branch.content[0].text.split(' / ') : [];
 
-    // 取得 effects 陣列 (後端已去重，直接使用)
+    // Effect類別陣列
     const effectsList = Array.isArray(branch.effects) ? branch.effects : [];
 
     return (
         <div className="flex flex-col">
             <div
-                className={`flex items-start px-3 py-1 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors ${isSingleEffectContent ? 'hover:bg-muted/80' : 'cursor-pointer hover:bg-muted/80'}`}
+                className={`flex items-start px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors hover:bg-muted/80 ${isSingleEffectContent ? '' : 'cursor-pointer'}`}
                 onClick={() => {
                     // 若使用者正在反白複製劇本文字，則不觸發展開/收合
                     if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return;
@@ -482,12 +430,12 @@ function BranchOption({ branch, treeActionId, isGlobalExpand }: { branch: any, t
 
                 {/* 右側彈性內容區塊，允許內部折行，折行時會產生整齊的縮排 */}
                 <div className="flex flex-wrap items-center -ml-3.5 gap-x-0.5 gap-y-1 flex-1 min-w-0">
-                    <div className="wrap-break-word ml-3.5 mr-1"><ParsedText text={translateTerm(branch.text)} translate={translateTerm} /></div>
+                    <div className="wrap-break-word ml-3.5 mr-1"><ParsedText text={translateTerm(branch.text)} /></div>
 
                     {branch.condition && (
                         <span className="flex items-center pl-1 gap-0.5 leading-5 text-muted-foreground rounded border">
                             <Lock className="size-3.5 shrink-0 text-muted-foreground/70" />
-                            <span><ParsedText text={translateTerm(branch.condition)} translate={translateTerm} /></span>
+                            <span><ParsedText text={translateTerm(branch.condition)} /></span>
                         </span>
                     )}
 
@@ -516,7 +464,7 @@ function BranchOption({ branch, treeActionId, isGlobalExpand }: { branch: any, t
                             <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1 min-w-0">
                                 {effectItems.map((item: string, idx: number) => (
                                     <div key={idx} className="flex items-center whitespace-nowrap">
-                                        <ParsedText text={translateTerm(item)} translate={translateTerm} />
+                                        <ParsedText text={translateTerm(item)} />
                                         {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2 select-none">/</span>}
                                     </div>
                                 ))}
@@ -528,10 +476,54 @@ function BranchOption({ branch, treeActionId, isGlobalExpand }: { branch: any, t
             {!isSingleEffectContent && isExpanded && (
                 <div className="flex flex-col pl-4 ml-4 mb-2 border-l-2 border-border/80">
                     {branch.content?.map((subNode: any, idx: number) => (
-                        <DataContent key={idx} node={subNode} translateTerm={translateTerm} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} />
+                        <DataContent key={idx} node={subNode} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} />
                     ))}
                 </div>
             )}
+        </div>
+    );
+}
+
+// ==========================================
+// 關聯項目元件 (Card)
+// ==========================================
+function DataRelation({ phase, types }: { phase: string, types: any }) {
+
+    // i18n 解析邏輯
+    const { translateTerm } = useAppTranslation();
+
+    // 檢查是否有內容
+    if (!types || Object.keys(types).length === 0) return null;
+    if (!Object.values(types).some((ids: any) => Array.isArray(ids) && ids.length > 0)) return null;
+
+    return (
+        <div className="bg-card border rounded-xl p-4 sm:p-5 shadow-sm w-full">
+            <h3 className="text-md font-bold text-primary mb-4 border-b border-border/50 pb-2">
+                {translateTerm(`Web.Rel.${phase}`)}
+            </h3>
+            <div className="flex flex-col gap-3 text-sm">
+
+                {/* 關聯項目類別 */}
+                {Object.entries(types).map(([type, ids]: [string, any]) => {
+                    if (!Array.isArray(ids) || ids.length === 0) return null;
+                    return (
+                        <div key={type} className="flex flex-col sm:flex-row gap-2 sm:gap-4 border-b border-border/40 pb-3 last:border-0 last:pb-0">
+                            <span className="font-semibold text-muted-foreground w-18 shrink-0 mt-0.5">{translateTerm(`Web.${type}`, undefined, true)}</span>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 flex-1">
+                                {ids.map((id: string) => (
+                                    <div key={id} className="flex items-start overflow-hidden">
+
+                                        {/* 關聯項目，利用 **:[[role=button]]:強制覆寫內部按鈕樣式 */}
+                                        <div className="flex-1 min-w-0 **:[[role=button]]:block **:[[role=button]]:w-full **:[[role=button]]:text-left **:[[role=button]]:truncate">
+                                            <ParsedText text={`[*Label.${type},${id}*]`} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }
