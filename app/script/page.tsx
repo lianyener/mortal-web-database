@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
-import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, Search, TableProperties } from 'lucide-react';
+import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, Search, TableProperties, Filter } from 'lucide-react';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -24,7 +24,6 @@ export default function ScriptPage() {
 function ScriptContent() {
 
     const [mounted, setMounted] = useState(false);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     useEffect(() => setMounted(true), []);
 
     // 全域分岐收合控制狀態
@@ -50,6 +49,16 @@ function ScriptContent() {
 
     // 側邊欄開啟狀態
     const isOpen = useSidebarStore(state => state.isOpen);
+
+    // 取得該劇本所有可用的 effect 類別
+    const availableEffects = useMemo(() => Array.isArray(data?.effects) ? data.effects : [], [data]);
+    const [selectedEffects, setSelectedEffects] = useState<string[]>([]);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+    // 當載入新劇本時，預設全選所有 effect 類別
+    useEffect(() => {
+        setSelectedEffects(availableEffects);
+    }, [availableEffects]);
 
     if (!mounted) return null;
 
@@ -133,6 +142,49 @@ function ScriptContent() {
                                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
                                     <h2 className="text-lg font-bold">{translateTerm('Web.Content', undefined, 2)}</h2>
                                     <div className="flex items-center gap-2">
+                                        
+                                        {/* 篩選分支下拉選單 */}
+                                        {availableEffects.length > 0 && (
+                                            <div className="relative">
+                                                <Button variant="outline" size="sm" onClick={() => setIsFilterOpen(!isFilterOpen)} className="h-8 px-2.5 text-xs">
+                                                    <Filter className="mr-1.5 size-3.5 text-muted-foreground" />
+                                                    {translateTerm('Web.FilterSwitch', undefined, 2)} ({selectedEffects.length}/{availableEffects.length})
+                                                </Button>
+                                                {isFilterOpen && (
+                                                    <>
+                                                        <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
+                                                        <div className="absolute right-0 sm:right-auto sm:left-0 top-full mt-1 w-max min-w-44 bg-popover/95 backdrop-blur-sm border rounded-md shadow-lg z-50 p-2 flex flex-col gap-1 max-h-[60vh] overflow-y-auto">
+                                                            <div className="flex items-center justify-between px-1 pb-1 mb-1 border-b border-border/50">
+                                                                <button className="text-xs text-primary hover:underline font-semibold" onClick={() => setSelectedEffects(availableEffects)}>{translateTerm('Web.SelectAll', undefined, 2)}</button>
+                                                                <button className="text-xs text-muted-foreground hover:underline font-semibold" onClick={() => setSelectedEffects([])}>{translateTerm('Web.DeselectAll', undefined, 2)}</button>
+                                                            </div>
+                                                            {availableEffects.map((effect: any) => (
+                                                                <label key={effect} className="flex items-center gap-2 px-2 py-1.5 hover:bg-muted/80 rounded cursor-pointer select-none">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        className="rounded border-primary/50 text-primary focus:ring-primary size-3.5"
+                                                                        checked={selectedEffects.includes(effect)}
+                                                                        onChange={(e) => {
+                                                                            if (e.target.checked) {
+                                                                                setSelectedEffects([...selectedEffects, effect]);
+                                                                            } else {
+                                                                                setSelectedEffects(selectedEffects.filter(x => x !== effect));
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                    <span className="text-sm flex items-center gap-1.5">
+                                                                        <span className="text-muted-foreground opacity-80">{translateTerm(`LabelIcon.${effect}`, undefined, 0)}</span>
+                                                                        <span className="font-semibold">{translateTerm(`Web.${effect}`, undefined, 2)}</span>
+                                                                    </span>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* 全域展開/收合按鈕 */}
                                         <ButtonGroup>
                                             <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
                                                 <UnfoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
@@ -150,7 +202,8 @@ function ScriptContent() {
                                         {contentArray.map((node: any, idx: number) => (
                                             <DataContent
                                                 key={idx} node={node}
-                                                treeActionId={treeActionId} isGlobalExpand={isGlobalExpand}
+                                                treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} 
+                                                selectedEffects={selectedEffects}
                                             />
                                         ))}
                                     </div>
@@ -337,7 +390,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
 }
 
 // 劇本內容元件 (Tree)
-function DataContent({ node, treeActionId, isGlobalExpand }: { node: any, treeActionId: number, isGlobalExpand: boolean }) {
+function DataContent({ node, treeActionId, isGlobalExpand, selectedEffects }: { node: any, treeActionId: number, isGlobalExpand: boolean, selectedEffects?: string[] }) {
     const { translateTerm } = useAppTranslation();
     if (!node) return null;
 
@@ -365,6 +418,13 @@ function DataContent({ node, treeActionId, isGlobalExpand }: { node: any, treeAc
 
     // 分岐內容
     if (node.form === 'branch') {
+        
+        // 判斷 Switch 分岐是否因為 Filter 被隱藏 (只要 effects 中沒有任何一項被勾選，整個節點不顯示)
+        if (node.type === 'Switch' && selectedEffects && Array.isArray(node.effects) && node.effects.length > 0) {
+            const hasSelectedEffect = node.effects.some((e: string) => selectedEffects.includes(e));
+            if (!hasSelectedEffect) return null;
+        }
+
         return (
             <div>
                 {/* 分岐種類文字(檢定/選項/轉盤...) */}
@@ -375,7 +435,7 @@ function DataContent({ node, treeActionId, isGlobalExpand }: { node: any, treeAc
                 {/* 分岐項目 */}
                 <div className="flex flex-col pl-1 mx-2">
                     {node.branches?.map((branch: any) => (
-                        <BranchItem key={branch.index} branch={branch} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} />
+                        <BranchItem key={branch.index} branch={branch} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} selectedEffects={selectedEffects} />
                     ))}
                 </div>
             </div>
@@ -387,7 +447,7 @@ function DataContent({ node, treeActionId, isGlobalExpand }: { node: any, treeAc
 }
 
 // 分岐項目
-function BranchItem({ branch, treeActionId, isGlobalExpand }: { branch: any, treeActionId: number, isGlobalExpand: boolean }) {
+function BranchItem({ branch, treeActionId, isGlobalExpand, selectedEffects }: { branch: any, treeActionId: number, isGlobalExpand: boolean, selectedEffects?: string[] }) {
     const [isExpanded, setIsExpanded] = useState(isGlobalExpand);
     const { translateTerm } = useAppTranslation();
 
@@ -473,7 +533,7 @@ function BranchItem({ branch, treeActionId, isGlobalExpand }: { branch: any, tre
             {!isSingleEffect && isExpanded && (
                 <div className="flex flex-col pl-4 ml-4 mb-2 border-l-2 border-border/80">
                     {branch.content?.map((subNode: any, idx: number) => (
-                        <DataContent key={idx} node={subNode} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} />
+                        <DataContent key={idx} node={subNode} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} selectedEffects={selectedEffects} />
                     ))}
                 </div>
             )}

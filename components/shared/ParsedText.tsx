@@ -35,8 +35,12 @@ export function ParsedText({ text }: { text: string }) {
 
           const content = part.slice(2, -2);
           const translated = translateParagraph(part);
+          const baseKey = content.split(',')[0].trim();
           let contentNode: React.ReactNode;
-          if (translated === content) {
+
+          console.log(`${content} -> ${baseKey} -> ${translated}`);
+
+          if (translated === content || translated === baseKey) {
             contentNode = <span className="text-destructive text-xs bg-destructive/10 px-1 rounded" title="Missing translation">{part}</span>;
           } else {
             contentNode = translated;
