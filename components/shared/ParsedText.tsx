@@ -95,7 +95,7 @@ export function ParsedText({ text }: { text: string }) {
               }
             };
 
-            //
+            // 是否為連結
             let isLink = true;
             switch (category) {
                 case 'Buff':

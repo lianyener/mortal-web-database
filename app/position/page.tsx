@@ -22,7 +22,7 @@ function PositionContent() {
   // 改為依照網址中的 ID，精確抓取特定的 position 小檔案
   const { data, isLoading, isError } = useItemDetail('position', query.id);
 
-  const { getTranslation } = useAppTranslation();
+  const { translateTerm } = useAppTranslation();
 
   // 相容兩種結構：如果檔案直接是地點物件就用 data，如果是包在大 JSON 裡就用 data[query.id]
   const targetPosition = data?.[query.id] || data;
@@ -50,19 +50,19 @@ function PositionContent() {
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">時期 (period)</div>
                   <div className="font-semibold text-sm">
-                    <ParsedText text={getTranslation(targetPosition.period)} />
+                    <ParsedText text={translateTerm(targetPosition.period)} />
                   </div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">位置 (position)</div>
                   <div className="font-semibold text-sm">
-                    <ParsedText text={getTranslation(targetPosition.position)} />
+                    <ParsedText text={translateTerm(targetPosition.position)} />
                   </div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">行為 (action)</div>
                   <div className="font-semibold text-sm">
-                    <ParsedText text={getTranslation(targetPosition.action)} />
+                    <ParsedText text={translateTerm(targetPosition.action)} />
                   </div>
                 </div>
               </div>
@@ -79,7 +79,7 @@ function PositionContent() {
                         <span className="bg-primary/10 text-primary px-2 py-0.5 rounded text-xs font-mono">
                           {eventId}
                         </span>
-                        <ParsedText text={getTranslation(eventData.name)} />
+                        <ParsedText text={translateTerm(eventData.name)} />
                       </div>
                       {eventData.script && (
                         <Link
@@ -98,7 +98,7 @@ function PositionContent() {
                           <div className="font-semibold text-muted-foreground mb-1 flex items-center gap-1"><span className="text-xs">🔒</span>觸發條件</div>
                           <div className="space-y-1 pl-1">
                             {eventData.condition.map((cond: string, i: number) => (
-                              <div key={i}><ParsedText text={getTranslation(cond)} /></div>
+                              <div key={i}><ParsedText text={translateTerm(cond)} /></div>
                             ))}
                           </div>
                         </div>
@@ -110,7 +110,7 @@ function PositionContent() {
                           <span className="font-semibold text-muted-foreground">出現機率/權重:</span>
                           {eventData.rate.map((rate: string, i: number) => (
                             <span key={i} className="bg-muted px-2 py-0.5 rounded text-foreground font-mono">
-                              <ParsedText text={getTranslation(rate)} />
+                              <ParsedText text={translateTerm(rate)} />
                             </span>
                           ))}
                         </div>

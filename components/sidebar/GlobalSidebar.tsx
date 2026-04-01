@@ -101,8 +101,8 @@ export function GlobalSidebar() {
         }}
       >
         <SheetHeader>
-          <SheetTitle className="text-xl font-bold">{translateTerm('Web.RefrenceInfo')}</SheetTitle>
-          <SheetDescription>{`${category}: ${id}`}</SheetDescription>
+          <SheetTitle className="text-xl font-bold">{translateTerm('Web.RefrenceInfo', undefined, 2)}</SheetTitle>
+          <SheetDescription>{category}: {id}</SheetDescription>
         </SheetHeader>
 
         {category && id ? (
@@ -143,25 +143,25 @@ function DefaultInfo({ category, id, data }: any) {
       {/* 基本資訊區塊 */}
       <div className="space-y-3 bg-card p-4 rounded-lg border shadow-sm">
         <div>
-          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
+          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id', undefined, 2)}</div>
           <div className="font-semibold text-lg">{id}</div>
         </div>
         {name && (
           <div>
-            <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
+            <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name', undefined, 2)}</div>
             <div className="font-semibold text-lg">{name}</div>
           </div>
         )}
         {desc && (
           <div>
-            <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc')}</div>
+            <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc', undefined, 2)}</div>
             <div className="text-sm leading-relaxed">{desc}</div>
           </div>
         )}
       </div>
 
       {/* 關聯區塊 */}
-      <SidebarRelations data={data} />
+      <SidebarRelation data={data} />
     </div>
   );
 }
@@ -183,21 +183,21 @@ function FlagInfo({ id, data }: any) {
       {/* 基本資訊區塊(增加預設值) */}
       <div className="space-y-3 bg-card p-4 rounded-lg border shadow-sm">
         <div>
-          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
+          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id', undefined, 2)}</div>
           <div className="font-semibold text-lg">{id}</div>
         </div>
         <div>
-          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Init')}</div>
+          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Init', undefined, 2)}</div>
           <div className="text-sm leading-relaxed">{data.init}</div>
         </div>
       </div>
 
       {/* Flag專用資訊 */}
       {data.data && Array.isArray(data.data) && (
-        <div className="space-y-4">
+        <div className="space-y-3">
 
           {/* 標題 */}
-          <h4 className="font-bold text-base border-b pb-2 mb-3">{translateTerm('Web.FlagData')}</h4>
+          <h4 className="font-bold text-base border-b pb-2 mb-3">{translateTerm('Web.FlagData', undefined, 2)}</h4>
 
           {/* 卡片 */}
           <div className="flex flex-col gap-3">
@@ -210,7 +210,7 @@ function FlagInfo({ id, data }: any) {
 
                   {/* 對應場景 */}
                   <div className="pb-3 mb-3 border-b border-border/50">
-                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.Scenario')}</div>
+                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.Scenario', undefined, 2)}</div>
                     {item.script && Array.isArray(item.script) && item.script.length > 0 ? (
                       <div className="flex flex-wrap -ml-1 gap-1">
                         {item.script.map((s: string) => (
@@ -218,13 +218,13 @@ function FlagInfo({ id, data }: any) {
                         ))}
                       </div>
                     ) : (
-                      <div className="font-semibold">{translateTerm('Web.DefaultScenario')}</div>
+                      <div className="font-semibold">{translateTerm('Web.DefaultScenario', undefined, 2)}</div>
                     )}
                   </div>
 
                   {/* 名稱及說明 */}
                   <div className="pb-3 mb-3 border-b border-border/50">
-                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.FlagInfo')}</div>
+                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.FlagInfo', undefined, 2)}</div>
                     <div className="font-semibold text-base text-foreground">{subName}</div>
                     {subDesc && (
                       <div className="mt-1 text-sm/relaxed text-foreground/70">{subDesc}</div>
@@ -233,7 +233,7 @@ function FlagInfo({ id, data }: any) {
 
                   {/* 設定數值區塊 */}
                   <div>
-                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.ValueDef')}</div>
+                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.ValueDef', undefined, 2)}</div>
                     {item.value && Object.keys(item.value).length > 0 ? (
                       <div className="font-(family-name:--font-script)">
                         {Object.entries(item.value).map(([valKey, valText]: [string, any]) => (
@@ -244,7 +244,7 @@ function FlagInfo({ id, data }: any) {
                         ))}
                       </div>
                     ) : (
-                      <div>{translateTerm('Web.NoValueDef')}</div>
+                      <div>{translateTerm('Web.NoValueDef', undefined, 2)}</div>
                     )}
                   </div>
 
@@ -256,56 +256,55 @@ function FlagInfo({ id, data }: any) {
       )}
 
       {/* 關聯區塊 */}
-      <SidebarRelations data={data} />
+      <SidebarRelation data={data} />
     </div>
   );
 }
 
-// 側邊欄專用的關聯區塊統整器
-function SidebarRelations({ data }: { data: any }) {
-  if (!data.rel && !data.backRel) return null;
+// 關聯區塊
+function SidebarRelation({ data }: { data: any }) {
+  const { translateTerm } = useAppTranslation();
+
+  if (!data.rel) return null;
+
   return (
-    <div className="space-y-4">
-      {data.rel && Object.entries(data.rel).map(([phase, types]) => (
-        <SidebarRelationCard key={`rel-${phase}`} mainType="Rel" phase={phase} types={types} />
-      ))}
-      {data.backRel && Object.entries(data.backRel).map(([phase, types]) => (
-        <SidebarRelationCard key={`backRel-${phase}`} mainType="BackRel" phase={phase} types={types} />
+    <div className="space-y-3">
+      <h4 className="font-bold text-base border-b pb-2 mb-3">{translateTerm('Web.Relations', undefined, 2)}</h4>
+      {Object.entries(data.rel).map(([phase, types]) => (
+        <DataRelation key={phase} phase={phase} types={types} />
       ))}
     </div>
   );
 }
 
-// 側邊欄專用的單一階段關聯卡片
-function SidebarRelationCard({ mainType, phase, types }: { mainType: string, phase: string, types: any }) {
-  const { getPlainText } = useAppTranslation();
+// 關聯項目元件
+function DataRelation({ phase, types }: { phase: string, types: any }) {
+  const { translateTerm } = useAppTranslation();
+
+  // 檢查是否有內容
   if (!types || Object.keys(types).length === 0) return null;
-  const hasContent = Object.values(types).some((ids: any) => Array.isArray(ids) && ids.length > 0);
-  if (!hasContent) return null;
-
-  const phaseKey = phase.charAt(0).toUpperCase() + phase.slice(1);
-  const titleKey = `Web.${mainType}.${phaseKey}`;
-  const title = getPlainText(titleKey) !== titleKey ? getPlainText(titleKey) : `${mainType} - ${phaseKey}`;
+  if (!Object.values(types).some((ids: any) => Array.isArray(ids) && ids.length > 0)) return null;
 
   return (
-    <div className="bg-card border rounded-lg p-3 shadow-sm text-sm">
-      <div className="font-semibold text-primary mb-3 border-b pb-1.5">
-        {title}
+    <div className="bg-card border rounded-lg p-3 shadow-sm">
+      <div className="font-semibold text-primary text-base mb-3 border-b pb-1.5">
+        {translateTerm(`Web.Rel.${phase}`)}
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
+
+        {/* 關聯項目類別 */}
         {Object.entries(types).map(([type, ids]: [string, any]) => {
           if (!Array.isArray(ids) || ids.length === 0) return null;
 
-          const typeLabel = getPlainText(`Web.${type}`) !== `Web.${type}` ? getPlainText(`Web.${type}`) : type;
-
           return (
             <div key={type} className="flex flex-col sm:flex-row gap-1 sm:gap-3 border-b border-border/40 pb-2 last:border-0 last:pb-0">
-              <span className="font-semibold text-muted-foreground w-20 shrink-0 mt-0.5 sm:text-right">{typeLabel}</span>
+              <span className="font-semibold text-muted-foreground w-18 shrink-0 mt-0.5">{translateTerm(`Web.${type}`, undefined, 2)}</span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5 flex-1">
                 {ids.map((id: string) => (
                   <div key={id} className="flex items-start overflow-hidden">
-                    {/* 同樣加入 [&_[role=button]]: 覆寫樣式 */}
-                    <div className="flex-1 min-w-0 **:[[role=button]]:block **:[[role=button]]:w-full **:[[role=button]]:text-left **:[[role=button]]:truncate" title={id}>
+
+                    {/* 關聯項目，利用 **:[[role=button]]:強制覆寫內部按鈕樣式 */}
+                    <div className="flex-1 min-w-0 **:[[role=button]]:block **:[[role=button]]:w-full **:[[role=button]]:text-left **:[[role=button]]:truncate">
                       <ParsedText text={`[*Label.${type},${id}*]`} />
                     </div>
                   </div>
