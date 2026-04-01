@@ -101,7 +101,11 @@ export function GlobalSidebar() {
         }}
       >
         <SheetHeader>
-          <SheetTitle className="text-xl font-bold">{translateTerm('Web.RefrenceInfo', undefined, 2)}</SheetTitle>
+          <SheetTitle className="text-xl font-bold">
+            {translateTerm(`LabelIcon.${category}`, undefined, 0)}
+            {translateTerm(`Web.${category}`, undefined, 2)}
+            {translateTerm('Web.RefrenceInfo', undefined, 2)}
+          </SheetTitle>
           <SheetDescription>{category}: {id}</SheetDescription>
         </SheetHeader>
 
