@@ -109,7 +109,7 @@ export function ParsedText({ text }: { text: string }) {
             }
 
             // 設定提示詞 (文面顯示ID提示名稱，反之提示ID)
-            let titleText = ':';
+            let titleText = ': ';
             switch (category) {
               case 'Script':
               case 'Free':
@@ -124,7 +124,7 @@ export function ParsedText({ text }: { text: string }) {
                 break;
             }
             if (!targetId) titleText = '';
-            titleText = `${translateTerm(`Web.${category}`, undefined, true)}${titleText}`;
+            titleText = `${translateTerm(`Web.${category}`, undefined, 2)}${titleText}`;
 
             return (
               <span key={index} onClick={handleClick} role="button" tabIndex={0} title={titleText}

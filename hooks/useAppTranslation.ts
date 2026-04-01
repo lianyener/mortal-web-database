@@ -43,7 +43,7 @@ export function useAppTranslation() {
     const { translateTerm, translateParagraph } = useMemo(() => {
 
         // 翻譯用詞
-        const tTerm = (text: string, params?: TranslationValues, defaultText: boolean = false): string => {
+        const tTerm = (text: string, params?: TranslationValues, defaultText: number = 1): string => {
 
             // 防呆
             if (!text) return '';
@@ -54,8 +54,8 @@ export function useAppTranslation() {
             // 嘗試正常翻譯
             else if (t.has(text)) text = t(text, params);
 
-            // 無可用翻譯回傳本身或最後一個KEY
-            else return defaultText ? text.split('.').pop()! : text;
+            // 無可用翻譯回傳 0:空白 / 1:本身 / 2:最後一個KEY
+            else return defaultText === 0 ? '' : defaultText === 2 ? text.split('.').pop()! : text;
 
             // 處理巢狀翻譯並回傳
             return tParagraph(text);

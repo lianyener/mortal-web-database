@@ -39,7 +39,7 @@ function ScriptContent() {
     // 判斷啟用列表模式
     const isListView = (query.id === 'index');
 
-    // 透過 useItemDetail 取得資料
+    // 透過useItemDetail取得資料
     const { data, isLoading, isError } = useItemDetail('script', query.id);
 
     // 目標劇本資料
@@ -54,7 +54,7 @@ function ScriptContent() {
     if (!mounted) return null;
 
     return (
-        <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'md:pr-[512px] lg:pr-[576px]' : ''}`}>
+        <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'md:pr-128 lg:pr-144' : ''}`}>
             {/* 頂部固定導覽列 */}
             <TopNavbar />
 
@@ -83,12 +83,12 @@ function ScriptContent() {
                         {/* 基本資訊 */}
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                                <h2 className="text-lg font-bold">{translateTerm('Web.ScriptData', undefined, true)}</h2>
+                                <h2 className="text-lg font-bold">{translateTerm('Web.ScriptData', undefined, 2)}</h2>
                                 <div className="flex items-center">
                                     <Button asChild variant="outline" size="sm" className="h-8 px-2.5 text-xs">
                                         <Link href="/script">
                                             <TableProperties className="mr-1.5 size-3.5 rotate-180 text-muted-foreground" />
-                                            {translateTerm('Web.ReturnList', undefined, true)}
+                                            {translateTerm('Web.ReturnList', undefined, 2)}
                                         </Link>
                                     </Button>
                                 </div>
@@ -96,19 +96,19 @@ function ScriptContent() {
                             <div className="p-5 border rounded-xl shadow-sm bg-card">
                                 <div className="space-y-4">
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id', undefined, true)}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id', undefined, 2)}</div>
                                         <div className="font-semibold text-foreground">
                                             {query.id}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name', undefined, true)}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name', undefined, 2)}</div>
                                         <div className="font-semibold text-foreground">
                                             {translateTerm(`Script.Name.${query.id}`)}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc', undefined, true)}</div>
+                                        <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc', undefined, 2)}</div>
                                         <div className="text-sm leading-relaxed">
                                             {translateTerm(`Script.Desc.${query.id}`) || translateTerm('System.NA')}
                                         </div>
@@ -131,16 +131,16 @@ function ScriptContent() {
                         {data.content && data.content.length > 0 && (
                             <div className="flex flex-col gap-4">
                                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                                    <h2 className="text-lg font-bold">{translateTerm('Web.Content', undefined, true)}</h2>
+                                    <h2 className="text-lg font-bold">{translateTerm('Web.Content', undefined, 2)}</h2>
                                     <div className="flex items-center gap-2">
                                         <ButtonGroup>
                                             <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
                                                 <UnfoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
-                                                {translateTerm('Web.ExpandAll', undefined, true)}
+                                                {translateTerm('Web.ExpandAll', undefined, 2)}
                                             </Button>
                                             <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(false); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
                                                 <FoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
-                                                {translateTerm('Web.CollapseAll', undefined, true)}
+                                                {translateTerm('Web.CollapseAll', undefined, 2)}
                                             </Button>
                                         </ButtonGroup>
                                     </div>
@@ -162,7 +162,7 @@ function ScriptContent() {
                         {data.rel && (
                             <div className="flex flex-col gap-4 mt-2">
                                 <h2 className="text-lg font-bold border-b border-border/50 pb-2">
-                                    {translateTerm('Web.Relations', undefined, true)}
+                                    {translateTerm('Web.Relations', undefined, 2)}
                                 </h2>
                                 <div className="flex flex-col gap-3">
                                     {Object.entries(data.rel).map(([phase, types]) => (
@@ -184,9 +184,7 @@ function ScriptContent() {
     );
 }
 
-// ==========================================
 // 劇本列表元件 (DataTable)
-// ==========================================
 function DataList({ data }: { data: Record<string, any> | any[] }) {
     const { translateTerm, translateParagraph } = useAppTranslation();
     const [searchInput, setSearchInput] = useState('');
@@ -272,7 +270,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         <div className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
                 <div className="flex items-center gap-2">
-                    <h2 className="text-lg font-bold">{translateTerm('Web.ScriptList', undefined, true)}</h2>
+                    <h2 className="text-lg font-bold">{translateTerm('Web.ScriptList', undefined, 2)}</h2>
                     {isBuildingCache && <span className="text-xs text-muted-foreground animate-pulse">({translateTerm('Web.BuildingCache')})</span>}
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -297,8 +295,8 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                         <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
                             <tr>
                                 <th className="px-4 py-3 font-semibold w-24">{translateTerm('Web.Id')}</th>
-                                <th className="px-4 py-3 font-semibold min-w-[150px]">{translateTerm('Web.Name')}</th>
-                                <th className="px-4 py-3 font-semibold min-w-[200px] w-full">{translateTerm('Web.Desc')}</th>
+                                <th className="px-4 py-3 font-semibold min-w-37.5">{translateTerm('Web.Name')}</th>
+                                <th className="px-4 py-3 font-semibold min-w-50 w-full">{translateTerm('Web.Desc')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border/70">
@@ -328,7 +326,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                 {/* 載入更多按鈕 */}
                 {hasMore && (
                     <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
-                        <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-[200px]">
+                        <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50">
                             {translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})
                         </Button>
                     </div>
@@ -338,9 +336,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
     );
 }
 
-// ==========================================
 // 劇本內容元件 (Tree)
-// ==========================================
 function DataContent({ node, treeActionId, isGlobalExpand }: { node: any, treeActionId: number, isGlobalExpand: boolean }) {
     const { translateTerm } = useAppTranslation();
     if (!node) return null;
@@ -354,7 +350,7 @@ function DataContent({ node, treeActionId, isGlobalExpand }: { node: any, treeAc
 
         return (
             <div className="flex items-start gap-2 px-3 py-0.5 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
-                <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-[5px]" />
+                <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-1.25" />
                 <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
                     {effectItems.map((item: string, idx: number) => (
                         <div key={idx} className="flex items-center whitespace-nowrap">
@@ -402,8 +398,8 @@ function BranchItem({ branch, treeActionId, isGlobalExpand }: { branch: any, tre
     }, [treeActionId, isGlobalExpand]);
 
     // 單一Effect內容直接在右側同行顯示
-    const isSingleEffectContent = branch.content?.length === 1 && branch.content[0].form === 'effect';
-    const effectItems = isSingleEffectContent && typeof branch.content[0].text === 'string' ? branch.content[0].text.split(' / ') : [];
+    const isSingleEffect = branch.content?.length === 1 && branch.content[0].form === 'effect';
+    const effectItems = isSingleEffect && typeof branch.content[0].text === 'string' ? branch.content[0].text.split(' / ') : [];
 
     // Effect類別陣列
     const effectsList = Array.isArray(branch.effects) ? branch.effects : [];
@@ -411,60 +407,59 @@ function BranchItem({ branch, treeActionId, isGlobalExpand }: { branch: any, tre
     return (
         <div className="flex flex-col">
             <div
-                className={`flex items-start px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors hover:bg-muted/80 ${isSingleEffectContent ? '' : 'cursor-pointer'}`}
+                className={`flex items-start px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors hover:bg-muted/80 ${isSingleEffect ? '' : 'cursor-pointer'}`}
                 onClick={() => {
                     // 若使用者正在反白複製劇本文字，則不觸發展開/收合
                     if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return;
 
-                    if (!isSingleEffectContent) setIsExpanded(!isExpanded);
+                    // 展開/收合分岐
+                    if (!isSingleEffect) setIsExpanded(!isExpanded);
                 }}
             >
-                {/* 左側固定區塊 (圖示 + 序號) */}
-                {/* 固定寬度讓數字靠右對齊，確保右側彈性區塊的起跑線一致 */}
+                {/* 左側固定區塊 (圖示+序號) */}
                 <div className="flex items-center gap-1 shrink-0 w-10.5">
                     <span className="shrink-0 flex items-center justify-center w-4 text-muted-foreground">
-                        {isSingleEffectContent ? <Minus className="size-4" /> : (isExpanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />)}
+                        {isSingleEffect ? <Minus className="size-4" /> : (isExpanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />)}
                     </span>
                     <span className="shrink-0 flex-1 text-right text-muted-foreground">{branch.index}.</span>
                 </div>
 
-                {/* 右側彈性內容區塊，允許內部折行，折行時會產生整齊的縮排 */}
+                {/* 右側彈性內容區塊，允許內部折行 */}
                 <div className="flex flex-wrap items-center -ml-3.5 gap-x-0.5 gap-y-1 flex-1 min-w-0">
-                    <div className="wrap-break-word ml-3.5 mr-1"><ParsedText text={translateTerm(branch.text)} /></div>
 
+                    {/* 分岐名稱 */}
+                    <div className="wrap-break-word ml-3.5 mr-1"><ParsedText text={branch.text} /></div>
+
+                    {/* 分岐條件 (不一定有) */}
                     {branch.condition && (
                         <span className="flex items-center pl-1 gap-0.5 leading-5 text-muted-foreground rounded border">
                             <Lock className="size-3.5 shrink-0 text-muted-foreground/70" />
-                            <span><ParsedText text={translateTerm(branch.condition)} /></span>
+                            <span><ParsedText text={branch.condition} /></span>
                         </span>
                     )}
 
-                    {/* 收合狀態下，在最右側顯示可能影響的類別 Icon (即使沒有 Icon 也保留佔位符與刪節號提示) */}
-                    {!isSingleEffectContent && !isExpanded && (
+                    {/* 收合狀態下，顯示可能影響的類別 Icon */}
+                    {!isSingleEffect && !isExpanded && (
                         <div
-                            className="flex items-center min-w-[40px] opacity-60 text-sm select-none pl-1 hover:opacity-90 transition-opacity"
+                            className="flex items-center min-w-10 opacity-60 text-sm select-none pl-1 hover:opacity-90 transition-opacity"
                             title={effectsList.length > 0 ? effectsList.map((e: string) => translateTerm(`Web.${e}`)).join(', ') : ''}
                         >
                             <CircleFadingPlus className="size-4 shrink-0 text-muted-foreground/70 mr-1.5" />
                             <div className="truncate tracking-widest">
-                                {effectsList.map((eff: any) => {
-                                    const icon = translateTerm(`LabelIcon.${eff}`);
-                                    return icon !== `LabelIcon.${eff}` ? icon : '';
-                                }).filter(Boolean).join(' ')}
+                                {effectsList.map((e: any) => translateTerm(`LabelIcon.${e}`, undefined, 0)).filter(Boolean).join('')}
                             </div>
-                            <span className="ml-0.5 text-muted-foreground/60 font-bold tracking-tighter">...</span>
+                            <span className="ml-0.5 text-muted-foreground/70 font-bold tracking-tighter">...</span>
                         </div>
                     )}
 
-                    {/* 若為單一 Effect，直接接在右側顯示，並還原字體粗細 (font-normal) */}
-                    {isSingleEffectContent && (
+                    {/* 單一Effect直接接在右側顯示 */}
+                    {isSingleEffect && (
                         <div className="flex items-start gap-1.5 ml-1 text-foreground font-normal">
-                            {/* 因為右側也可能折行，設定 items-start 讓圖示對齊文字頂端 */}
-                            <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-[5px]" />
+                            <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-1.25" />
                             <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1 min-w-0">
                                 {effectItems.map((item: string, idx: number) => (
                                     <div key={idx} className="flex items-center whitespace-nowrap">
-                                        <ParsedText text={translateTerm(item)} />
+                                        <ParsedText text={item} />
                                         {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2 select-none">/</span>}
                                     </div>
                                 ))}
@@ -473,7 +468,9 @@ function BranchItem({ branch, treeActionId, isGlobalExpand }: { branch: any, tre
                     )}
                 </div>
             </div>
-            {!isSingleEffectContent && isExpanded && (
+
+            {/* 分岐內容 */}
+            {!isSingleEffect && isExpanded && (
                 <div className="flex flex-col pl-4 ml-4 mb-2 border-l-2 border-border/80">
                     {branch.content?.map((subNode: any, idx: number) => (
                         <DataContent key={idx} node={subNode} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} />
@@ -484,12 +481,8 @@ function BranchItem({ branch, treeActionId, isGlobalExpand }: { branch: any, tre
     );
 }
 
-// ==========================================
 // 關聯項目元件 (Card)
-// ==========================================
 function DataRelation({ phase, types }: { phase: string, types: any }) {
-
-    // i18n 解析邏輯
     const { translateTerm } = useAppTranslation();
 
     // 檢查是否有內容
@@ -508,7 +501,7 @@ function DataRelation({ phase, types }: { phase: string, types: any }) {
                     if (!Array.isArray(ids) || ids.length === 0) return null;
                     return (
                         <div key={type} className="flex flex-col sm:flex-row gap-2 sm:gap-4 border-b border-border/40 pb-3 last:border-0 last:pb-0">
-                            <span className="font-semibold text-muted-foreground w-18 shrink-0 mt-0.5">{translateTerm(`Web.${type}`, undefined, true)}</span>
+                            <span className="font-semibold text-muted-foreground w-18 shrink-0 mt-0.5">{translateTerm(`Web.${type}`, undefined, 2)}</span>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 flex-1">
                                 {ids.map((id: string) => (
                                     <div key={id} className="flex items-start overflow-hidden">

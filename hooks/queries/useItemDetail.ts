@@ -2,7 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 
 export function useItemDetail(category: string | null, id: string | null) {
   return useQuery({
-    // queryKey 就像這筆資料的身份證，當 category 或 id 改變時，React Query 會自動重新抓取
+
+    // 當 category 或 id 改變時，React Query 會自動重新抓取
     queryKey: ['itemDetail', category, id],
     queryFn: async () => {
       if (!category || !id) return null;
@@ -12,6 +13,8 @@ export function useItemDetail(category: string | null, id: string | null) {
       }
       return res.json();
     },
-    enabled: !!category && !!id, // 只有在 category 和 id 都有值時才發起請求
+
+    // category 和 id 都有值時才發起請求
+    enabled: !!category && !!id
   });
 }
