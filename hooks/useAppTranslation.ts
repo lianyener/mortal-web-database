@@ -23,11 +23,11 @@ export function useAppTranslation() {
             else return defaultText === 0 ? '' : defaultText === 2 ? text.split('.').pop()! : text;
 
             // 處理巢狀翻譯並回傳
-            return tParagraph(text);
+            return tParagraph(text, defaultText);
         };
 
         // 翻譯段落
-        const tParagraph = (text: string): string => {
+        const tParagraph = (text: string, defaultText: number = 1): string => {
 
             // 防呆
             if (!text) return '';
@@ -56,11 +56,11 @@ export function useAppTranslation() {
                     }, {} as Record<number, string>);
 
                     // 回傳翻譯結果
-                    return tTerm(key.trim(), params);
+                    return tTerm(key.trim(), params, defaultText);
                 }
 
                 // 回傳翻譯結果
-                return tTerm(content);
+                return tTerm(content, undefined, defaultText);
             });
 
             // 回傳結果

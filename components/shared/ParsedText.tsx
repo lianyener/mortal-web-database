@@ -34,15 +34,14 @@ export function ParsedText({ text }: { text: string }) {
         else if (part.startsWith('[*') && part.endsWith('*]')) {
 
           const content = part.slice(2, -2);
-          const translated = translateParagraph(part);
+          const translated = translateParagraph(part, 0);
           const baseKey = content.split(',')[0].trim();
           let contentNode: React.ReactNode;
 
-          console.log(`${content} -> ${baseKey} -> ${translated}`);
-
           if (translated === content || translated === baseKey) {
             contentNode = <span className="text-destructive text-xs bg-destructive/10 px-1 rounded" title="Missing translation">{part}</span>;
-          } else {
+          }
+          else {
             contentNode = translated;
           }
 
@@ -102,12 +101,12 @@ export function ParsedText({ text }: { text: string }) {
             // 是否為連結
             let isLink = true;
             switch (category) {
-                case 'Buff':
-                case 'Debuff':
-                case 'Support':
-                case 'Stat':
-                case 'Enemy':
-                case 'Story':
+              case 'Buff':
+              case 'Debuff':
+              case 'Support':
+              case 'Stat':
+              case 'Enemy':
+              case 'Story':
                 isLink = false;
                 break;
             }
@@ -123,12 +122,22 @@ export function ParsedText({ text }: { text: string }) {
               case 'Battle':
                 titleText += translateTerm(`${category}.Name.${targetId}`);
                 break;
+              case 'Flag':
+              case 'RelationshipFlag':
+                titleText += targetId.split('.')[0];
+                break;
               default:
                 titleText += targetId;
                 break;
             }
             if (!targetId) titleText = '';
             titleText = `${translateTerm(`Web.${category}`, undefined, 2)}${titleText}`;
+
+            // 只有emoji -> 找不到用詞
+            if (translated == translateTerm(`LabelIcon.${category}`)) {
+              contentNode = `${translated}${translateTerm('Web.Unknown', { 0: translateTerm(`Web.${category}`) }, 2)}(${targetId.split('.')[0]})`;
+              isLink = false;
+            }
 
             return (
               <span key={index} onClick={handleClick} role="button" tabIndex={0} title={titleText}
