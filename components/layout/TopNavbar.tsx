@@ -6,7 +6,7 @@ import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { ChevronDown, Sun, Moon } from 'lucide-react';
 
 export function TopNavbar() {
-  const { translateTerm } = useAppTranslation();
+  const { translateTerm, translateTermWithParam } = useAppTranslation();
 
   // 深淺色模式切換邏輯
   const [mounted, setMounted] = useState(false);
@@ -43,27 +43,27 @@ export function TopNavbar() {
     {
       titleKey: 'Web.Event',
       items: [
-        { titleKey: 'Web.Mission', href: null },
-        { titleKey: 'Web.Trigger', href: null },
-        { titleKey: 'Web.Position', href: '/position?id=Alchemy_Work_001' },
-        { titleKey: 'Web.Script', href: '/script' },
-        { titleKey: 'Web.Combat', href: null },
-        { titleKey: 'Web.Battle', href: null },
+        { titleKey: 'Web.Label.Mission', href: null },
+        { titleKey: 'Web.Label.Trigger', href: null },
+        { titleKey: 'Web.Label.Position', href: '/position?id=Alchemy_Work_001' },
+        { titleKey: 'Web.Label.Script', href: '/script' },
+        { titleKey: 'Web.Label.Combat', href: null },
+        { titleKey: 'Web.Label.Battle', href: null },
       ]
     },
     {
       titleKey: 'Web.Item',
       items: [
-        { titleKey: 'Web.Flag', href: null },
-        { titleKey: 'Web.Character', href: null },
-        { titleKey: 'Web.Book', href: null },
-        { titleKey: 'Web.Equip', href: null },
-        { titleKey: 'Web.Special', href: null },
-        { titleKey: 'Web.Misc', href: null },
-        { titleKey: 'Web.Talent', href: null },
-        { titleKey: 'Web.Achievement', href: null },
-        { titleKey: 'Web.End', href: null },
-        { titleKey: 'Web.Dead', href: null },
+        { titleKey: 'Web.Label.Flag', href: null },
+        { titleKey: 'Web.Label.Character', href: null },
+        { titleKey: 'Web.Label.Book', href: null },
+        { titleKey: 'Web.Label.Equip', href: null },
+        { titleKey: 'Web.Label.Special', href: null },
+        { titleKey: 'Web.Label.Misc', href: null },
+        { titleKey: 'Web.Label.Talent', href: null },
+        { titleKey: 'Web.Label.Achievement', href: null },
+        { titleKey: 'Web.Label.End', href: null },
+        { titleKey: 'Web.Label.Dead', href: null },
       ]
     },
     {
@@ -120,7 +120,7 @@ export function TopNavbar() {
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            title={translateTerm('Web.ThemeSwitch', { 0: isDark ? translateTerm('Web.LightMode') : translateTerm('Web.DarkMode') }, 2)}
+            title={translateTermWithParam('Web.ThemeSwitch', isDark ? 'LightMode' : 'DarkMode')}
           >
             {mounted ? (isDark ? <Moon className="size-4" /> : <Sun className="size-4" />) : <div className="size-4" />}
           </button>
