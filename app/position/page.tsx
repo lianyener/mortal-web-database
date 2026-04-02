@@ -33,7 +33,7 @@ function PositionContent() {
   if (!mounted) return null;
 
   return (
-    <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'md:pr-[512px] lg:pr-[576px]' : ''}`}>
+    <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'md:pr-128 lg:pr-144' : ''}`}>
       {/* 頂部固定導覽列 */}
       <TopNavbar />
 

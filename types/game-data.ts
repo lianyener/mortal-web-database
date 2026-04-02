@@ -1,21 +1,20 @@
-// 劇本基本內容節點 (例如 effect 或 remark)
+// 劇本基本內容節點
 export interface ScriptContentNode {
   form: 'effect' | 'remark' | 'branch' | 'perform';
   type?: string;
   text: string;
-  // 如果是 branch，底下還會有 branches
   branches?: ScriptBranch[];
 }
 
 // 分支選項
 export interface ScriptBranch {
   index: number;
-  text: string; // 顯示文字或條件文字，例如 "{@Story.O_Act_1_001}"
-  condition?: string; // 判斷條件
-  content?: ScriptContentNode[]; // 分支底下的內容
+  text: string;
+  condition?: string;
+  content?: ScriptContentNode[];
 }
 
-// 關聯資料 (rel / backRel)
+// 關聯資料
 export interface DataRelations {
   Flag?: string[];
   Character?: string[];
@@ -29,23 +28,26 @@ export interface DataRelations {
   Mission?: string[];
 }
 
+// 關連節點
+export interface RelationNode {
+    pre?: DataRelations;
+    post?: DataRelations;
+    intra?: DataRelations;
+    inner?: DataRelations;
+    to?: DataRelations;
+    from?: DataRelations;
+}
+
 // 單一劇本資料結構
 export interface ScriptData {
   content: ScriptContentNode[];
-  rel?: {
-    pre?: DataRelations;
-    intra?: DataRelations;
-    post?: DataRelations;
-  };
-  backRel?: {
-    post?: DataRelations;
-  };
+  rel?: RelationNode;
   remark?: string[];
 }
 
-// 用於側邊欄開啟時，傳遞的參數型別
+// 側邊欄傳遞參數型別
 export interface SidebarContext {
   isOpen: boolean;
-  category: string | null; // 例如 'Flag', 'Character', 'Script'
-  id: string | null;       // 例如 'G00002', 'brother4'
+  category: string | null;
+  id: string | null;
 }
