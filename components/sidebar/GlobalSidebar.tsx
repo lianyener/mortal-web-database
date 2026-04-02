@@ -302,12 +302,12 @@ function DataRelation({ phase, types }: { phase: string, types: any }) {
 
           return (
             <div key={type} className="flex flex-col sm:flex-row gap-1 sm:gap-3 border-b border-border/40 pb-2 last:border-0 last:pb-0">
-              <span className="font-semibold text-muted-foreground w-18 shrink-0 mt-0.5">{translateTerm(`Web.${type}`, undefined, 2)}</span>
+              <span className="font-semibold text-muted-foreground w-18 shrink-0">{translateTerm(`Web.${type}`, undefined, 2)}</span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5 flex-1">
                 {ids.map((id: string) => (
                   <div key={id} className="flex items-start overflow-hidden">
 
-                    {/* 關聯項目，利用 **:[[role=button]]:強制覆寫內部按鈕樣式 */}
+                    {/* 關聯項目，強制覆寫內部按鈕樣式 */}
                     <div className="flex-1 min-w-0 **:[[role=button]]:block **:[[role=button]]:w-full **:[[role=button]]:text-left **:[[role=button]]:truncate">
                       <ParsedText text={`[*Label.${type},${id}*]`} />
                     </div>
