@@ -1,1 +1,0 @@
-{"mission":"S8200","trigger":"S8200_01","active":true,"minTime":{"year":"1","month":"4","stage":"1"},"maxTime":{"year":"1","month":"5","stage":"3"},"condition":["[%[*Custom.GameTime*]≤[*Custom.GameTimeText,1,5,3*]%]","[*Custom.GoTo*][*Label.Position,Center*]"],"script":"S8200_01","content":[],"remark":[],"rel":{"pre":{},"post":{}},"type":"Sub","orderKey":"1-04-1-2-S8200_01"}

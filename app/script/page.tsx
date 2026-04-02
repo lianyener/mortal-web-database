@@ -442,6 +442,18 @@ function DataContent({ node, treeActionId, isGlobalExpand, selectedEffects }: { 
     );
   }
 
+  // 演出內容
+  if (node.form === 'perform') {
+    return (
+      <div className="flex items-start gap-2 px-3 py-0.5 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
+        <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-1.25" />
+        <div className="flex-1">
+            <ParsedText text={node.text} />
+        </div>
+      </div>
+    );
+  }
+
   // 未知節點
   return <div className="px-3 py-0.5 text-sm/loose bg-destructive/10 text-destructive rounded-md border">{translateTerm('Web.UnknownNode')}: {JSON.stringify(node)}</div>;
 }

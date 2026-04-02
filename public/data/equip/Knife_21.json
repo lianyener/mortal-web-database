@@ -1,1 +1,0 @@
-{"type":"Dart","faction":3,"evolution":[{"name":"[*Equip.Name.Knife_01*]","condition":[]}],"rel":{"pre":{"Equip":["Knife_11"]},"post":{"Equip":["Knife_01"]}}}

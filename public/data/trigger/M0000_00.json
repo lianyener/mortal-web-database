@@ -1,1 +1,0 @@
-{"mission":"main","active":true,"minTime":{"year":"1","month":"4","stage":"1"},"maxTime":{"year":"1","month":"4","stage":"1"},"condition":["※[*Custom.GameStart*]"],"script":"ch1_1","content":[],"remark":["[*Trigger.Remark.M0000_00.0*]"],"rel":{"pre":{},"to":{"Script":["ch1_1"]},"from":{"Mission":["main"]}},"type":"Main","orderKey":"1-04-1-1-M0000_00"}

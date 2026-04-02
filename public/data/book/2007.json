@@ -1,1 +1,0 @@
-{"cost":1200,"martial":true,"type":"Sword","level":5,"condition":["[*System.NA*]","[*System.NA*]","[*System.NA*]","[*System.NA*]","[*System.NA*]"],"learned":["[*Label.Stat,life*]","[*Label.Stat,m-sword*]"],"rel":{"pre":{"Script":["S0121_01_01"]},"post":{}}}

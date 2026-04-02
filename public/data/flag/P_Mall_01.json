@@ -1,1 +1,0 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.P_Mall_01.0.0*]","1":"[*Flag.P_Mall_01.0.1*]"}}],"init":0,"rel":{"post":{"Trigger":["Mall"],"Script":["free"]},"pre":{"Script":["ch7_5_2_1"]}}}

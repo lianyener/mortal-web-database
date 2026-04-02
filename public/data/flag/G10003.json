@@ -1,1 +1,0 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.G10003.0.0*]","1":"[*Flag.G10003.0.1*]"}}],"init":0,"rel":{"pre":{"Script":["ch0_meeting_option_03_02_03","ch0_meeting_option_03_02_02","S0017_03","S0022_01"]},"post":{"Script":["door_work_201","S8500_01_02"]}}}

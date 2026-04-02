@@ -1,1 +1,0 @@
-{"type":"000","friend":{"name":["[*Label.Enemy,500*]"],"people":0},"enemy":{"name":["[*Label.Enemy,200*]","[*Label.Enemy,001*]","[*Label.Enemy,002*]","[*Label.Enemy,100*]","[*Label.Enemy,008*]","[*Label.Enemy,004*]"],"people":100},"neutral":{"name":["[*Label.Enemy,900*]"],"people":0},"end":["[*Custom.Defeat*]","[*Custom.PlayerDie*]"],"rel":{"pre":{}}}

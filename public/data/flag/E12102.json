@@ -1,1 +1,0 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.E12102.0.0*]","1":"[*Flag.E12102.0.1*]"}}],"init":0,"rel":{"post":{"Position":["Back_Work_001","Door_02","Door_Free_001"],"Script":["fortress_work_302"]},"pre":{"Script":["ch2_4_2","ch3_2_1","ch4_1_1","S0024_01_03"]}}}

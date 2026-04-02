@@ -1,1 +1,0 @@
-{"type":"001","friend":{"name":["[*Label.Enemy,500*]"],"people":100},"enemy":{"name":["[*Label.Enemy,001*]"],"people":100},"neutral":{"name":["[*Label.Enemy,900*]"],"people":30},"end":["[*Custom.Defeat*]","[*Custom.PlayerDie*]"],"rel":{"pre":{},"from":{"Script":["battle_test_01"]}}}
