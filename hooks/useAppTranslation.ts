@@ -2,73 +2,78 @@ import { useMemo } from 'react';
 import { useTranslations, TranslationValues } from 'next-intl';
 
 export function useAppTranslation() {
-    const t = useTranslations();
+  const t = useTranslations();
 
-    // 快取常用之翻譯物件
-    const { translateTerm, translateParagraph } = useMemo(() => {
+  // 快取常用之翻譯物件
+  const { translateTerm, translateParagraph, translateTermWithParam } = useMemo(() => {
 
-        // 翻譯用詞
-        const tTerm = (text: string, params?: TranslationValues, defaultText: number = 1): string => {
+    const tTermWithParam = (text: string, param: string, defaultText: number = 2): string => {
+      if (param.includes('.')) param = tTerm(param, undefined, 1);
+      return tTerm(text, { 0: param }, defaultText);
+    }
 
-            // 防呆
-            if (!text) return '';
+    // 翻譯用詞
+    const tTerm = (text: string, params?: TranslationValues, defaultText: number = 2): string => {
 
-            // 嘗試處理自動降階
-            if (t.has(`${text}._`)) text = t(`${text}._`, params);
+      // 防呆
+      if (!text) return '';
 
-            // 嘗試正常翻譯
-            else if (t.has(text)) text = t(text, params);
+      // 嘗試處理自動降階
+      if (t.has(`${text}._`)) text = t(`${text}._`, params);
 
-            // 無可用翻譯回傳 0:空白 / 1:本身 / 2:最後一個KEY
-            else return defaultText === 0 ? '' : defaultText === 2 ? text.split('.').pop()! : text;
+      // 嘗試正常翻譯
+      else if (t.has(text)) text = t(text, params);
 
-            // 處理巢狀翻譯並回傳
-            return tParagraph(text, defaultText);
-        };
+      // 無可用翻譯回傳 0:空白 / 1:本身 / 2:最後一個KEY
+      else return defaultText === 0 ? '' : defaultText === 2 ? text.split('.').pop()! : text;
 
-        // 翻譯段落
-        const tParagraph = (text: string, defaultText: number = 1): string => {
+      // 處理巢狀翻譯並回傳
+      return tParagraph(text, defaultText);
+    };
 
-            // 防呆
-            if (!text) return '';
+    // 翻譯段落
+    const tParagraph = (text: string, defaultText: number = 1): string => {
 
-            // 初始化變數
-            const regexStatment = /\[%([\s\S]+?)%\]/g
-            const regexTerm = /\[\*([\s\S]+?)\*\]/g;
+      // 防呆
+      if (!text) return '';
 
-            // 移除比較式外框
-            text = text.replace(regexStatment, (_, content) => content);
+      // 初始化變數
+      const regexStatment = /\[%([\s\S]+?)%\]/g
+      const regexTerm = /\[\*([\s\S]+?)\*\]/g;
 
-            // 針對內部用詞進行翻譯
-            text = text.replace(regexTerm, (_, content) => {
+      // 移除比較式外框
+      text = text.replace(regexStatment, (_, content) => content);
 
-                // 取得鍵值及參數
-                const [key, ...args] = content.split(',');
+      // 針對內部用詞進行翻譯
+      text = text.replace(regexTerm, (_, content) => {
 
-                if (args.length > 0) {
+        // 取得鍵值及參數
+        const [key, ...args] = content.split(',');
 
-                    // 參數陣列轉換為參數物件
-                    const params = args.reduce((acc: Record<number, string>, arg: string, i: number) => {
+        if (args.length > 0) {
 
-                        // 嘗試翻譯變數
-                        acc[i] = tTerm(arg.trim());
-                        return acc;
-                    }, {} as Record<number, string>);
+          // 參數陣列轉換為參數物件
+          const params = args.reduce((acc: Record<number, string>, arg: string, i: number) => {
 
-                    // 回傳翻譯結果
-                    return tTerm(key.trim(), params, defaultText);
-                }
+            // 嘗試翻譯變數
+            acc[i] = tTerm(arg.trim(), undefined, 1);
+            return acc;
+          }, {} as Record<number, string>);
 
-                // 回傳翻譯結果
-                return tTerm(content, undefined, defaultText);
-            });
+          // 回傳翻譯結果
+          return tTerm(key.trim(), params, defaultText);
+        }
 
-            // 回傳結果
-            return text;
-        };
+        // 回傳翻譯結果
+        return tTerm(content, undefined, defaultText);
+      });
 
-        return { translateTerm: tTerm, translateParagraph: tParagraph };
-    }, [t]);
+      // 回傳結果
+      return text;
+    };
 
-    return { t, translateTerm, translateParagraph };
+    return { translateTerm: tTerm, translateParagraph: tParagraph, translateTermWithParam: tTermWithParam };
+  }, [t]);
+
+  return { t, translateTerm, translateParagraph, translateTermWithParam };
 }

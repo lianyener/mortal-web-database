@@ -33,7 +33,7 @@ export function GlobalSidebar() {
   const { data, isLoading, isError } = useItemDetail(category, id);
 
   // 共通i18n解析邏輯
-  const { translateTerm } = useAppTranslation();
+  const { translateTermWithParam } = useAppTranslation();
 
   // URL->Zustand (處理初始載入與瀏覽器上一頁/下一頁)
   useEffect(() => {
@@ -102,17 +102,15 @@ export function GlobalSidebar() {
       >
         <SheetHeader>
           <SheetTitle className="text-xl font-bold">
-            {translateTerm(`LabelIcon.${category}`, undefined, 0)}
-            {translateTerm(`Web.${category}`, undefined, 2)}
-            {translateTerm('Web.RefrenceInfo', undefined, 2)}
+            {translateTermWithParam('Web.ItemInfo', String(category))}
           </SheetTitle>
           <SheetDescription>{category}: {id}</SheetDescription>
         </SheetHeader>
 
         {category && id ? (
           <div className="-mt-8 p-4 text-sm">
-            {isLoading && <p className="text-muted-foreground">{translateTerm('Web.Loading', { 0: translateTerm(`Web.${category}`) })}</p>}
-            {isError && <p className="text-destructive">{translateTerm('Web.LoadError', { 0: translateTerm(`Web.${category}`) })}</p>}
+            {isLoading && <p className="text-muted-foreground">{translateTermWithParam('Web.Loading', category)}</p>}
+            {isError && <p className="text-destructive">{translateTermWithParam('Web.LoadError', category)}</p>}
             {data && (
               <SidebarContent category={category} id={id} data={data} />
             )}
@@ -137,28 +135,28 @@ function SidebarContent({ category, id, data }: any) {
 
 // 通用面板
 function DefaultInfo({ category, id, data }: any) {
-  const { translateTerm } = useAppTranslation();
-  const name = translateTerm(`LabelName.${category}`, { 0: id });
+  const { translateTerm, translateTermWithParam } = useAppTranslation();
+  const name = translateTermWithParam(`LabelName.${category}`, id);
   const desc = translateTerm(`${category}.Desc.${id}`, undefined, 0);
 
   return (
     <div className="flex flex-col gap-5">
 
       {/* 基本資訊區塊 */}
-      <div className="space-y-3 bg-card p-4 rounded-lg border shadow-sm">
+      <div className="space-y-3 bg-background p-4 rounded-lg border shadow-sm">
         <div>
-          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id', undefined, 2)}</div>
+          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
           <div className="font-semibold text-lg">{id}</div>
         </div>
         {name && (
           <div>
-            <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name', undefined, 2)}</div>
+            <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
             <div className="font-semibold text-lg">{name}</div>
           </div>
         )}
         {desc && (
           <div>
-            <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc', undefined, 2)}</div>
+            <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc')}</div>
             <div className="text-sm leading-relaxed">{desc}</div>
           </div>
         )}
@@ -172,7 +170,7 @@ function DefaultInfo({ category, id, data }: any) {
 
 // Flag 專用面板
 function FlagInfo({ id, data }: any) {
-  const { translateTerm, translateParagraph } = useAppTranslation();
+  const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
 
   // 判斷類別(Combat/Battle/Script)取得Script標籤
   const getScriptLabel = (s: string) => {
@@ -185,13 +183,13 @@ function FlagInfo({ id, data }: any) {
     <div className="flex flex-col gap-6">
 
       {/* 基本資訊區塊(增加預設值) */}
-      <div className="space-y-3 bg-card p-4 rounded-lg border shadow-sm">
+      <div className="space-y-3 bg-background p-4 rounded-lg border shadow-sm">
         <div>
-          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id', undefined, 2)}</div>
+          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
           <div className="font-semibold text-lg">{id}</div>
         </div>
         <div>
-          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Init', undefined, 2)}</div>
+          <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Init')}</div>
           <div className="text-sm leading-relaxed">{data.init}</div>
         </div>
       </div>
@@ -201,7 +199,7 @@ function FlagInfo({ id, data }: any) {
         <div className="space-y-3">
 
           {/* 標題 */}
-          <h4 className="font-bold text-base border-b pb-2 mb-3">{translateTerm('Web.FlagData', undefined, 2)}</h4>
+          <h4 className="font-bold text-base border-b pb-2 mb-3">{translateTerm('Web.BasicInfo')}</h4>
 
           {/* 卡片 */}
           <div className="flex flex-col gap-3">
@@ -214,7 +212,7 @@ function FlagInfo({ id, data }: any) {
 
                   {/* 對應場景 */}
                   <div className="pb-3 mb-3 border-b border-border/50">
-                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.Scenario', undefined, 2)}</div>
+                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.Scenario')}</div>
                     {item.script && Array.isArray(item.script) && item.script.length > 0 ? (
                       <div className="flex flex-wrap -ml-1 gap-1">
                         {item.script.map((s: string) => (
@@ -222,13 +220,13 @@ function FlagInfo({ id, data }: any) {
                         ))}
                       </div>
                     ) : (
-                      <div className="font-semibold">{translateTerm('Web.DefaultScenario', undefined, 2)}</div>
+                      <div className="font-semibold">{translateTerm('Web.DefaultScenario')}</div>
                     )}
                   </div>
 
                   {/* 名稱及說明 */}
                   <div className="pb-3 mb-3 border-b border-border/50">
-                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.FlagInfo', undefined, 2)}</div>
+                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTermWithParam('Web.Info', 'Flag')}</div>
                     <div className="font-semibold text-base text-foreground">{subName}</div>
                     {subDesc && (
                       <div className="mt-1 text-sm/relaxed text-foreground/70">{subDesc}</div>
@@ -237,7 +235,7 @@ function FlagInfo({ id, data }: any) {
 
                   {/* 設定數值區塊 */}
                   <div>
-                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.ValueDef', undefined, 2)}</div>
+                    <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.ValueDef')}</div>
                     {item.value && Object.keys(item.value).length > 0 ? (
                       <div className="font-(family-name:--font-script)">
                         {Object.entries(item.value).map(([valKey, valText]: [string, any]) => (
@@ -248,7 +246,7 @@ function FlagInfo({ id, data }: any) {
                         ))}
                       </div>
                     ) : (
-                      <div>{translateTerm('Web.NoValueDef', undefined, 2)}</div>
+                      <div>{translateTerm('Web.NoValueDef')}</div>
                     )}
                   </div>
 
@@ -273,7 +271,7 @@ function SidebarRelation({ data }: { data: any }) {
 
   return (
     <div className="space-y-3">
-      <h4 className="font-bold text-base border-b pb-2 mb-3">{translateTerm('Web.Relations', undefined, 2)}</h4>
+      <h4 className="font-bold text-base border-b pb-2 mb-3">{translateTerm('Web.Relations')}</h4>
       {Object.entries(data.rel).map(([phase, types]) => (
         <DataRelation key={phase} phase={phase} types={types} />
       ))}
@@ -290,7 +288,7 @@ function DataRelation({ phase, types }: { phase: string, types: any }) {
   if (!Object.values(types).some((ids: any) => Array.isArray(ids) && ids.length > 0)) return null;
 
   return (
-    <div className="bg-card border rounded-lg p-3 shadow-sm">
+    <div className="bg-background border rounded-lg p-3 shadow-sm">
       <div className="font-semibold text-primary text-base mb-3 border-b pb-1.5">
         {translateTerm(`Web.Rel.${phase}`)}
       </div>
@@ -302,7 +300,7 @@ function DataRelation({ phase, types }: { phase: string, types: any }) {
 
           return (
             <div key={type} className="flex flex-col sm:flex-row gap-1 sm:gap-3 border-b border-border/40 pb-2 last:border-0 last:pb-0">
-              <span className="font-semibold text-muted-foreground w-18 shrink-0">{translateTerm(`Web.${type}`, undefined, 2)}</span>
+              <span className="font-semibold text-muted-foreground w-18 shrink-0">{translateTerm(`Web.Label.${type}`)}</span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5 flex-1">
                 {ids.map((id: string) => (
                   <div key={id} className="flex items-start overflow-hidden">

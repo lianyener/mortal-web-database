@@ -6,7 +6,7 @@ import { useAppTranslation } from '@/hooks/useAppTranslation';
 export function ParsedText({ text }: { text: string }) {
 
   const router = useRouter();
-  const { translateTerm, translateParagraph } = useAppTranslation();
+  const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
 
   if (!text) return null;
 
@@ -116,11 +116,11 @@ export function ParsedText({ text }: { text: string }) {
             switch (category) {
               case 'Script':
               case 'Free':
-                titleText += translateTerm(`Script.Name.${targetId}`);
+                titleText += translateTerm(`Script.Name.${targetId}`, undefined, 1);
                 break;
               case 'Combat':
               case 'Battle':
-                titleText += translateTerm(`${category}.Name.${targetId}`);
+                titleText += translateTerm(`${category}.Name.${targetId}`, undefined, 1);
                 break;
               case 'Flag':
               case 'RelationshipFlag':
@@ -131,11 +131,11 @@ export function ParsedText({ text }: { text: string }) {
                 break;
             }
             if (!targetId) titleText = '';
-            titleText = `${translateTerm(`Web.${category}`, undefined, 2)}${titleText}`;
+            titleText = `${translateTerm(`Web.Label.${category}`)}${titleText}`;
 
             // 只有emoji -> 找不到用詞
             if (translated == translateTerm(`LabelIcon.${category}`)) {
-              contentNode = `${translated}${translateTerm('Web.Unknown', { 0: translateTerm(`Web.${category}`) }, 2)}(${targetId.split('.')[0]})`;
+              contentNode = `${translated}${translateTermWithParam('Web.Unknown', `Web.Label.${category}`)}(${targetId.split('.')[0]})`;
               isLink = false;
             }
 

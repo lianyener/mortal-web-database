@@ -1,0 +1,1 @@
+{"mission":"S0604","trigger":"S0604_01","active":false,"minTime":{"year":"1","month":"4","stage":"1"},"maxTime":{"year":"","month":"","stage":""},"condition":["※[*Custom.TriggerPriority,LowerThan*]"],"script":"S0604_01","content":[],"remark":["※[*Custom.TriggerDisable*]"],"rel":{"pre":{},"post":{}},"type":"Sub","orderKey":"1-04-1-2-S0604_01"}

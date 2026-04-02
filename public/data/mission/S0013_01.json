@@ -1,0 +1,1 @@
+{"mission":"S0013","trigger":"S0013_01","active":false,"minTime":{"year":"1","month":"4","stage":"1"},"maxTime":{"year":"","month":"","stage":""},"condition":["※[*Custom.TriggerPriority,HigherThan*]"],"script":"","content":[],"remark":["※[*Custom.TriggerDisable*]"],"rel":{"pre":{},"post":{}},"type":"Sub","orderKey":"1-04-1-0-S0013_01"}

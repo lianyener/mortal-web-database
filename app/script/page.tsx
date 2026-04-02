@@ -45,7 +45,7 @@ function ScriptContent() {
   const contentArray = data?.content || [];
 
   // i18n解析邏輯
-  const { translateTerm, translateParagraph } = useAppTranslation();
+  const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
 
   // 側邊欄開啟狀態
   const isOpen = useSidebarStore(state => state.isOpen);
@@ -71,12 +71,12 @@ function ScriptContent() {
       <div className="max-w-5xl mx-auto px-6 space-y-6">
         {isLoading && (
           <div className="text-center text-muted-foreground py-10 tracking-widest animate-pulse">
-            {translateTerm('Web.Loading', { 0: translateTerm('Web.Script') })}
+            {translateTermWithParam('Web.Msg.Loading', 'Script')}
           </div>
         )}
         {isError && (
           <div className="text-center text-destructive py-10 bg-destructive/10 rounded-md">
-            {translateTerm('Web.LoadError', { 0: translateTerm('Web.Script') })}
+            {translateTermWithParam('Web.Msg.LoadError', 'Script')}
           </div>
         )}
 
@@ -92,12 +92,12 @@ function ScriptContent() {
             {/* 基本資訊 */}
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                <h2 className="text-lg font-bold">{translateTerm('Web.ScriptData', undefined, 2)}</h2>
+                <h2 className="text-lg font-bold">{translateTermWithParam('Web.Info', 'Script')}</h2>
                 <div className="flex items-center">
                   <Button asChild variant="outline" size="sm" className="h-8 px-2.5 text-xs">
                     <Link href="/script">
                       <TableProperties className="mr-1.5 size-3.5 rotate-180 text-muted-foreground" />
-                      {translateTerm('Web.ReturnList', undefined, 2)}
+                      {translateTerm('Web.ReturnList')}
                     </Link>
                   </Button>
                 </div>
@@ -105,19 +105,19 @@ function ScriptContent() {
               <div className="p-5 border rounded-xl shadow-sm bg-card">
                 <div className="space-y-4">
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id', undefined, 2)}</div>
+                    <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
                     <div className="font-semibold text-foreground">
                       {query.id}
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name', undefined, 2)}</div>
+                    <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
                     <div className="font-semibold text-foreground">
                       {translateTerm(`Script.Name.${query.id}`)}
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc', undefined, 2)}</div>
+                    <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc')}</div>
                     <div className="text-sm leading-relaxed">
                       {translateTerm(`Script.Desc.${query.id}`) || translateTerm('System.NA')}
                     </div>
@@ -140,23 +140,23 @@ function ScriptContent() {
             {data.content && data.content.length > 0 && (
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                  <h2 className="text-lg font-bold">{translateTerm('Web.Content', undefined, 2)}</h2>
-                  <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-bold">{translateTerm('Web.Content')}</h2>
+                  <div className="flex flex-wrap items-center gap-2">
 
                     {/* 篩選分支下拉選單 */}
                     {availableEffects.length > 0 && (
-                      <div className="relative">
+                      <div className="relative" title={translateTerm('Web.Msg.FilterSwitch')}>
                         <Button variant="outline" size="sm" onClick={() => setIsFilterOpen(!isFilterOpen)} className="h-8 px-2.5 text-xs">
                           <Filter className="mr-1.5 size-3.5 text-muted-foreground" />
-                          {translateTerm('Web.FilterSwitch', undefined, 2)} ({selectedEffects.length}/{availableEffects.length})
+                          {translateTerm('Web.FilterSwitch')} ({selectedEffects.length}/{availableEffects.length})
                         </Button>
                         {isFilterOpen && (
                           <>
                             <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
                             <div className="absolute right-0 sm:right-auto sm:left-0 top-full mt-1 w-max min-w-44 bg-popover/95 backdrop-blur-sm border rounded-md shadow-lg z-50 p-2 flex flex-col gap-1 max-h-[60vh] overflow-y-auto">
                               <div className="flex items-center justify-between px-1 pb-1 mb-1 border-b border-border/50">
-                                <button className="text-xs text-primary hover:underline font-semibold" onClick={() => setSelectedEffects(availableEffects)}>{translateTerm('Web.SelectAll', undefined, 2)}</button>
-                                <button className="text-xs text-muted-foreground hover:underline font-semibold" onClick={() => setSelectedEffects([])}>{translateTerm('Web.DeselectAll', undefined, 2)}</button>
+                                <button className="text-xs text-primary hover:underline font-semibold" onClick={() => setSelectedEffects(availableEffects)}>{translateTerm('Web.SelectAll')}</button>
+                                <button className="text-xs text-muted-foreground hover:underline font-semibold" onClick={() => setSelectedEffects([])}>{translateTerm('Web.DeselectAll')}</button>
                               </div>
                               {availableEffects.map((effect: any) => (
                                 <label key={effect} className="flex items-center gap-2 px-2 py-1.5 hover:bg-muted/80 rounded cursor-pointer select-none">
@@ -173,8 +173,8 @@ function ScriptContent() {
                                     }}
                                   />
                                   <span className="text-sm flex items-center gap-1.5">
-                                    <span className="text-muted-foreground opacity-80">{translateTerm(`LabelIcon.${effect}`, undefined, 0)}</span>
-                                    <span className="font-semibold">{translateTerm(`Web.${effect}`, undefined, 2)}</span>
+                                    <span className="text-muted-foreground opacity-80">{translateTerm(`LabelIcon.${effect}`)}</span>
+                                    <span className="font-semibold">{translateTerm(`Web.Label.${effect}`)}</span>
                                   </span>
                                 </label>
                               ))}
@@ -188,11 +188,11 @@ function ScriptContent() {
                     <ButtonGroup>
                       <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
                         <UnfoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
-                        {translateTerm('Web.ExpandAll', undefined, 2)}
+                        {translateTerm('Web.ExpandAll')}
                       </Button>
                       <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(false); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
                         <FoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
-                        {translateTerm('Web.CollapseAll', undefined, 2)}
+                        {translateTerm('Web.CollapseAll')}
                       </Button>
                     </ButtonGroup>
                   </div>
@@ -215,7 +215,7 @@ function ScriptContent() {
             {data.rel && (
               <div className="flex flex-col gap-4 mt-2">
                 <h2 className="text-lg font-bold border-b border-border/50 pb-2">
-                  {translateTerm('Web.Relations', undefined, 2)}
+                  {translateTerm('Web.Relations')}
                 </h2>
                 <div className="flex flex-col gap-3">
                   {Object.entries(data.rel).map(([phase, types]) => (
@@ -229,7 +229,7 @@ function ScriptContent() {
 
         {!isLoading && !isError && !isListView && !data && (
           <div className="text-center text-muted-foreground py-10">
-            {translateTerm('Web.NotFound', { 0: translateTerm('Web.Script') })}
+            {translateTermWithParam('Web.NotFound', 'Web.Script')}
           </div>
         )}
       </div>
@@ -239,7 +239,7 @@ function ScriptContent() {
 
 // 劇本列表元件 (DataTable)
 function DataList({ data }: { data: Record<string, any> | any[] }) {
-  const { translateTerm, translateParagraph } = useAppTranslation();
+  const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
   const [searchInput, setSearchInput] = useState('');
   const [searchTarget, setSearchTarget] = useState('');
   const [page, setPage] = useState(1);
@@ -273,9 +273,9 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
       const mapped = list.map((item: any) => {
         const id = item.id || '';
         const idText = id.toLowerCase();
-        const nameText = translateTerm(`Script.Name.${id}`).toLowerCase();
-        const descText = translateTerm(`Script.Desc.${id}`).toLowerCase();
-        const keywordText = translateTerm(`Script.Keyword.${id}`).toLowerCase();
+        const nameText = translateTerm(`Script.Name.${id}`, undefined, 1).toLowerCase();
+        const descText = translateTerm(`Script.Desc.${id}`, undefined, 1).toLowerCase();
+        const keywordText = translateTerm(`Script.Keyword.${id}`, undefined, 1).toLowerCase();
 
         let contentText = '';
         if (item.searchText) {
@@ -323,14 +323,14 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
         <div className="flex items-center gap-2">
-          <h2 className="text-lg font-bold">{translateTerm('Web.ScriptList', undefined, 2)}</h2>
-          {isBuildingCache && <span className="text-xs text-muted-foreground animate-pulse">({translateTerm('Web.BuildingCache')})</span>}
+          <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Script')}</h2>
+          {isBuildingCache && <span className="text-xs text-muted-foreground animate-pulse">({translateTerm('Web.Msg.BuildingCache')})</span>}
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <ButtonGroup className="flex-1">
             <input
               type="text"
-              placeholder={translateTerm('Web.SearchPlaceholder')}
+              placeholder={translateTerm('Web.Msg.SearchPlaceholder')}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
@@ -360,18 +360,18 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                   </td>
                   <td className="px-4 py-3 font-bold whitespace-normal">
                     <Link href={`/script?id=${item.id}`} className="hover:text-primary transition-colors">
-                      {translateTerm(`Script.Name.${item.id}`)}
+                      {translateTerm(`Script.Name.${item.id}`, undefined, 1)}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`Script.Desc.${item.id}`)}>
+                  <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`Script.Desc.${item.id}`, undefined, 1)}>
                     <div className="line-clamp-2">
-                      {translateTerm(`Script.Desc.${item.id}`)}
+                      {translateTerm(`Script.Desc.${item.id}`, undefined, 1)}
                     </div>
                   </td>
                 </tr>
               ))}
               {filteredList.length === 0 && (
-                <tr><td colSpan={3} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.NoData')}</td></tr>
+                <tr><td colSpan={3} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>
               )}
             </tbody>
           </table>
@@ -502,7 +502,7 @@ function BranchItem({ branch, treeActionId, isGlobalExpand, selectedEffects }: {
           {!isSingleEffect && !isExpanded && (
             <div
               className="flex items-center min-w-10 opacity-60 text-sm select-none pl-1 hover:opacity-90 transition-opacity"
-              title={effectsList.length > 0 ? effectsList.map((e: string) => translateTerm(`Web.${e}`)).join(', ') : ''}
+              title={effectsList.length > 0 ? effectsList.map((e: string) => translateTerm(`Web.Label.${e}`)).join(', ') : ''}
             >
               <CircleFadingPlus className="size-4 shrink-0 text-muted-foreground/70 mr-1.5" />
               <div className="truncate tracking-widest">
@@ -552,7 +552,7 @@ function DataRelation({ phase, types }: { phase: string, types: any }) {
   return (
     <div className="bg-card border rounded-xl p-4 sm:p-5 shadow-sm w-full">
       <h3 className="text-md font-bold text-primary mb-4 border-b border-border/50 pb-2">
-        {translateTerm(`Web.Rel.${phase}`)}
+        {translateTerm(`Web.Rel.${phase}`, undefined, 1)}
       </h3>
       <div className="flex flex-col gap-3 text-sm">
 
@@ -561,7 +561,7 @@ function DataRelation({ phase, types }: { phase: string, types: any }) {
           if (!Array.isArray(ids) || ids.length === 0) return null;
           return (
             <div key={type} className="flex flex-col sm:flex-row gap-2 sm:gap-4 border-b border-border/40 pb-3 last:border-0 last:pb-0">
-              <span className="font-semibold text-muted-foreground w-18 shrink-0">{translateTerm(`Web.${type}`, undefined, 2)}</span>
+              <span className="font-semibold text-muted-foreground w-18 shrink-0">{translateTerm(`Web.Label.${type}`)}</span>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 flex-1">
                 {ids.map((id: string) => (
                   <div key={id} className="flex items-start overflow-hidden">
