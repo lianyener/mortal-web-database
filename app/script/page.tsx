@@ -9,11 +9,11 @@ import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingP
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
+import { DataRelation } from '@/components/shared/DataRelation';
 import { ParsedText } from '@/components/shared/ParsedText';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from "@/components/ui/button-group";
-import { DataRelation } from '@/components/shared/DataRelation';
 
 export default function ScriptPage() {
   return (

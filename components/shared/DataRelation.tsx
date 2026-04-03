@@ -15,6 +15,7 @@ export function DataRelation({ phase, types }: { phase: string, types: any }) {
         {translateTerm(`Web.Rel.${phase}`, undefined, 1)}
       </h3>
       <div className="flex flex-col gap-3 text-sm">
+        
         {/* 關聯項目類別 */}
         {Object.entries(types).map(([type, ids]: [string, any]) => {
           if (!Array.isArray(ids) || ids.length === 0) return null;
@@ -24,6 +25,7 @@ export function DataRelation({ phase, types }: { phase: string, types: any }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 flex-1">
                 {ids.map((id: string) => (
                   <div key={id} className="flex items-start overflow-hidden">
+
                     {/* 關聯項目，強制覆寫內部按鈕樣式 */}
                     <div className="flex-1 min-w-0 **:[[role=button]]:block **:[[role=button]]:w-full **:[[role=button]]:text-left **:[[role=button]]:truncate">
                       <ParsedText text={`[*Label.${type},${id}*]`} />

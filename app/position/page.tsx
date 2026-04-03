@@ -9,11 +9,11 @@ import { Search, TableProperties } from 'lucide-react';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
+import { DataRelation } from '@/components/shared/DataRelation';
 import { ParsedText } from '@/components/shared/ParsedText';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from "@/components/ui/button-group";
-import { DataRelation } from '@/components/shared/DataRelation';
 
 export default function PositionPage() {
   return (
@@ -168,6 +168,8 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
   const [searchTarget, setSearchTarget] = useState('');
   const [page, setPage] = useState(1);
   const itemsPerPage = 100;
+  const [periodFilter, setPeriodFilter] = useState('all');
+  const [positionFilter, setPositionFilter] = useState('all');
 
   // 緩存清單並排序
   const list = useMemo(() => {
@@ -180,6 +182,25 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
     // 依據 orderKey 進行排序
     return rawList.sort((a, b) => (a.orderKey || 9999) - (b.orderKey || 9999));
   }, [data]);
+
+  // 提取唯一的 Period 選項
+  const periodOptions = useMemo(() => {
+    const periods = new Set<string>();
+    list.forEach((item: any) => { if (item.period) periods.add(item.period); });
+    return Array.from(periods);
+  }, [list]);
+
+  // 提取唯一的 Position 選項
+  const positionOptions = useMemo(() => {
+    const positions = new Set<string>();
+    list.forEach((item: any) => { if (item.position) positions.add(item.position); });
+    return Array.from(positions);
+  }, [list]);
+
+  // 切換篩選時回到第一頁
+  useEffect(() => {
+    setPage(1);
+  }, [periodFilter, positionFilter]);
 
   // 執行搜尋
   const handleSearch = () => {
@@ -219,7 +240,18 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
 
   // 過濾清單
   const filteredList = useMemo(() => {
-    const sourceList = searchableList.length > 0 ? searchableList : list;
+    let sourceList = searchableList.length > 0 ? searchableList : list;
+
+    // 套用時期過濾
+    if (periodFilter !== 'all') {
+      sourceList = sourceList.filter((item: any) => item.period === periodFilter);
+    }
+
+    // 套用地點過濾
+    if (positionFilter !== 'all') {
+      sourceList = sourceList.filter((item: any) => item.position === positionFilter);
+    }
+
     if (!searchTarget) return sourceList;
     const searchLower = searchTarget.trim().toLowerCase();
 
@@ -232,8 +264,8 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
       const targetString = item._searchString || `${item.id} ${translateParagraph(item.period)} ${translateParagraph(item.position)} ${translateParagraph(item.action)}`.toLowerCase();
       return searchTerms.every(term => targetString.includes(term));
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchableList, list, searchTarget]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchableList, list, searchTarget, periodFilter, positionFilter]);
 
   // 分頁顯示資料
   const displayList = useMemo(() => {
@@ -248,15 +280,36 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
           <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Web.Label.Position')}</h2>
           {isBuildingCache && <span className="text-xs text-muted-foreground animate-pulse">({translateTerm('Web.Msg.BuildingCache')})</span>}
         </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <ButtonGroup className="flex-1">
+        <div className="flex flex-wrap items-center gap-2 xl:w-auto">
+          
+          {/* 時期篩選 */}
+          <select
+            value={periodFilter}
+            onChange={(e) => setPeriodFilter(e.target.value)}
+            className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-36 sm:max-w-48 truncate"
+          >
+            <option value="all">{translateTerm('Web.Period')} - {translateTerm('Web.Term.All')}</option>
+            {periodOptions.map(p => <option key={p} value={p}>{translateParagraph(p)}</option>)}
+          </select>
+
+          {/* 地點篩選 */}
+          <select
+            value={positionFilter}
+            onChange={(e) => setPositionFilter(e.target.value)}
+            className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-36 sm:max-w-48 truncate"
+          >
+            <option value="all">{translateTerm('Web.Position')} - {translateTerm('Web.Term.All')}</option>
+            {positionOptions.map(p => <option key={p} value={p}>{translateParagraph(p)}</option>)}
+          </select>
+
+          <ButtonGroup className="flex-1 xl:flex-none">
             <input
               type="text"
               placeholder={translateTerm('Web.Msg.SearchPlaceholder')}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
-              className="px-3 text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors sm:w-64"
+              className="px-3 text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors sm:w-48"
             />
             <Button variant="outline" size="sm" onClick={handleSearch} className="px-2">
               <Search className="size-4 opacity-70" />
