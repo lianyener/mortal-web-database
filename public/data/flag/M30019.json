@@ -1,0 +1,1 @@
+{"data":[{"script":[],"value":{"0":"[*Flag.M30019.0.0*]","1":"[*Flag.M30019.0.1*]"}}],"init":0,"rel":{"post":{"Trigger":["S0303_01"],"Script":["ch3_13_break_start_01","ch3_16_1","ch4_1_1","ch4_3_1","ch4_3_2","ch4_4_1","ch4_4_2_break_start_01"]},"pre":{"Script":["S0302_01","S0302_01_01"]}}}

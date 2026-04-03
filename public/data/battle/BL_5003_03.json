@@ -1,0 +1,1 @@
+{"type":"002","friend":{"name":["[*Label.Enemy,500*]"],"people":30},"enemy":{"name":["[*Label.Enemy,002*]"],"people":30},"neutral":{"name":[],"people":""},"end":["[*Custom.Timeout*](60 [*Custom.Second*])","[*Custom.Defeat*]","[*Custom.PlayerDie*]"],"rel":{"pre":{},"from":{"Script":["teashop_work_203"]}}}

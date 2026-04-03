@@ -1,0 +1,1 @@
+{"type":"","faction":3,"evolution":[{"name":"[*Equip.Name.Poison_01*]","condition":[]}],"rel":{"pre":{"Equip":["Poison_01"]},"post":{"Equip":["Poison_01"],"Script":["S2002_03_break_start_01"]}}}

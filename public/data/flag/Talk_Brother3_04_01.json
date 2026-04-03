@@ -1,0 +1,1 @@
+{"data":[{"script":[],"value":{"0":"[*Flag.Talk_Brother3_04_01.0.0*]","1":"[*Flag.Talk_Brother3_04_01.0.1*]"}}],"init":0,"rel":{"post":{"Script":["talk_brother3_01"]},"pre":{"Script":["talk_brother3_01"]}}}

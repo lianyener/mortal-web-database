@@ -1,0 +1,1 @@
+{"data":[{"script":[],"value":{"0":"[*Flag.P_Kitchen_01.0.0*]","1":"[*Flag.P_Kitchen_01.0.1*]"}}],"init":0,"rel":{"post":{"Trigger":["Kitchen"],"Script":["free"]},"pre":{"Script":["ch7_5_2_3"]}}}

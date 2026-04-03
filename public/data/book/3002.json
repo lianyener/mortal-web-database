@@ -1,0 +1,1 @@
+{"cost":1000,"martial":true,"type":"Fist","level":5,"condition":["[*Label.Stat,m-fist*]≥10","[*Label.Stat,m-fist*]≥10","[*Label.Stat,m-fist*]≥10","[*Label.Stat,m-fist*]≥10","[*Label.Stat,m-fist*]≥10"],"learned":["[*Label.Stat,m-fist*]","[*Label.Talent,1200*]"],"rel":{"pre":{"Script":["act1","ch3_2_3_2_3_1"]},"post":{"Talent":["1200"]}}}

@@ -2,6 +2,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
 import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, Search, TableProperties, Filter } from 'lucide-react';
@@ -11,7 +12,7 @@ import { useSidebarStore } from '@/store/useSidebarStore';
 import { ParsedText } from '@/components/shared/ParsedText';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
-import { ButtonGroup } from "@/components/ui/button-group"
+import { ButtonGroup } from "@/components/ui/button-group";
 
 export default function ScriptPage() {
   return (
@@ -239,6 +240,7 @@ function ScriptContent() {
 
 // 劇本列表元件 (DataTable)
 function DataList({ data }: { data: Record<string, any> | any[] }) {
+  const router = useRouter();
   const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
   const [searchInput, setSearchInput] = useState('');
   const [searchTarget, setSearchTarget] = useState('');
@@ -276,15 +278,11 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         const nameText = translateTerm(`Script.Name.${id}`, undefined, 1).toLowerCase();
         const descText = translateTerm(`Script.Desc.${id}`, undefined, 1).toLowerCase();
         const keywordText = translateTerm(`Script.Keyword.${id}`, undefined, 1).toLowerCase();
-
-        let contentText = '';
-        if (item.searchText) {
-          contentText = translateParagraph(item.searchText).toLowerCase();
-        }
+        const searchText = translateParagraph(item.searchText || '').toLowerCase();
 
         return {
           ...item,
-          _searchString: `${idText} ${nameText} ${descText} ${keywordText} ${contentText}`
+          _searchString: `${idText} ${nameText} ${descText} ${keywordText} ${searchText}`
         };
       });
       setSearchableList(mapped);
@@ -354,19 +352,13 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             </thead>
             <tbody className="divide-y divide-border/70">
               {displayList.map((item: any) => (
-                <tr key={item.id} className="hover:bg-muted/50 transition-colors group">
-                  <td className="px-4 py-3 font-mono text-primary">
-                    <Link href={`/script?id=${item.id}`} className="hover:underline">{item.id}</Link>
-                  </td>
-                  <td className="px-4 py-3 font-bold whitespace-normal">
-                    <Link href={`/script?id=${item.id}`} className="hover:text-primary transition-colors">
-                      {translateTerm(`Script.Name.${item.id}`, undefined, 1)}
-                    </Link>
+                <tr key={item.id} onClick={() => router.push(`/script?id=${item.id}`)} className="hover:bg-muted/50 transition-colors group cursor-pointer">
+                  <td className="px-4 py-3 font-mono text-primary group-hover:underline">{item.id}</td>
+                  <td className="px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80">
+                    {translateTerm(`Script.Name.${item.id}`, undefined, 1)}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`Script.Desc.${item.id}`, undefined, 1)}>
-                    <div className="line-clamp-2">
-                      {translateTerm(`Script.Desc.${item.id}`, undefined, 1)}
-                    </div>
+                    <div className="line-clamp-2">{translateTerm(`Script.Desc.${item.id}`, undefined, 1)}</div>
                   </td>
                 </tr>
               ))}
@@ -376,6 +368,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             </tbody>
           </table>
         </div>
+        
         {/* 載入更多按鈕 */}
         {hasMore && (
           <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
@@ -448,7 +441,7 @@ function DataContent({ node, treeActionId, isGlobalExpand, selectedEffects }: { 
       <div className="flex items-start gap-2 px-3 py-0.5 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
         <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-1.25" />
         <div className="flex-1">
-            <ParsedText text={node.text} />
+          <ParsedText text={node.text} />
         </div>
       </div>
     );

@@ -1,0 +1,1 @@
+{"data":[{"script":[],"value":{"0":"[*Flag.S9906_01_Option_01.0.0*]","1":"[*Flag.S9906_01_Option_01.0.1*]"}}],"init":0,"rel":{"post":{"Script":["S9906_01_03_option"]},"pre":{"Script":["S9906_01_03_option"]}}}

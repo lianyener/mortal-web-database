@@ -1,0 +1,1 @@
+{"type":"Melee","faction":3,"evolution":[{"name":"[*Equip.Name.Melee_01*]","condition":[]}],"rel":{"pre":{"Equip":["Melee_10"]},"post":{"Equip":["Melee_01"]}}}

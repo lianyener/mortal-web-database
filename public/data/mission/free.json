@@ -1,0 +1,1 @@
+{"trigger":["Room2","Room1","Door","Kitchen","BackMountain","Alchemy","Study","Mall","Forge","Center"],"init":"","rel":{"to":{"Trigger":["Room2","Kitchen","BackMountain","Room1","Alchemy","Door","Study","Mall","Forge","Center"]}}}

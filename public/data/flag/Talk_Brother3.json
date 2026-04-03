@@ -1,0 +1,1 @@
+{"data":[{"script":[],"value":{"0":"[*Flag.Talk_Brother3.0.0*]","1":"[*Flag.Talk_Brother3.0.1*]"}}],"init":0,"rel":{"pre":{"Trigger":["Mall"]},"post":{"Script":["free"]}}}

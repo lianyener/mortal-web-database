@@ -1,0 +1,1 @@
+{"cost":900,"martial":true,"type":"Etc","level":5,"condition":["[*System.NA*]","[*System.NA*]","[*System.NA*]","[*System.NA*]","[*System.NA*]"],"learned":["[*Label.Stat,dexterity*]","[*Label.Stat,disposition*]","[*Label.Stat,training*]","[*Label.Stat,karma*]"],"rel":{"pre":{"Script":["act1","S9906_01_03_01"]},"post":{}}}
