@@ -268,10 +268,10 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
           <table className="w-full text-sm text-left whitespace-nowrap">
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
               <tr>
-                <th className="px-4 py-3 font-semibold w-24">{translateTerm('Web.Id')}</th>
-                <th className="px-4 py-3 font-semibold min-w-32">{translateTerm('Web.Period')}</th>
-                <th className="px-4 py-3 font-semibold min-w-32">{translateTerm('Web.Position')}</th>
-                <th className="px-4 py-3 font-semibold min-w-32 w-full">{translateTerm('Web.Action')}</th>
+                <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Id')}</th>
+                <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Period')}</th>
+                <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Position')}</th>
+                <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Action')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/70">
