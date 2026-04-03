@@ -38,11 +38,11 @@ export function useAppTranslation() {
       if (!text) return '';
 
       // 初始化變數
-      const regexStatment = /\[%([\s\S]+?)%\]/g
+      const regexStatment = /\[([%#])([\s\S]+?)\1\]/g
       const regexTerm = /\[\*([\s\S]+?)\*\]/g;
 
       // 移除比較式外框
-      text = text.replace(regexStatment, (_, content) => content);
+      text = text.replace(regexStatment, (_, symbol, content) => content);
 
       // 針對內部用詞進行翻譯
       text = text.replace(regexTerm, (_, content) => {

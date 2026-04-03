@@ -11,7 +11,7 @@ export function ParsedText({ text }: { text: string }) {
   if (!text) return null;
 
   // 匹配 [%條件式%] 或 [*翻譯參照*]
-  const regexPart = /(\[%[\s\S]*?%\]|\[\*[\s\S]*?\*\])/g;
+  const regexPart = /(\[%[\s\S]*?%\]|\[\*[\s\S]*?\*\]|\[#[\s\S]*?#\])/g;
   const regexLabel = /^Label\.(\w+)?(?:,(.+))?$/;
   const parts = text.split(regexPart);
 
@@ -19,11 +19,24 @@ export function ParsedText({ text }: { text: string }) {
     <>
       {parts.map((part, index) => {
 
-        // 條件式加框
+        // 條件式加底
         if (part.startsWith('[%') && part.endsWith('%]')) {
           const content = part.slice(2, -2);
           return (
             <span key={index} className="inline-block px-1 mx-0.5 text-sm/relaxed font-semibold rounded bg-amber-600/10">
+
+              {/* 遞迴處理內部文字 */}
+              <ParsedText text={content} />
+            </span>
+          );
+        }
+
+        // 加框
+        if (part.startsWith('[#') && part.endsWith('#]')) {
+          const content = part.slice(2, -2);
+          return (
+            <span key={index} className="inline-block px-1 mx-0.5 text-sm/[20.75px] border rounded">
+
               {/* 遞迴處理內部文字 */}
               <ParsedText text={content} />
             </span>
@@ -141,7 +154,7 @@ export function ParsedText({ text }: { text: string }) {
 
             return (
               <span key={index} onClick={handleClick} role="button" tabIndex={0} title={titleText}
-                className={`inline-flex items-center font-bold text-inherit transition-colors hover:text-current/80 ${isLink ? 'cursor-pointer' : ''}`}>
+                className={`inline-flex items-center font-semibold text-inherit transition-colors hover:text-current/80 ${isLink ? 'cursor-pointer' : ''}`}>
                 {contentNode}
               </span>
             );

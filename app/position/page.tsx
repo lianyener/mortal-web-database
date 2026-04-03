@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
-import { Search, TableProperties, Lock, Percent } from 'lucide-react';
+import { Search, TableProperties } from 'lucide-react';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -83,14 +83,14 @@ function PositionContent() {
                 <h2 className="text-lg font-bold">{translateTermWithParam('Web.Info', 'Web.Label.Position')}</h2>
                 <div className="flex items-center">
                   <Button asChild variant="outline" size="sm" className="h-8 px-2.5 text-xs">
-                    <Link href="/position?id=index">
+                    <Link href="/position">
                       <TableProperties className="mr-1.5 size-3.5 rotate-180 text-muted-foreground" />
                       {translateTerm('Web.ReturnList')}
                     </Link>
                   </Button>
                 </div>
               </div>
-              
+
               <div className="p-5 border rounded-xl shadow-sm bg-card">
                 <div className="space-y-4">
                   <div>
@@ -129,11 +129,7 @@ function PositionContent() {
                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
                   <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Web.Label.Event')}</h2>
                 </div>
-                <div className="flex flex-col gap-4">
-                  {Object.entries(detailData.event).map(([eventId, eventData]: [string, any]) => (
-                    <EventCard key={eventId} eventId={eventId} eventData={eventData} />
-                  ))}
-                </div>
+                <EventTable events={detailData.event} />
               </div>
             )}
 
@@ -293,7 +289,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             </tbody>
           </table>
         </div>
-        
+
         {/* 載入更多按鈕 */}
         {hasMore && (
           <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
@@ -307,68 +303,73 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
   );
 }
 
-// 單一事件卡片
-function EventCard({ eventId, eventData }: { eventId: string, eventData: any }) {
+// 事件列表元件 (DataTable)
+function EventTable({ events }: { events: Record<string, any> }) {
   const { translateTerm, translateParagraph } = useAppTranslation();
 
   return (
-    <div className="p-5 bg-card border rounded-xl shadow-sm hover:border-primary/40 transition-colors">
-      
-      {/* 標題與跳轉劇本按鈕 */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-border/50">
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">
-            {eventId}
-          </span>
-          <span className="font-bold text-base text-foreground">
-            <ParsedText text={translateTerm(eventData.name)} />
-          </span>
-        </div>
-        
-        {eventData.script && (
-          <ParsedText text={`[*Label.Script,${eventData.script}*]`} />
-        )}
-      </div>
-
-      <div className="space-y-4">
-        {/* 條件 */}
-        {eventData.condition && eventData.condition.length > 0 && (
-          <div className="flex flex-col gap-1.5">
-            <div className="text-xs text-muted-foreground font-semibold flex items-center gap-1.5">
-              <Lock className="size-3.5" /> {translateTerm('Web.Condition') || '觸發條件'}
-            </div>
-            <div className="flex flex-col gap-1.5 pl-4 border-l-2 border-border/60 ml-1.5">
-              {eventData.condition.map((cond: string, i: number) => (
-                <div key={i} className="text-sm"><ParsedText text={cond} /></div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 機率 / 權重 */}
-        {eventData.rate && eventData.rate.length > 0 && (
-          <div className="flex flex-col gap-1.5">
-            <div className="text-xs text-muted-foreground font-semibold flex items-center gap-1.5">
-              <Percent className="size-3.5" /> {translateTerm('Web.Rate') || '出現機率 / 權重'}
-            </div>
-            <div className="flex flex-wrap gap-2 pl-4 border-l-2 border-border/60 ml-1.5">
-              {eventData.rate.map((rate: string, i: number) => (
-                <div key={i} className="text-sm bg-muted/60 border px-2 py-0.5 rounded font-mono font-medium">
-                  <ParsedText text={rate} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 備註 */}
-        {eventData.remark && eventData.remark.length > 0 && (
-          <div className="mt-4 pt-3 border-t border-border/50 text-sm text-amber-700 dark:text-amber-400">
-            {eventData.remark.map((rmk: string, i: number) => (
-              <div key={i} className="mb-1 last:mb-0"><ParsedText text={translateParagraph(rmk)} /></div>
-            ))}
-          </div>
-        )}
+    <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left whitespace-nowrap">
+          <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
+            <tr>
+              <th className="px-4 py-3 font-semibold min-w-10">{translateTerm('Web.Class')}</th>
+              <th className="px-4 py-3 font-semibold min-w-60">{translateTerm('Web.Condition')}</th>
+              <th className="px-4 py-3 font-semibold min-w-48">{translateTerm('Web.Rate')}</th>
+              <th className="px-4 py-3 font-semibold min-w-48">{translateTerm('Web.Label.Script')}</th>
+            </tr>
+          </thead>
+          {Object.entries(events).sort(([idA], [idB]) => idA.localeCompare(idB)).map(([eventId, eventData]: [string, any]) => {
+            const classId = eventId.charAt(0);
+            const hasRemark = eventData.remark && eventData.remark.length > 0;
+            return (
+              <tbody key={eventId} className="border-b border-border/70 last:border-b-0 group font-(family-name:--font-script)">
+                <tr className="transition-colors group-hover:bg-muted/50">
+                  <td className="px-4 py-3.5 align-top">{translateTerm(`Position.Class.${classId}`)}</td>
+                  <td className="px-4 py-3 text-foreground/80 align-top">
+                    {eventData.condition && eventData.condition.length > 0 ? (
+                      <div className="flex flex-col gap-1.5">
+                        {eventData.condition.map((cond: string, i: number) => (
+                          <div key={i}><span className="text-muted-foreground">{i + 1}.</span><ParsedText text={cond} /></div>
+                        ))}
+                      </div>
+                    ) : <span className="text-muted-foreground/50">-</span>}
+                  </td>
+                  <td className="px-4 py-3 text-foreground/80 align-top">
+                    {eventData.rate && eventData.rate.length > 0 ? (
+                      <div className="flex flex-col gap-1.5">
+                        {eventData.rate.map((rate: string, i: number) => (
+                          <div key={i}><ParsedText text={rate} /></div>
+                        ))}
+                      </div>
+                    ) : <span className="text-muted-foreground/50">-</span>}
+                  </td>
+                  <td className="px-4 py-3.5 align-top">
+                    {eventData.script ? (
+                      <div className="flex flex-col gap-1.5">
+                        <div>
+                          <ParsedText text={`[*Label.Script,${eventData.script}*]`} />
+                        </div>
+                        <div className="ml-4.5">({translateTerm(`Script.Name.${eventData.script}`)})</div>
+                      </div>
+                    ) : <span className="text-muted-foreground/50">-</span>}
+                  </td>
+                </tr>
+                {hasRemark && (
+                  <tr className="transition-colors group-hover:bg-muted/50">
+                    <td colSpan={4} className="px-3 pb-3 pt-0 align-top whitespace-normal">
+                      <div className="flex flex-col gap-1 text-amber-700 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20 px-3 py-2 rounded-md border border-amber-200/50 dark:border-amber-900/50">
+                        {eventData.remark.map((r: string, i: number) => (
+                          <div key={i}>{translateParagraph(r)}</div>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            );
+          })}
+        </table>
       </div>
     </div>
   );
@@ -398,7 +399,7 @@ function DataRelation({ phase, types }: { phase: string, types: any }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 flex-1">
                 {ids.map((id: string) => (
                   <div key={id} className="flex items-start overflow-hidden">
-                    
+
                     {/* 關聯項目，強制覆寫內部按鈕樣式 */}
                     <div className="flex-1 min-w-0 **:[[role=button]]:block **:[[role=button]]:w-full **:[[role=button]]:text-left **:[[role=button]]:truncate">
                       <ParsedText text={`[*Label.${type},${id}*]`} />
