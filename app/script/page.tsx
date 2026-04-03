@@ -106,16 +106,18 @@ function ScriptContent() {
               </div>
               <div className="p-5 border rounded-xl shadow-sm bg-card">
                 <div className="space-y-4">
-                  <div>
-                    <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
-                    <div className="font-semibold text-foreground">
-                      {query.id}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
+                      <div className="font-semibold text-foreground">
+                        {query.id}
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
-                    <div className="font-semibold text-foreground">
-                      {translateTerm(`Script.Name.${query.id}`)}
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
+                      <div className="font-semibold text-foreground">
+                        {translateTerm(`Script.Name.${query.id}`)}
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -369,7 +371,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             </tbody>
           </table>
         </div>
-        
+
         {/* 載入更多按鈕 */}
         {hasMore && (
           <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">

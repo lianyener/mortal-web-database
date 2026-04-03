@@ -153,7 +153,7 @@ export function ParsedText({ text }: { text: string }) {
             }
 
             return (
-              <span key={index} onClick={handleClick} role="button" tabIndex={0} title={titleText}
+              <span key={index} onClick={isLink ? handleClick : undefined} role="button" tabIndex={0} title={titleText}
                 className={`inline-flex items-center font-semibold text-inherit transition-colors hover:text-current/80 ${isLink ? 'cursor-pointer' : ''}`}>
                 {contentNode}
               </span>
