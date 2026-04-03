@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
-import { Search, TableProperties, Lock, ArrowRight, Percent } from 'lucide-react';
+import { Search, TableProperties, Lock, Percent } from 'lucide-react';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -101,19 +101,19 @@ function PositionContent() {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-border/50 pt-4">
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Period') || '時期 (Period)'}</div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Period')}</div>
                       <div className="font-semibold text-sm text-foreground">
                         <ParsedText text={translateParagraph(detailData.period)} />
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Label.Position') || '位置 (Position)'}</div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Label.Position')}</div>
                       <div className="font-semibold text-sm text-foreground">
                         <ParsedText text={translateParagraph(detailData.position)} />
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Action') || '行為 (Action)'}</div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Action')}</div>
                       <div className="font-semibold text-sm text-foreground">
                         <ParsedText text={translateParagraph(detailData.action)} />
                       </div>
@@ -127,7 +127,7 @@ function PositionContent() {
             {detailData.event && Object.keys(detailData.event).length > 0 && (
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                  <h2 className="text-lg font-bold">{translateTerm('Web.Event') || '觸發事件列表'}</h2>
+                  <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Web.Label.Event')}</h2>
                 </div>
                 <div className="flex flex-col gap-4">
                   {Object.entries(detailData.event).map(([eventId, eventData]: [string, any]) => (
@@ -326,12 +326,7 @@ function EventCard({ eventId, eventData }: { eventId: string, eventData: any }) 
         </div>
         
         {eventData.script && (
-          <Button asChild variant="secondary" size="sm" className="h-8 px-3">
-            <Link href={`/script?id=${eventData.script}`}>
-              <span className="font-semibold text-xs tracking-wide">{translateTerm('Web.Label.Script')}: {eventData.script}</span>
-              <ArrowRight className="ml-1.5 size-3.5" />
-            </Link>
-          </Button>
+          <ParsedText text={`[*Label.Script,${eventData.script}*]`} />
         )}
       </div>
 
@@ -403,6 +398,7 @@ function DataRelation({ phase, types }: { phase: string, types: any }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 flex-1">
                 {ids.map((id: string) => (
                   <div key={id} className="flex items-start overflow-hidden">
+                    
                     {/* 關聯項目，強制覆寫內部按鈕樣式 */}
                     <div className="flex-1 min-w-0 **:[[role=button]]:block **:[[role=button]]:w-full **:[[role=button]]:text-left **:[[role=button]]:truncate">
                       <ParsedText text={`[*Label.${type},${id}*]`} />
