@@ -81,7 +81,7 @@ function PositionContent() {
             {/* 基本資訊 */}
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                <h2 className="text-lg font-bold">{translateTermWithParam('Web.Info', 'Web.Label.Position')}</h2>
+                <h2 className="text-lg font-bold whitespace-nowrap">{translateTermWithParam('Web.Info', 'Web.Label.Position')}</h2>
                 <div className="flex items-center">
                   <Button asChild variant="outline" size="sm" className="h-8 px-2.5 text-xs">
                     <Link href="/position">
@@ -103,21 +103,15 @@ function PositionContent() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-border/50 pt-4">
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Period')}</div>
-                      <div className="font-semibold text-sm text-foreground">
-                        <ParsedText text={translateParagraph(detailData.period)} />
-                      </div>
+                      <div className="font-semibold text-sm text-foreground">{translateParagraph(detailData.period)}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Label.Position')}</div>
-                      <div className="font-semibold text-sm text-foreground">
-                        <ParsedText text={translateParagraph(detailData.position)} />
-                      </div>
+                      <div className="font-semibold text-sm text-foreground">{translateParagraph(detailData.position)}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Action')}</div>
-                      <div className="font-semibold text-sm text-foreground">
-                        <ParsedText text={translateParagraph(detailData.action)} />
-                      </div>
+                      <div className="font-semibold text-sm text-foreground">{translateParagraph(detailData.action)}</div>
                     </div>
                   </div>
                 </div>
@@ -128,7 +122,7 @@ function PositionContent() {
             {detailData.event && Object.keys(detailData.event).length > 0 && (
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                  <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Web.Label.Event')}</h2>
+                  <h2 className="text-lg font-bold whitespace-nowrap">{translateTermWithParam('Web.List', 'Web.Label.Event')}</h2>
                 </div>
                 <EventTable events={detailData.event} />
               </div>
@@ -137,9 +131,7 @@ function PositionContent() {
             {/* 關聯項目 */}
             {detailData.rel && (
               <div className="flex flex-col gap-4 mt-2">
-                <h2 className="text-lg font-bold border-b border-border/50 pb-2">
-                  {translateTerm('Web.Relations')}
-                </h2>
+                <h2 className="pb-2 text-lg font-bold border-b border-border/50 whitespace-nowrap">{translateTerm('Web.Relations')}</h2>
                 <div className="flex flex-col gap-3">
                   {Object.entries(detailData.rel).map(([phase, types]) => (
                     <DataRelation key={phase} phase={phase} types={types} />

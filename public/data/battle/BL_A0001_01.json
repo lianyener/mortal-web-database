@@ -1,1 +1,1 @@
-{"type":"008","friend":{"name":["[*Label.Enemy,500*]"],"people":50},"enemy":{"name":["[*Label.Enemy,008*]"],"people":30},"neutral":{"name":[],"people":""},"end":["[*Custom.Defeat*]","[*Custom.PlayerDie*]"],"rel":{"pre":{},"from":{"Script":["act2_1"]}}}
+{"type":"008","friend":{"name":["[*Label.Enemy,500*]"],"people":50},"enemy":{"name":["[*Label.Enemy,008*]"],"people":30},"neutral":{"name":[],"people":""},"end":["[*Custom.Defeat*]","[*Custom.PlayerDie*]"],"rel":{"pre":{},"from":{"Script":["act2_1"]}},"searchText":"[*Label.Enemy,500*],[*Label.Enemy,008*]"}

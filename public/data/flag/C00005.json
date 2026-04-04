@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.C00005.0.0*]","1":"[*Flag.C00005.0.1*]"}}],"init":0,"rel":{"pre":{"Combat":["CL_1307_01"]},"post":{"Script":["ch3_9_2_1","ch3_9_3"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.C00005.0.0*]","1":"[*Flag.C00005.0.1*]"}}],"init":0,"rel":{"pre":{"Combat":["CL_1307_01"]},"post":{"Script":["ch3_9_3","ch3_9_2_1"]}}}

@@ -48,7 +48,7 @@ export function TopNavbar() {
         { titleKey: 'Web.Label.Position', href: '/position' },
         { titleKey: 'Web.Label.Script', href: '/script' },
         { titleKey: 'Web.Label.Combat', href: '/combat' },
-        { titleKey: 'Web.Label.Battle', href: null },
+        { titleKey: 'Web.Label.Battle', href: '/battle' },
       ]
     },
     {

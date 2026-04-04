@@ -94,7 +94,7 @@ function ScriptContent() {
             {/* 基本資訊 */}
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                <h2 className="text-lg font-bold">{translateTermWithParam('Web.Info', 'Script')}</h2>
+                <h2 className="text-lg font-bold whitespace-nowrap">{translateTermWithParam('Web.Info', 'Script')}</h2>
                 <div className="flex items-center">
                   <Button asChild variant="outline" size="sm" className="h-8 px-2.5 text-xs">
                     <Link href="/script">
@@ -106,18 +106,14 @@ function ScriptContent() {
               </div>
               <div className="p-5 border rounded-xl shadow-sm bg-card">
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
-                      <div className="font-semibold text-foreground">
-                        {query.id}
-                      </div>
+                      <div className="font-semibold text-foreground break-all">{query.id}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
-                      <div className="font-semibold text-foreground">
-                        {translateTerm(`Script.Name.${query.id}`)}
-                      </div>
+                      <div className="font-semibold text-foreground">{translateTerm(`Script.Name.${query.id}`)}</div>
                     </div>
                   </div>
                   <div>
@@ -144,8 +140,8 @@ function ScriptContent() {
             {data.content && data.content.length > 0 && (
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                  <h2 className="text-lg font-bold">{translateTerm('Web.Content')}</h2>
-                  <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="mr-1 text-lg font-bold whitespace-nowrap">{translateTerm('Web.Content')}</h2>
+                  <div className="flex flex-wrap justify-end items-center gap-2">
 
                     {/* 篩選分支下拉選單 */}
                     {availableEffects.length > 0 && (
@@ -218,9 +214,7 @@ function ScriptContent() {
             {/* 關聯項目 */}
             {data.rel && (
               <div className="flex flex-col gap-4 mt-2">
-                <h2 className="text-lg font-bold border-b border-border/50 pb-2">
-                  {translateTerm('Web.Relations')}
-                </h2>
+                <h2 className="pb-2 text-lg font-bold border-b border-border/50 whitespace-nowrap">{translateTerm('Web.Relations')}</h2>
                 <div className="flex flex-col gap-3">
                   {Object.entries(data.rel).map(([phase, types]) => (
                     <DataRelation key={phase} phase={phase} types={types} />

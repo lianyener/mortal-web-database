@@ -84,7 +84,7 @@ function CombatContent() {
             {/* 基本資訊 */}
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                <h2 className="text-lg font-bold">{translateTermWithParam('Web.Info', 'Combat')}</h2>
+                <h2 className="text-lg font-bold whitespace-nowrap">{translateTermWithParam('Web.Info', 'Combat')}</h2>
                 <div className="flex items-center">
                   <Button asChild variant="outline" size="sm" className="h-8 px-2.5 text-xs">
                     <Link href="/combat">
@@ -99,21 +99,15 @@ function CombatContent() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
-                      <div className="font-semibold text-foreground">
-                        {query.id}
-                      </div>
+                      <div className="font-semibold text-foreground break-all">{query.id}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
-                      <div className="font-semibold text-foreground">
-                        {translateTerm(`Combat.Name.${query.id}`)}
-                      </div>
+                      <div className="font-semibold text-foreground">{translateTerm(`Combat.Name.${query.id}`)}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Enemy')}</div>
-                      <div className="font-semibold text-foreground">
-                        {translateParagraph(detailData.enemy)}
-                      </div>
+                      <div className="font-semibold text-foreground">{translateParagraph(detailData.enemy)}</div>
                     </div>
                   </div>
                   <div className="border-t border-border/50 pt-4">
@@ -130,7 +124,7 @@ function CombatContent() {
             {contentArray.length > 0 && (
               <div className="flex flex-col gap-4">
                 <div className="flex items-center border-b border-border/50 pb-2">
-                  <h2 className="text-lg font-bold">{translateTerm('Web.Content')}</h2>
+                  <h2 className="text-lg font-bold whitespace-nowrap">{translateTerm('Web.Content')}</h2>
                 </div>
                 <div className="bg-card border rounded-xl p-5 shadow-sm overflow-x-auto font-(family-name:--font-script)">
                   <div className="flex flex-col p-0 m-0 min-w-max sm:min-w-0">
@@ -145,9 +139,7 @@ function CombatContent() {
             {/* 關聯項目 */}
             {detailData.rel && (
               <div className="flex flex-col gap-4 mt-2">
-                <h2 className="text-lg font-bold border-b border-border/50 pb-2">
-                  {translateTerm('Web.Relations')}
-                </h2>
+                <h2 className="pb-2 text-lg font-bold border-b border-border/50 whitespace-nowrap">{translateTerm('Web.Relations')}</h2>
                 <div className="flex flex-col gap-3">
                   {Object.entries(detailData.rel).map(([phase, types]) => (
                     <DataRelation key={phase} phase={phase} types={types} />
@@ -160,7 +152,7 @@ function CombatContent() {
 
         {!isLoading && !isError && !isListView && !detailData && (
           <div className="text-center text-muted-foreground py-10">
-            {translateTermWithParam('Web.NotFound', 'Combat')}
+            {translateTermWithParam('Web.Msg.NotFound', 'Combat')}
           </div>
         )}
       </div>
@@ -272,9 +264,9 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
               <tr>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Id')}</th>
-                <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.Name')}</th>
-                <th className="px-4 py-3 font-semibold min-w-32">{translateTerm('Web.Enemy')}</th>
-                <th className="px-4 py-3 font-semibold min-w-50 w-full">{translateTerm('Web.Desc')}</th>
+                <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Name')}</th>
+                <th className="px-4 py-3 font-semibold min-w-20">{translateTerm('Web.Enemy')}</th>
+                <th className="px-4 py-3 font-semibold min-w-48">{translateTerm('Web.Desc')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/70">
