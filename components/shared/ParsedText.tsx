@@ -86,8 +86,10 @@ export function ParsedText({ text }: { text: string }) {
                 case 'Free':
                   router.push(`/script?id=${targetId}${sidebarParams}`);
                   break;
+                case 'Combat':
+                case 'Battle':
                 case 'Position':
-                  router.push(`/position?id=${targetId}${sidebarParams}`);
+                  router.push(`/${category.toLowerCase()}?id=${targetId}${sidebarParams}`);
                   break;
 
                 // 開啟側邊欄
