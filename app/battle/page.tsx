@@ -155,7 +155,7 @@ function BattleContent() {
                 <div className="bg-card border rounded-xl p-5 shadow-sm overflow-x-auto font-(family-name:--font-script)">
 
                   {/* 戰役陣容 */}
-                  <div className={`grid grid-cols-1 md:grid-cols-${groupCount} gap-4 mb-3`}>
+                  <div className={`grid grid-cols-1 sm:grid-cols-${groupCount} gap-4 mb-3`}>
                     {groups.map(group => {
                       if (!detailData[group.key]?.name || detailData[group.key].name.length === 0) return null;
                       const list = detailData[group.key].name;
@@ -165,7 +165,7 @@ function BattleContent() {
                           <h3 className="font-bold text-primary border-b border-border/40 pb-1.5">{group.label}</h3>
                           <div className="flex items-start gap-0.5 bg-muted/30 px-2.5 py-1 text-sm/loose rounded-md border border-border/50">
                             <div className='whitespace-nowrap'>{translateTerm('Web.People')}:</div>
-                            <ParsedText text={people} />
+                            <div><ParsedText text={people} /></div>
                           </div>
                           <div className="flex items-start gap-0.5 h-full bg-muted/30 px-2.5 py-1 text-sm/loose rounded-md border border-border/50">
                             <div className='whitespace-nowrap'>{translateTerm('Web.Team')}:</div>
