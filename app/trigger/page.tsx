@@ -40,7 +40,7 @@ function TriggerContent() {
   // 透過useItemDetail取得資料
   const { data, isLoading, isError } = useItemDetail('trigger', query.id);
 
-  // 相容結構 (Trigger的資料是由all.json提供，直接依照id取用)
+  // 相容結構
   const detailData = isListView ? null : (data?.type ? data : data?.[query.id]);
 
   // i18n解析邏輯

@@ -23,7 +23,7 @@ export function ParsedText({ text }: { text: string }) {
         if (part.startsWith('[%') && part.endsWith('%]')) {
           const content = part.slice(2, -2);
           return (
-            <span key={index} className="inline-block px-1 mx-0.5 text-sm/relaxed font-semibold rounded bg-amber-600/10">
+            <span key={index} className="inline-block px-1 mx-0.5 text-sm/[22.25px] font-semibold rounded bg-amber-600/10">
 
               {/* 遞迴處理內部文字 */}
               <ParsedText text={content} />
@@ -103,6 +103,8 @@ export function ParsedText({ text }: { text: string }) {
                 case 'Combat':
                 case 'Battle':
                 case 'Position':
+                case 'Trigger':
+                case 'Mission':
                   router.push(`/${category.toLowerCase()}?id=${targetId}${sidebarParams}`);
                   break;
 
@@ -129,6 +131,8 @@ export function ParsedText({ text }: { text: string }) {
                 break;
               case 'Combat':
               case 'Battle':
+              case 'Trigger':
+              case 'Mission':
                 titleText += translateTerm(`${category}.Name.${targetId}`, undefined, 1);
                 break;
               case 'Flag':
