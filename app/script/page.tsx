@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
-import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, Search, TableProperties, Filter } from 'lucide-react';
+import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, Search, TableProperties, Filter, CircleCheck } from 'lucide-react';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -415,15 +415,35 @@ function DataContent({ node, treeActionId, isGlobalExpand, selectedEffects }: { 
       if (!hasSelectedEffect) return null;
     }
 
+    // 切分項目
+    const textStr = typeof node.text === 'string' ? node.text : '';
+    const branchTextItems = textStr.split(' / ');
+    const label = branchTextItems.shift();
+
     return (
       <div>
         {/* 分岐種類文字(檢定/選項/轉盤...) */}
-        <div className="flex flex-wrap items-center px-2 py-0.5 gap-0.5 font-bold text-primary text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
-          <ParsedText text={node.text} />
+        <div className="flex items-start px-2 py-0.5 gap-2 font-bold text-primary text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
+          <div className="shrink-0">
+            <ParsedText text={label} />
+          </div>
+          {node.type === 'Dice' && branchTextItems.length > 0 && (
+            <div className='flex items-start gap-2'>
+              <CircleCheck className='size-4 shrink-0 text-muted-foreground/50 mt-1.25' />
+              <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
+                {branchTextItems.map((item: string, idx: number) => (
+                  <div key={idx} className="flex items-center whitespace-nowrap">
+                    <ParsedText text={item} />
+                    {idx < branchTextItems.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 分岐項目 */}
-        <div className="flex flex-col pl-1 mx-2">
+        <div className="flex flex-col pl-1 ml-2">
           {node.branches?.map((branch: any) => (
             <BranchItem key={branch.index} branch={branch} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} selectedEffects={selectedEffects} />
           ))}

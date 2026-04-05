@@ -446,7 +446,7 @@ function DataContent({ node }: { node: any }) {
         </div>
         
         {/* 分岐項目 */}
-        <div className="flex flex-col pl-1 mx-2">
+        <div className="flex flex-col pl-1 ml-2">
           {node.branches?.map((branch: any) => (
             <BranchItem key={branch.index} branch={branch} />
           ))}
