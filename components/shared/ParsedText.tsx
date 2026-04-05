@@ -63,6 +63,20 @@ export function ParsedText({ text }: { text: string }) {
           if (match) {
             const category = match[1];
             const targetId = (match[2] ?? '').split(',')[0];
+            
+            // 是否為連結
+            let isLink = true;
+            switch (category) {
+              case 'Buff':
+              case 'Debuff':
+              case 'Support':
+              case 'Stat':
+              case 'Enemy':
+              case 'Story':
+              case 'Place':
+                isLink = false;
+                break;
+            }
 
             // 設定點擊事件
             const handleClick = (e: React.MouseEvent) => {
@@ -100,31 +114,11 @@ export function ParsedText({ text }: { text: string }) {
                 case 'Relationship':
                   sidebarState.openSidebar('Character', targetId);
                   break;
-                case 'Buff':
-                case 'Debuff':
-                case 'Support':
-                case 'Stat':
-                case 'Enemy':
-                case 'Story':
-                  break;
                 default:
-                  sidebarState.openSidebar(category, targetId);
+                  if (isLink) sidebarState.openSidebar(category, targetId);
                   break;
               }
             };
-
-            // 是否為連結
-            let isLink = true;
-            switch (category) {
-              case 'Buff':
-              case 'Debuff':
-              case 'Support':
-              case 'Stat':
-              case 'Enemy':
-              case 'Story':
-                isLink = false;
-                break;
-            }
 
             // 設定提示詞 (文面顯示ID提示名稱，反之提示ID)
             let titleText = ': ';
