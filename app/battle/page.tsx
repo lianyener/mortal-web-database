@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
-import { Search, TableProperties } from 'lucide-react';
+import { CircleArrowRight, Search, TableProperties } from 'lucide-react';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -187,9 +187,19 @@ function BattleContent() {
                     <h3 className="font-bold text-primary border-b border-border/40 pb-1.5">{translateTerm('Web.End')}</h3>
                     <div className="flex flex-col items-start pt-2 gap-1 text-sm/loose">
                       {detailData.end && detailData.end.map((item: any, i: number) => (
-                        <div key={i} className="whitespace-nowrap">
-                          <span className="text-muted-foreground">{i+1}.</span>
-                          <ParsedText text={`[#${item}#]`} />
+                        <div key={i} className='flex items-start w-full py-0.5 gap-1 rounded-md transition-colors hover:bg-muted/80'>
+                          <span className="pl-1.5 text-muted-foreground shrink-0 select-none">{i + 1}.</span>
+                          <div className="flex flex-wrap items-center gap-x-0.5 gap-y-1 flex-1 min-w-0">
+                            <ParsedText text={`${item.condition}`} />
+                            <div className="flex items-start gap-1.5 ml-1 text-foreground font-normal">
+                              <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-1.25" />
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center whitespace-nowrap">
+                                  <ParsedText text={item.result} />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>
