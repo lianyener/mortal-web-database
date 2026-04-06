@@ -2,15 +2,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useQueryStates, parseAsString } from 'nuqs';
+import { ExternalLink, X } from 'lucide-react';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
-import { ParsedText } from '@/components/shared/ParsedText';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
+import { ParsedText } from '@/components/shared/ParsedText';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
 
 export function GlobalSidebar() {
 
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -33,7 +37,7 @@ export function GlobalSidebar() {
   const { data, isLoading, isError } = useItemDetail(category, id);
 
   // 共通i18n解析邏輯
-  const { translateTermWithParam } = useAppTranslation();
+  const { translateTerm, translateTermWithParam } = useAppTranslation();
 
   // URL->Zustand (處理初始載入與瀏覽器上一頁/下一頁)
   useEffect(() => {
@@ -90,7 +94,7 @@ export function GlobalSidebar() {
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange} modal={false}>
       <SheetContent
-        className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl overflow-y-auto bg-muted"
+        className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl bg-muted p-0 gap-0 flex flex-col [&>button]:hidden shadow-2xl"
 
         // 在桌面版 (>= 768px) 防止點擊外部關閉，允許無縫更新
         // 在手機版 (< 768px) 恢復預設行為，點擊外部區域時自動關閉側邊欄
@@ -100,22 +104,56 @@ export function GlobalSidebar() {
           }
         }}
       >
-        <SheetHeader>
-          <SheetTitle className="text-xl font-bold">
-            {translateTermWithParam('Web.ItemInfo', String(category))}
-          </SheetTitle>
-          <SheetDescription>{category}: {id}</SheetDescription>
-        </SheetHeader>
+        {/* 固定在頂部的 Header 區塊 */}
+        <div className="shrink-0 sticky top-0 z-50 bg-muted/95 backdrop-blur-sm border-b border-border/50 px-5 sm:px-6 py-4 flex items-start justify-between gap-4 shadow-sm">
+          <SheetHeader className="text-left space-y-1 p-0">
+            <SheetTitle className="text-xl font-bold">
+              {translateTermWithParam('Web.ItemInfo', String(category))}
+            </SheetTitle>
+            <SheetDescription className="text-sm">
+              {category}: {id}
+            </SheetDescription>
+          </SheetHeader>
 
-        {category && id ? (
-          <div className="-mt-8 p-4 text-sm">
-            {isLoading && <p className="text-muted-foreground">{translateTermWithParam('Web.Loading', category)}</p>}
-            {isError && <p className="text-destructive">{translateTermWithParam('Web.LoadError', category)}</p>}
-            {data && (
-              <SidebarContent category={category} id={id} data={data} />
+          {/* 右上角操作按鈕群組 */}
+          <div className="flex items-center gap-2 shrink-0">
+            {category && id && ['mission', 'trigger', 'position', 'script', 'combat', 'battle', 'flag'].includes(String(category).toLowerCase()) && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  router.push(`/${category.toLowerCase()}?id=${id}`);
+                }}
+                className="h-8 w-8 shadow-sm text-muted-foreground hover:bg-muted transition-colors"
+                title={translateTerm('Web.OpenInMainPage')}
+              >
+                <ExternalLink className="size-3.5" />
+              </Button>
             )}
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 shadow-sm text-muted-foreground hover:bg-muted transition-colors"
+              onClick={closeSidebar}
+              title={translateTerm('Web.Close')}
+            >
+              <X className="size-4" />
+            </Button>
           </div>
-        ) : null}
+        </div>
+
+        {/* 內部滾動區塊 */}
+        <div className="flex-1 overflow-y-auto p-5 sm:p-6">
+          {category && id ? (
+            <div className="text-sm">
+              {isLoading && <p className="text-muted-foreground">{translateTermWithParam('Web.Loading', category)}</p>}
+              {isError && <p className="text-destructive">{translateTermWithParam('Web.LoadError', category)}</p>}
+              {data && (
+                <SidebarContent category={category} id={id} data={data} />
+              )}
+            </div>
+          ) : null}
+        </div>
       </SheetContent>
     </Sheet>
   );
@@ -199,7 +237,7 @@ function FlagInfo({ id, data }: any) {
         <div className="space-y-3">
 
           {/* 標題 */}
-          <h4 className="font-bold text-base border-b pb-2 mb-3">{translateTerm('Web.BasicInfo')}</h4>
+          <h4 className="font-bold text-base border-b pb-2 mb-3">{translateTermWithParam('Web.Content', 'Flag')}</h4>
 
           {/* 卡片 */}
           <div className="flex flex-col gap-3">

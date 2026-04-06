@@ -140,7 +140,7 @@ function ScriptContent() {
             {data.content && data.content.length > 0 && (
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                  <h2 className="mr-1 text-lg font-bold whitespace-nowrap">{translateTerm('Web.Content')}</h2>
+                  <h2 className="mr-1 text-lg font-bold whitespace-nowrap">{translateTerm('Web.BranchContent')}</h2>
                   <div className="flex flex-wrap justify-end items-center gap-2">
 
                     {/* 篩選分支下拉選單 */}

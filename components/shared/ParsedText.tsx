@@ -1,6 +1,6 @@
 import React from 'react';
-import { useSidebarStore } from '@/store/useSidebarStore';
 import { useRouter } from 'next/navigation';
+import { useSidebarStore } from '@/store/useSidebarStore';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 
 export function ParsedText({ text }: { text: string }) {

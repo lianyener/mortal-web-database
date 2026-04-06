@@ -155,7 +155,7 @@ function TriggerContent() {
 
             <div className="flex flex-col gap-4">
               <div className="pb-2 flex items-center border-b border-border/50">
-                <h2 className="text-lg font-bold">{translateTerm('Web.TriggerContent')}</h2>
+                <h2 className="text-lg font-bold">{translateTermWithParam('Web.Content', 'Trigger')}</h2>
               </div>
               <div className="bg-card border rounded-xl p-5 shadow-sm overflow-x-auto font-(family-name:--font-script)">
 

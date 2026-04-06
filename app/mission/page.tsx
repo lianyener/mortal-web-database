@@ -117,7 +117,7 @@ function MissionContent() {
             {/* 任務內容 */}
             <div className="flex flex-col gap-4">
               <div className="pb-2 flex items-center border-b border-border/50">
-                <h2 className="text-lg font-bold">{translateTerm('Web.MissionContent')}</h2>
+                <h2 className="text-lg font-bold">{translateTermWithParam('Web.Content', 'Mission')}</h2>
               </div>
               <div className="bg-card border rounded-xl p-5 shadow-sm">
                 <div className="flex flex-col gap-6">
