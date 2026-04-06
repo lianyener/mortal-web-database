@@ -272,7 +272,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
           <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Web.Label.Position')}</h2>
           {isBuildingCache && <span className="text-xs text-muted-foreground animate-pulse">({translateTerm('Web.Msg.BuildingCache')})</span>}
         </div>
-        <div className="flex flex-wrap items-center gap-2 xl:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           
           {/* 時期篩選 */}
           <select

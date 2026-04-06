@@ -187,7 +187,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         <div className="flex items-center gap-2">
           <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Character')}</h2>
         </div>
-        <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <ButtonGroup className="flex-1 xl:flex-none">
             <input
               type="text"
@@ -210,7 +210,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
               <tr>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Id')}</th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Name')}</th>
-                <th className="px-4 py-3 font-semibold min-w-48">{translateTerm('Web.Desc')}</th>
+                <th className="px-4 py-3 font-semibold min-w-48 w-full">{translateTerm('Web.Desc')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/70">

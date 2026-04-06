@@ -117,7 +117,7 @@ export function GlobalSidebar() {
 
           {/* 右上角操作按鈕群組 */}
           <div className="flex items-center gap-2 shrink-0">
-            {category && id && ['mission', 'trigger', 'position', 'script', 'combat', 'battle', 'flag', 'character'].includes(String(category).toLowerCase()) && (
+            {category && id && ['mission', 'trigger', 'position', 'script', 'combat', 'battle', 'flag', 'character', 'book'].includes(String(category).toLowerCase()) && (
               <Button
                 variant="outline"
                 size="sm"
@@ -175,7 +175,8 @@ function SidebarContent({ category, id, data }: any) {
 function DefaultInfo({ category, id, data }: any) {
   const { translateTerm, translateTermWithParam } = useAppTranslation();
   const name = translateTermWithParam(`LabelName.${category}`, id);
-  const desc = translateTerm(`${category}.Desc.${id}`, undefined, 0);
+  const categoryAlias = category === 'Talent' ? 'PlayerTalent' : category;
+  const desc = translateTerm(`${categoryAlias}.Desc.${id}`, undefined, 0);
 
   return (
     <div className="flex flex-col gap-5">

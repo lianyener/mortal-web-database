@@ -299,7 +299,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         <div className="flex items-center gap-2">
           <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Battle')}</h2>
         </div>
-        <div className="flex flex-wrap items-center gap-2 xl:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
 
           {/* 類型篩選 */}
           <select

@@ -134,6 +134,7 @@ export function ParsedText({ text }: { text: string }) {
               case 'Trigger':
               case 'Mission':
               case 'Character':
+              case 'Book':
                 titleText += translateTerm(`${category}.Name.${targetId}`, undefined, 1);
                 break;
               case 'Flag':

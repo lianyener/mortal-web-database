@@ -56,7 +56,7 @@ export function TopNavbar() {
       items: [
         { titleKey: 'Web.Label.Flag', href: '/flag' },
         { titleKey: 'Web.Label.Character', href: '/character' },
-        { titleKey: 'Web.Label.Book', href: null },
+        { titleKey: 'Web.Label.Book', href: '/book' },
         { titleKey: 'Web.Label.Equip', href: null },
         { titleKey: 'Web.Label.Special', href: null },
         { titleKey: 'Web.Label.Misc', href: null },
