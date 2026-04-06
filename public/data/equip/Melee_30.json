@@ -1,1 +1,1 @@
-{"type":"Melee","faction":4,"evolution":[{"name":"[*Equip.Name.Melee_01*]","condition":[]}],"rel":{"pre":{},"post":{"Equip":["Melee_01"]}}}
+{"type":"Melee","faction":4,"evolution":[{"name":"[*Label.Equip,Melee_01*]","condition":[]}],"rel":{"pre":{},"post":{"Equip":["Melee_01"]}}}

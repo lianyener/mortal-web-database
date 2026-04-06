@@ -1,1 +1,1 @@
-{"type":"","faction":1,"evolution":[{"name":"[*Equip.Name.Medi_05*]","condition":[]},{"name":"[*Equip.Name.Medi_01*]","condition":[]}],"rel":{"pre":{"Equip":["Medi_01","Medi_05"]},"post":{"Equip":["Medi_05","Medi_01"]}}}
+{"type":"Medi","faction":1,"evolution":[{"name":"[*Label.Equip,Medi_05*]","condition":[]},{"name":"[*Label.Equip,Medi_01*]","condition":[]}],"rel":{"pre":{"Equip":["Medi_01","Medi_05"]},"post":{"Equip":["Medi_05","Medi_01"]}}}

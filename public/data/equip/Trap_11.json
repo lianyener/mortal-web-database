@@ -1,1 +1,1 @@
-{"type":"Trap","faction":2,"evolution":[{"name":"[*Equip.Name.Trap_01*]","condition":[]}],"rel":{"pre":{"Equip":["Trap_01"]},"post":{"Equip":["Trap_01"]}}}
+{"type":"Trap","faction":2,"evolution":[{"name":"[*Label.Equip,Trap_01*]","condition":[]}],"rel":{"pre":{"Equip":["Trap_01"]},"post":{"Equip":["Trap_01"]}}}
