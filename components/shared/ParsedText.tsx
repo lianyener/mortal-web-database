@@ -114,7 +114,7 @@ export function ParsedText({ text }: { text: string }) {
                   sidebarState.openSidebar('Flag', targetId.split('.')[0]);
                   break;
                 case 'Relationship':
-                  sidebarState.openSidebar('Character', targetId);
+                  router.push(`/character?id=${targetId}${sidebarParams}`);
                   break;
                 default:
                   if (isLink) sidebarState.openSidebar(category, targetId);
@@ -133,6 +133,7 @@ export function ParsedText({ text }: { text: string }) {
               case 'Battle':
               case 'Trigger':
               case 'Mission':
+              case 'Character':
                 titleText += translateTerm(`${category}.Name.${targetId}`, undefined, 1);
                 break;
               case 'Flag':
