@@ -223,7 +223,7 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
         <div className="flex items-center gap-2">
           <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Equip')}</h2>
         </div>
-        <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
 
           <select value={typeFilter} onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }} className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-36 truncate">
             <option value="all">{translateTerm('Web.Type')} - {translateTerm('Web.Term.All')}</option>
