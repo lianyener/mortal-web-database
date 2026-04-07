@@ -114,7 +114,7 @@ export function ParsedText({ text }: { text: string }) {
                   sidebarState.openSidebar('Flag', targetId.split('.')[0]);
                   break;
                 case 'Relationship':
-                  router.push(`/character?id=${targetId}${sidebarParams}`);
+                  sidebarState.openSidebar('Character', targetId);
                   break;
                 default:
                   if (isLink) sidebarState.openSidebar(category, targetId);

@@ -118,8 +118,8 @@ function ScriptContent() {
                   </div>
                   <div>
                     <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc')}</div>
-                    <div className="text-sm leading-relaxed">
-                      {translateTerm(`Script.Desc.${query.id}`) || translateTerm('System.NA')}
+                    <div className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+                      {translateTerm(`Script.Desc.${query.id}`, undefined, 1) || translateTerm('System.NA')}
                     </div>
                   </div>
                   {data.remark && (Array.isArray(data.remark) ? data.remark.length > 0 : true) && (

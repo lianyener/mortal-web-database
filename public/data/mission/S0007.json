@@ -1,1 +1,1 @@
-{"trigger":["S0007_00"],"init":"","rel":{"to":{"Trigger":["S0007_00"]}}}
+{"trigger":["S0007_00"],"init":"","remark":["[*Mission.Remark.S0007.0*]"],"rel":{"to":{"Trigger":["S0007_00"]}}}

@@ -1,1 +1,1 @@
-{"trigger":["S3005_01"],"init":"S3005_01","rel":{"to":{"Trigger":["S3005_01"]}}}
+{"trigger":["S3005_01"],"init":"S3005_01","remark":[],"rel":{"to":{"Trigger":["S3005_01"]}}}

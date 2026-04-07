@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◎[*Custom.DemoEnd*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Script":["act2_3_1","act2_3_2","act2_3_3"]}},"remark":[],"effects":["System"]}
+{"content":[{"form":"effect","text":"◎[*Custom.DemoEnd*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Script":["act2_3_2","act2_3_1","act2_3_3"]}},"remark":[],"effects":["System"]}

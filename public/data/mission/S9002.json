@@ -1,1 +1,1 @@
-{"trigger":["S9002_01"],"init":"S9002_01","rel":{"to":{"Trigger":["S9002_01"]}}}
+{"trigger":["S9002_01"],"init":"S9002_01","remark":[],"rel":{"to":{"Trigger":["S9002_01"]}}}
