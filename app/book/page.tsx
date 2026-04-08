@@ -110,7 +110,7 @@ function BookContent() {
                       <div className="font-semibold text-foreground">{getTypeLabel(detailData.type)}</div>
                     </div>
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Level')}</div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.MaxLevel')}</div>
                       <div className="font-semibold text-foreground">{detailData.level}</div>
                     </div>
                     <div>

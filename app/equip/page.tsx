@@ -41,7 +41,7 @@ function EquipContent() {
   const { data, isLoading, isError } = useItemDetail('equip', query.id);
 
   // 相容結構
-  const detailData = isListView ? null : (data?.evolution || data?.rel ? data : data?.[query.id]);
+  const detailData = isListView ? null : (data?.levels !== undefined || data?.evolution || data?.rel ? data : data?.[query.id]);
 
   // i18n解析邏輯
   const { translateTerm, translateTermWithParam } = useAppTranslation();
@@ -96,12 +96,12 @@ function EquipContent() {
               </div>
               <div className="p-5 border rounded-xl shadow-sm bg-card">
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div className="col-span-2 sm:col-span-1">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
                       <div className="font-semibold text-foreground break-all">{query.id}</div>
                     </div>
-                    <div className="col-span-2 sm:col-span-1">
+                    <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
                       <div className="font-semibold text-foreground">{translateTerm(`Equip.Name.${query.id}`, undefined, 1)}</div>
                     </div>
@@ -110,8 +110,16 @@ function EquipContent() {
                       <div className="font-semibold text-foreground">{getTypeLabel(detailData.type)}</div>
                     </div>
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Faction') || '門派規模'}</div>
-                      <div className="font-semibold text-foreground">{detailData.faction ?? translateTerm('System.NA')}</div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Faction')}</div>
+                      <div className="font-semibold text-foreground">{detailData.faction}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.CostPerTime')}</div>
+                      <div className="font-semibold text-foreground">{detailData.cost}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.MaxLevel')}</div>
+                      <div className="font-semibold text-foreground">{detailData.level}</div>
                     </div>
                   </div>
 
@@ -125,10 +133,18 @@ function EquipContent() {
               </div>
             </div>
 
+            {/* 裝備等級內容 */}
+            {detailData.levels && detailData.levels.length > 0 && (
+              <div className="flex flex-col gap-4">
+                <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTermWithParam('Web.Content', 'Equip')}</h2>
+                <EquipLevelTable levels={detailData.levels} />
+              </div>
+            )}
+
             {/* 開發項目內容 */}
             {detailData.evolution && detailData.evolution.length > 0 && (
               <div className="flex flex-col gap-4">
-                <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTerm('Web.Evolution') || '開發項目'}</h2>
+                <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTerm('Web.Evolution')}</h2>
                 <EvolutionTable evolutions={detailData.evolution} />
               </div>
             )}
@@ -263,6 +279,70 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
           </table>
         </div>
         {hasMore && (<div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center"><Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50">{translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})</Button></div>)}
+      </div>
+    </div>
+  );
+}
+
+// 裝備等級列表元件 (DataTable)
+function EquipLevelTable({ levels }: { levels: any[] }) {
+  const { translateTerm, translateParagraph } = useAppTranslation();
+
+  // 檢查是否包含各項效果資料，作為顯示欄位的依據
+  const hasCombat = levels.some((lvl: any) => lvl.combat && lvl.combat.length > 0);
+  const hasBattle = levels.some((lvl: any) => lvl.battle && lvl.battle.length > 0);
+  const hasEffect = levels.some((lvl: any) => lvl.effect && lvl.effect.length > 0);
+
+  // 通用列表渲染函式
+  const renderList = (list: string[]) => {
+    list = list.flatMap(item => translateParagraph(item).split('  '));
+    if (!list || list.length === 0) return <span className="text-muted-foreground/50">-</span>;
+    return (
+      <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
+        {list.map((item: string, j: number) => (
+          <div key={j} className="flex items-center whitespace-nowrap">
+            {translateTerm("LabelIcon.Effect")}{item}
+            {j < list.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left whitespace-nowrap">
+          <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
+            <tr>
+              <th className="px-4 py-3 font-semibold min-w-20">{translateTerm('Web.Level')}</th>
+              <th className="px-4 py-3 font-semibold min-w-20">{translateTerm('Web.Point')}</th>
+              {hasCombat && <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.CombatEffect')} ({translateTerm('Web.Term.Cumulative')})</th>}
+              {hasBattle && <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.BattleEffect')} ({translateTerm('Web.Term.Cumulative')})</th>}
+              {hasEffect && <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.Effect')} ({translateTerm('Web.Term.Cumulative')})</th>}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border/70 font-(family-name:--font-script)">
+            {levels.map((lvl: any, i: number) => (
+              <tr key={i} className="hover:bg-muted/50 transition-colors group">
+                <td className="px-4 py-3.5 align-top text-foreground/75 font-semibold">Lv.{i + 1}</td>
+                <td className="px-4 py-3.5 align-top">{lvl.point}</td>
+                {hasCombat && <td className="px-4 py-3.5 align-top whitespace-normal">{renderList(lvl.combat)}</td>}
+                {hasBattle && <td className="px-4 py-3.5 align-top whitespace-normal">{renderList(lvl.battle)}</td>}
+                {hasEffect && <td className="px-4 py-3.5 align-top whitespace-normal">
+                  <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
+                    {lvl.effect.map((eff: string, j: number) => (
+                      <div key={j} className="flex items-center whitespace-nowrap">
+                        <ParsedText text={eff} />
+                        {j < lvl.effect.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}
+                      </div>
+                    ))}
+                  </div>
+                </td>}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
