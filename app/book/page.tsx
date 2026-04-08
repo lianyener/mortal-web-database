@@ -130,45 +130,15 @@ function BookContent() {
             </div>
 
             {/* 秘笈內容 */}
-            {(detailData.condition?.length > 0 || detailData.learned?.length > 0) && (
+            {detailData.levels && detailData.levels.length > 0 && (
               <div className="flex flex-col gap-4">
                 <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTermWithParam('Web.Content', 'Book')}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
-                  
-                  {/* 學習效果 */}
-                  {detailData.learned && detailData.learned.length > 0 && (
-                    <div className="h-full bg-card border rounded-xl p-5 shadow-sm">
-                      <h3 className="font-bold text-primary border-b border-border/40 pb-1.5 mb-3">{translateTerm('Web.Learned')}</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {detailData.learned.map((item: string, i: number) => (
-                          <div key={i} className="bg-muted/40 px-3 py-1.5 rounded-md border border-border/50 text-sm hover:border-primary/40 transition-colors">
-                            <ParsedText text={item} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 升級條件 */}
-                  {detailData.condition && detailData.condition.length > 0 && (
-                    <div className="bg-card border rounded-xl p-5 shadow-sm">
-                      <h3 className="font-bold text-primary border-b border-border/40 pb-1.5 mb-3">{translateTerm('Web.Condition')}</h3>
-                      <div className="flex flex-col gap-2 font-(family-name:--font-script)">
-                        {detailData.condition.map((cond: string, i: number) => (
-                          <div key={i} className="flex items-start gap-2 text-sm bg-muted/20 px-3 py-2 rounded-md border border-border/50 hover:border-primary/40 transition-colors">
-                            <span className="text-muted-foreground w-10 shrink-0 font-semibold pt-0.5">Lv.{i + 1}</span>
-                            <div className="flex-1 text-foreground/90"><ParsedText text={cond} /></div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <BookLevelTable levels={detailData.levels} />
               </div>
             )}
 
             {/* 關聯項目 */}
-            {detailData.rel && (
+            {detailData.rel && Object.values(detailData.rel).some(obj => Object.keys(Object(obj)).length > 0) && (
               <div className="flex flex-col gap-4 mt-2">
                 <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTerm('Web.Relations')}</h2>
                 <div className="flex flex-col gap-3">
@@ -200,7 +170,7 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
   const [page, setPage] = useState(1);
   const itemsPerPage = 100;
   const [typeFilter, setTypeFilter] = useState('all');
-  
+
   // 緩存清單
   const list = useMemo(() => {
     if (!data) return [];
@@ -228,7 +198,7 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
   // 過濾清單
   const filteredList = useMemo(() => {
     let sourceList = list;
-    
+
     // 類型篩選
     if (typeFilter !== 'all') {
       sourceList = sourceList.filter((item: any) => (item.type || '') === typeFilter);
@@ -257,7 +227,7 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
           <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Book')}</h2>
         </div>
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          
+
           <select value={typeFilter} onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }} className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-36 truncate">
             <option value="all">{translateTerm('Web.Type')} - {translateTerm('Web.Term.All')}</option>
             {typeOptions.map(t => <option key={t} value={t}>{getTypeLabel(t)}</option>)}
@@ -275,7 +245,7 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
               <tr>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Id')}</th>
-                <th className="px-4 py-3 font-semibold min-w-32">{translateTerm('Web.Name')}</th>
+                <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.Name')}</th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Type')}</th>
                 <th className="px-4 py-3 font-semibold min-w-48 w-full">{translateTerm('Web.Desc')}</th>
               </tr>
@@ -296,6 +266,51 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
           </table>
         </div>
         {hasMore && (<div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center"><Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50">{translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})</Button></div>)}
+      </div>
+    </div>
+  );
+}
+
+// 秘笈等級列表元件 (DataTable)
+function BookLevelTable({ levels }: { levels: any[] }) {
+  const { translateTerm } = useAppTranslation();
+
+  return (
+    <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left whitespace-nowrap">
+          <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
+            <tr>
+              <th className="px-4 py-3 font-semibold min-w-20">{translateTerm('Web.Level')}</th>
+              <th className="px-4 py-3 font-semibold min-w-20">{translateTerm('Web.Point')}</th>
+              <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Condition')}</th>
+              <th className="px-4 py-3 font-semibold min-w-60">{translateTerm('Web.Effect')}</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border/70 font-(family-name:--font-script)">
+            {levels.map((lvl: any, i: number) => (
+              <tr key={i} className="hover:bg-muted/50 transition-colors group">
+                <td className="px-4 py-3.5 align-top text-foreground/75 font-semibold">Lv.{i + 1}</td>
+                <td className="px-4 py-3.5 align-top">{lvl.point}</td>
+                <td className="px-4 py-3.5 align-top whitespace-normal">
+                  <ParsedText text={lvl.condition} />
+                </td>
+                <td className="px-4 py-3.5 align-top whitespace-normal">
+                  {lvl.effect && lvl.effect.length > 0 ? (
+                    <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
+                      {lvl.effect.map((eff: string, j: number) => (
+                        <div key={j} className="flex items-center whitespace-nowrap">
+                          <ParsedText text={eff} />
+                          {j < lvl.effect.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}
+                        </div>
+                      ))}
+                    </div>
+                  ) : <span className="text-muted-foreground/50">-</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

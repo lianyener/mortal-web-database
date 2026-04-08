@@ -514,9 +514,9 @@ function BranchItem({ branch, treeActionId, isGlobalExpand, selectedEffects }: {
 
           {/* 分岐條件 (不一定有) */}
           {branch.condition && (
-            <span className="flex items-center pl-1 gap-0.5 leading-5 text-muted-foreground rounded border">
+            <span className="flex items-center pl-1 gap-0.5 leading-[22.25px] text-muted-foreground rounded border">
               <Lock className="size-3.5 shrink-0 text-muted-foreground/70" />
-              <span><ParsedText text={branch.condition} /></span>
+              <span className='mr-1'><ParsedText text={branch.condition} /></span>
             </span>
           )}
 
