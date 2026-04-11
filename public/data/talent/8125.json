@@ -1,1 +1,1 @@
-{"skill":"S8125","low":["[*Talent.Name.8103*]"],"rel":{"pre":{"Book":["2301"]},"post":{"Script":["S0213_02"]}}}
+{"skill":"S8125","level":0,"low":["8103"],"rel":{"pre":{"Book":["2301"]},"post":{"Script":["S0213_02"]}}}
