@@ -56,7 +56,9 @@ export function useAppTranslation() {
           const params = args.reduce((acc: Record<number, string>, arg: string, i: number) => {
 
             // 嘗試翻譯變數
-            acc[i] = tTerm(arg.trim(), undefined, 1);
+            if (arg.includes('.')) acc[i] = tTerm(arg.trim(), undefined, 1);
+            else acc[i] = arg.trim();
+            
             return acc;
           }, {} as Record<number, string>);
 

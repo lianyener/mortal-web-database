@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.M50019.0.0*]","1":"[*Flag.M50019.0.1*]"}}],"init":0,"rel":{"pre":{"Script":["ch5_4_8_8_1"]},"post":{"Script":["ch5_4_8_8_3","ch5_4_8_9"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.M50019.0.0*]","1":"[*Flag.M50019.0.1*]"}}],"init":0,"rel":{"post":{"Script":["ch5_4_8_8_3","ch5_4_8_9"]},"pre":{"Script":["ch5_4_8_8_1"]}}}
