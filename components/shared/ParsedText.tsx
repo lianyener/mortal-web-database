@@ -98,8 +98,6 @@ export function ParsedText({ text }: { text: string }) {
                 // 跳轉獨立頁面
                 case 'Script':
                 case 'Free':
-                  router.push(`/script?id=${targetId}${sidebarParams}`);
-                  break;
                 case 'Combat':
                 case 'Battle':
                 case 'Position':

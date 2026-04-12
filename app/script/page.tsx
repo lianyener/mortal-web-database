@@ -24,7 +24,6 @@ export default function ScriptPage() {
 }
 
 function ScriptContent() {
-
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
