@@ -290,7 +290,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
   const filteredList = useMemo(() => {
     let sourceList = list;
 
-    if (activeOnly) sourceList = sourceList.filter((item: any) => item.active === true);
+    if (activeOnly) sourceList = sourceList.filter((item: any) => item.active === true && item.script);
     if (typeFilter !== 'all') sourceList = sourceList.filter((item: any) => item.type === typeFilter);
     if (yearFilter !== 'all') sourceList = sourceList.filter((item: any) => parseInt(item.minTime?.year) <= parseInt(yearFilter) && parseInt(item.maxTime?.year || 5) >= parseInt(yearFilter));
     if (monthFilter !== 'all') sourceList = sourceList.filter((item: any) => parseInt(item.minTime?.month) <= parseInt(monthFilter) && parseInt(item.maxTime?.month || 13) >= parseInt(monthFilter));
