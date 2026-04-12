@@ -127,8 +127,9 @@ function ScriptContent() {
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Remark')}</div>
                       <div className="px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50">
                         {Array.isArray(data.remark)
-                          ? data.remark.map((r: string, i: number) => <div key={i}>{translateParagraph(r)}</div>)
-                          : translateParagraph(data.remark)}
+                          ? data.remark.map((r: string, i: number) => 
+                            <div key={i}><ParsedText text={translateParagraph(r, 1, false)} /></div>
+                          ) : <ParsedText text={translateParagraph(data.remark, 1, false)} />}
                       </div>
                     </div>
                   )}

@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◎[*Custom.NextScript*]var1"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Position":["Back_02"]}},"remark":[],"effects":["Script"]}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.Random*][*Label.Position,Back_Work_001*][*System.StoryEvent*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Position":["Back_02"]}},"remark":["[*Script.Remark.back_02_001.0*]"],"effects":["Script"]}

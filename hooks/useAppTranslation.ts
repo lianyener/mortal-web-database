@@ -13,7 +13,7 @@ export function useAppTranslation() {
     }
 
     // 翻譯用詞
-    const tTerm = (text: string, params?: TranslationValues, defaultText: number = 2): string => {
+    const tTerm = (text: string, params?: TranslationValues, defaultText: number = 2, nest: boolean = true): string => {
 
       // 防呆
       if (!text) return '';
@@ -28,11 +28,11 @@ export function useAppTranslation() {
       else return defaultText === 0 ? '' : defaultText === 2 ? text.split('.').pop()! : text;
 
       // 處理巢狀翻譯並回傳
-      return tParagraph(text, defaultText);
+      return nest ? tParagraph(text, defaultText) : text;
     };
 
     // 翻譯段落
-    const tParagraph = (text: string, defaultText: number = 1): string => {
+    const tParagraph = (text: string, defaultText: number = 1, nest: boolean = true): string => {
 
       // 防呆
       if (!text) return '';
@@ -63,11 +63,11 @@ export function useAppTranslation() {
           }, {} as Record<number, string>);
 
           // 回傳翻譯結果
-          return tTerm(key.trim(), params, defaultText);
+          return tTerm(key.trim(), params, defaultText, nest);
         }
 
         // 回傳翻譯結果
-        return tTerm(content, undefined, defaultText);
+        return tTerm(content, undefined, defaultText, nest);
       });
 
       // 回傳結果
