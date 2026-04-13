@@ -14,6 +14,7 @@ import { ParsedText } from '@/components/shared/ParsedText';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from "@/components/ui/button-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function EquipPage() {
   return (
@@ -241,10 +242,18 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
         </div>
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
 
-          <select value={typeFilter} onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }} className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-36 truncate">
-            <option value="all">{translateTerm('Web.Type')} - {translateTerm('Web.Term.All')}</option>
-            {typeOptions.map(t => <option key={t} value={t}>{getTypeLabel(t)}</option>)}
-          </select>
+          {/* 類型篩選 */}
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className="h-8! text-sm min-w-32 max-w-48 truncate hover:bg-muted/50 transition-colors">
+              <SelectValue placeholder={translateTerm('Web.Type')} />
+            </SelectTrigger>
+            <SelectContent className='min-w-28' position='popper'>
+              <SelectItem value="all">{translateTerm('Web.Type')} - {translateTerm('Web.Term.All')}</SelectItem>
+              {typeOptions.map(o => (
+                <SelectItem key={o} value={o}>{getTypeLabel(o)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           <ButtonGroup className="flex-1 xl:flex-none">
             <input type="text" placeholder={translateTerm('Web.Msg.SearchPlaceholder')} value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }} className="px-3 text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors sm:w-64" />

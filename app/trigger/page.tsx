@@ -14,6 +14,7 @@ import { ParsedText } from '@/components/shared/ParsedText';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from "@/components/ui/button-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function TriggerPage() {
   return (
@@ -319,7 +320,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
           <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Trigger')}</h2>
         </div>
         <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-
+          {/* 狀態切換按鈕 */}
           <Button
             variant={activeOnly ? "default" : "outline"}
             size="sm"
@@ -331,26 +332,61 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             {activeOnly ? translateTerm('Web.ActiveOnly') : translateTerm('Web.Term.All')}
           </Button>
 
-          <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-28 truncate">
-            <option value="all">{translateTerm('Web.Type')} - {translateTerm('Web.Term.All')}</option>
-            {typeOptions.map(o => <option key={o} value={o}>{translateTerm(`Web.Label.${o}`)}</option>)}
-          </select>
+          {/* 類型篩選 */}
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className="h-8! text-sm min-w-28 hover:bg-muted/50 transition-colors">
+              <SelectValue placeholder={translateTerm('Web.Type')} />
+            </SelectTrigger>
+            <SelectContent className='min-w-28' position='popper'>
+              <SelectItem value="all">{translateTerm('Web.Type')} - {translateTerm('Web.Term.All')}</SelectItem>
+              {typeOptions.map(o => (
+                <SelectItem key={o} value={o}>{translateTerm(`Web.Label.${o}`)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-          <select value={yearFilter} onChange={(e) => setYearFilter(e.target.value)} className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-24 truncate">
-            <option value="all">{translateTerm('Web.Term.Year')}</option>
-            {yearOptions.map(o => <option key={o} value={o}>{translateParagraph(`[*System.Number_${o}*][*Web.Term.Year*]`)}</option>)}
-          </select>
+          {/* 年份篩選 */}
+          <Select value={yearFilter} onValueChange={setYearFilter}>
+            <SelectTrigger className="h-8! text-sm min-w-18 hover:bg-muted/50 transition-colors">
+              <SelectValue placeholder={translateTerm('Web.Term.Year')} />
+            </SelectTrigger>
+            <SelectContent className='min-w-18' position='popper'>
+              <SelectItem value="all">{translateTerm('Web.Term.Year')}</SelectItem>
+              {yearOptions.map(o => (
+                <SelectItem key={o} value={o}>
+                  {translateParagraph(`[*System.Number_${o}*][*Web.Term.Year*]`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-          <select value={monthFilter} onChange={(e) => setMonthFilter(e.target.value)} className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-24 truncate">
-            <option value="all">{translateTerm('Web.Term.Month')}</option>
-            {monthOptions.map(o => <option key={o} value={o}>{translateTerm(`System.Month_${o}`)}</option>)}
-          </select>
+          {/* 月份篩選 */}
+          <Select value={monthFilter} onValueChange={setMonthFilter}>
+            <SelectTrigger className="h-8! text-sm min-w-18 hover:bg-muted/50 transition-colors">
+              <SelectValue placeholder={translateTerm('Web.Term.Month')} />
+            </SelectTrigger>
+            <SelectContent className='min-w-18' position='popper'>
+              <SelectItem value="all">{translateTerm('Web.Term.Month')}</SelectItem>
+              {monthOptions.map(o => (
+                <SelectItem key={o} value={o}>{translateTerm(`System.Month_${o}`)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-          <select value={stageFilter} onChange={(e) => setStageFilter(e.target.value)} className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-24 truncate">
-            <option value="all">{translateTerm('Web.Term.Stage')}</option>
-            {stageOptions.map(o => <option key={o} value={o}>{translateTerm(`System.Stage_${o}`)}</option>)}
-          </select>
+          {/* 階段篩選 */}
+          <Select value={stageFilter} onValueChange={setStageFilter}>
+            <SelectTrigger className="h-8! text-sm min-w-18 hover:bg-muted/50 transition-colors">
+              <SelectValue placeholder={translateTerm('Web.Term.Stage')} />
+            </SelectTrigger>
+            <SelectContent className='min-w-18' position='popper'>
+              <SelectItem value="all">{translateTerm('Web.Term.Stage')}</SelectItem>
+              {stageOptions.map(o => (
+                <SelectItem key={o} value={o}>{translateTerm(`System.Stage_${o}`)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
+          {/* 搜尋框 */}
           <ButtonGroup className="flex-1 xl:flex-none">
             <input
               type="text"
@@ -444,7 +480,7 @@ function DataContent({ node }: { node: any }) {
         <div className="flex flex-wrap items-center px-2 py-0.5 gap-0.5 font-bold text-primary text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
           <ParsedText text={node.text} />
         </div>
-        
+
         {/* 分岐項目 */}
         <div className="flex flex-col pl-1 ml-2">
           {node.branches?.map((branch: any) => (

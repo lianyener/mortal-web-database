@@ -14,6 +14,7 @@ import { ParsedText } from '@/components/shared/ParsedText';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from "@/components/ui/button-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function BattlePage() {
   return (
@@ -302,14 +303,17 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
 
           {/* 類型篩選 */}
-          <select
-            value={typeFilter}
-            onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-            className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-36 sm:max-w-48 truncate"
-          >
-            <option value="all">{translateTerm('Web.Type')} - {translateTerm('Web.Term.All')}</option>
-            {typeOptions.map(t => <option key={t} value={t}>{translateTerm(`EnemyTeam.${t}`)}</option>)}
-          </select>
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className="h-8! text-sm min-w-32 max-w-48 truncate hover:bg-muted/50 transition-colors">
+              <SelectValue placeholder={translateTerm('Web.Type')} />
+            </SelectTrigger>
+            <SelectContent className='min-w-28' position='popper'>
+              <SelectItem value="all">{translateTerm('Web.Type')} - {translateTerm('Web.Term.All')}</SelectItem>
+              {typeOptions.map(o => (
+                <SelectItem key={o} value={o}>{translateTerm(`EnemyTeam.${o}`)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           <ButtonGroup className="flex-1 xl:flex-none">
             <input

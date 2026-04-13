@@ -14,6 +14,7 @@ import { ParsedText } from '@/components/shared/ParsedText';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from "@/components/ui/button-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function PositionPage() {
   return (
@@ -275,24 +276,30 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           
           {/* 時期篩選 */}
-          <select
-            value={periodFilter}
-            onChange={(e) => setPeriodFilter(e.target.value)}
-            className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-36 sm:max-w-48 truncate"
-          >
-            <option value="all">{translateTerm('Web.Period')} - {translateTerm('Web.Term.All')}</option>
-            {periodOptions.map(p => <option key={p} value={p}>{translateParagraph(p)}</option>)}
-          </select>
+          <Select value={periodFilter} onValueChange={setPeriodFilter}>
+            <SelectTrigger className="h-8! text-sm min-w-32 max-w-48 truncate hover:bg-muted/50 transition-colors">
+              <SelectValue placeholder={translateTerm('Web.Period')} />
+            </SelectTrigger>
+            <SelectContent className='min-w-32' position='popper'>
+              <SelectItem value="all">{translateTerm('Web.Period')} - {translateTerm('Web.Term.All')}</SelectItem>
+              {periodOptions.map(o => (
+                <SelectItem key={o} value={o}>{translateParagraph(o)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           {/* 地點篩選 */}
-          <select
-            value={positionFilter}
-            onChange={(e) => setPositionFilter(e.target.value)}
-            className="px-2 h-8 text-xs sm:text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors max-w-36 sm:max-w-48 truncate"
-          >
-            <option value="all">{translateTerm('Web.Position')} - {translateTerm('Web.Term.All')}</option>
-            {positionOptions.map(p => <option key={p} value={p}>{translateParagraph(p)}</option>)}
-          </select>
+          <Select value={positionFilter} onValueChange={setPositionFilter}>
+            <SelectTrigger className="h-8! text-sm min-w-32 max-w-48 truncate hover:bg-muted/50 transition-colors">
+              <SelectValue placeholder={translateTerm('Web.Position')} />
+            </SelectTrigger>
+            <SelectContent className='min-w-28' position='popper'>
+              <SelectItem value="all">{translateTerm('Web.Position')} - {translateTerm('Web.Term.All')}</SelectItem>
+              {positionOptions.map(o => (
+                <SelectItem key={o} value={o}>{translateParagraph(o)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           <ButtonGroup className="flex-1 xl:flex-none">
             <input
