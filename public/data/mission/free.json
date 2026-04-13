@@ -1,1 +1,1 @@
-{"trigger":["Door","Kitchen","Room1","Alchemy","BackMountain","Room2","Mall","Forge","Center","Study"],"init":"","remark":[],"rel":{"to":{"Trigger":["Door","BackMountain","Room1","Kitchen","Alchemy","Room2","Mall","Forge","Center","Study"]}}}
+{"trigger":["Kitchen","Door","Forge","BackMountain","Center","Alchemy","Room2","Study","Room1","Mall"],"init":"","remark":[],"rel":{"to":{"Trigger":["Kitchen","Room2","BackMountain","Door","Forge","Center","Room1","Study","Alchemy","Mall"]}}}

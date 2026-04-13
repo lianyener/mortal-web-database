@@ -196,6 +196,18 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
   }, [filteredList, page]);
   const hasMore = displayList.length < filteredList.length;
 
+  // 處理列表點擊事件
+  const handleRowClick = (e: React.MouseEvent, id: string) => {
+    if (e.ctrlKey || e.metaKey) window.open(`/misc?id=${id}`, '_blank');
+    else router.push(`/misc?id=${id}`);
+  };
+  const handleRowAuxClick = (e: React.MouseEvent, id: string) => {
+    if (e.button === 1) window.open(`/misc?id=${id}`, '_blank');
+  };
+  const handleRowMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 1) e.preventDefault();
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
@@ -221,7 +233,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             </thead>
             <tbody className="divide-y divide-border/70">
               {displayList.map((item: any) => (
-                <tr key={item.id} onClick={() => router.push(`/misc?id=${item.id}`)} className="hover:bg-muted/50 transition-colors group cursor-pointer">
+                <tr key={item.id} onMouseDown={handleRowMouseDown} onClick={(e) => handleRowClick(e, item.id)} onAuxClick={(e) => handleRowAuxClick(e, item.id)} className="hover:bg-muted/50 transition-colors group cursor-pointer">
                   <td className="px-4 py-3 font-mono text-primary group-hover:underline">{item.id}</td>
                   <td className="px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80">{translateTerm(`Misc.Name.${item.id}`, undefined, 1)}</td>
                   <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`Misc.Desc.${item.id}`, undefined, 1)}>

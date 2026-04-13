@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.M70024.0.0*]","1":"[*Flag.M70024.0.1*]"}}],"init":0,"rel":{"post":{"Trigger":["M6003_08_01","M6004_03_01"],"Script":["ch7_5_4_1","ch7_5_4_2_2_break_start_01"]},"pre":{"Script":["ch7_5_4_2_2_break_start_01","ch7_5_3_1","ch7_5_4_7"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.M70024.0.0*]","1":"[*Flag.M70024.0.1*]"}}],"init":0,"rel":{"post":{"Trigger":["M6003_08_01","M6004_03_01"],"Script":["ch7_5_4_1","ch7_5_4_2_2_break_start_01"]},"pre":{"Script":["ch7_5_3_1","ch7_5_4_7","ch7_5_4_2_2_break_start_01"]}}}

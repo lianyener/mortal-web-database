@@ -117,7 +117,7 @@ export function GlobalSidebar() {
 
           {/* 右上角操作按鈕群組 */}
           <div className="flex items-center gap-2 shrink-0">
-            {category && id && ['mission', 'trigger', 'position', 'script', 'combat', 'battle', 'flag', 'character', 'book', 'equip', 'special', 'misc', 'free'].includes(String(category).toLowerCase()) && (
+            {category && id && ['mission', 'trigger', 'position', 'script', 'combat', 'battle', 'flag', 'character', 'book', 'equip', 'special', 'misc', 'free', 'talent'].includes(String(category).toLowerCase()) && (
               <Button
                 variant="outline"
                 size="sm"
