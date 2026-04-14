@@ -4,7 +4,7 @@
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
 import { CircleArrowRight, Search, TableProperties, ChevronDown, Minus, Eye, EyeOff } from 'lucide-react';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -40,9 +40,6 @@ function TriggerContent() {
   // 透過useItemDetail取得資料
   const { data, isLoading, isError } = useItemDetail('trigger', query.id);
 
-  // 相容結構
-  const detailData = isListView ? null : (data?.type ? data : data?.[query.id]);
-
   // i18n解析邏輯
   const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
 
@@ -51,17 +48,17 @@ function TriggerContent() {
 
   // 整理 Content 陣列，如果劇本有設定 script 屬性，在尾端塞入跳轉節點
   const contentArray = useMemo(() => {
-    if (!detailData) return [];
-    const arr = [...(detailData.content || [])];
-    if (detailData.script) {
+    if (!data) return [];
+    const arr = [...(data.content || [])];
+    if (data.script) {
       arr.push({
         form: 'effect',
         type: 'Script',
-        text: `◎[*Custom.NextScript*][*Label.Script,${detailData.script}*]`
+        text: `◎[*Custom.NextScript*][*Label.Script,${data.script}*]`
       });
     }
     return arr;
-  }, [detailData]);
+  }, [data]);
 
   if (!mounted) return null;
 
@@ -89,7 +86,7 @@ function TriggerContent() {
         )}
 
         {/* 單一觸發器內容模式 */}
-        {!isLoading && !isError && !isListView && detailData ? (
+        {!isLoading && !isError && !isListView && data ? (
           <div className="flex flex-col gap-8">
 
             {/* 基本資訊 */}
@@ -118,12 +115,12 @@ function TriggerContent() {
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Type')}</div>
-                      <div className="font-semibold text-foreground">{translateTerm(`Web.Label.${detailData.type}`)}</div>
+                      <div className="font-semibold text-foreground">{translateTerm(`Web.Label.${data.type}`)}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Active')}</div>
                       <div className="font-semibold text-foreground">
-                        {detailData.active ? (
+                        {data.active ? (
                           <span className="text-primary">{translateTerm('Web.Term.Yes')}</span>
                         ) : (
                           <span className="text-muted-foreground/70">{translateTerm('Web.Term.No')}</span>
@@ -139,13 +136,13 @@ function TriggerContent() {
                     </div>
                   </div>
 
-                  {detailData.remark && (Array.isArray(detailData.remark) ? detailData.remark.length > 0 : true) && (
+                  {data.remark && (Array.isArray(data.remark) ? data.remark.length > 0 : true) && (
                     <div className="border-t border-border/50 pt-4">
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Remark')}</div>
                       <div className="px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50">
-                        {Array.isArray(detailData.remark)
-                          ? detailData.remark.map((r: string, i: number) => <div key={i}>{translateParagraph(r)}</div>)
-                          : translateParagraph(detailData.remark)}
+                        {Array.isArray(data.remark)
+                          ? data.remark.map((r: string, i: number) => <div key={i}>{translateParagraph(r)}</div>)
+                          : translateParagraph(data.remark)}
                       </div>
                     </div>
                   )}
@@ -160,11 +157,11 @@ function TriggerContent() {
               <div className="bg-card border rounded-xl p-5 shadow-sm overflow-x-auto font-mixed">
 
                 {/* 觸發條件 */}
-                {detailData.condition && (
+                {data.condition && (
                   <div>
                     <h3 className="font-bold text-primary border-b border-border/40 pb-1.5">{translateTerm('Web.Condition')}</h3>
                     <div className="flex flex-col items-start pt-2 gap-1 text-sm/loose">
-                      {detailData.condition.map((item: any, i: number) => (
+                      {data.condition.map((item: any, i: number) => (
                         <div key={i} className='flex items-start w-full py-0.5 gap-1 rounded-md transition-colors hover:bg-muted/80'>
                           <span className="pl-1.5 text-muted-foreground shrink-0 select-none">{i + 1}.</span>
                           <div className="items-center gap-x-0.5 gap-y-1 flex-1 min-w-0">
@@ -192,11 +189,11 @@ function TriggerContent() {
             </div>
 
             {/* 關聯項目 */}
-            {detailData.rel && (
+            {data.rel && (
               <div className="flex flex-col gap-4 mt-2">
                 <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTerm('Web.Relations')}</h2>
                 <div className="flex flex-col gap-3">
-                  {Object.entries(detailData.rel).map(([phase, types]) => (
+                  {Object.entries(data.rel).map(([phase, types]) => (
                     <DataRelation key={phase} phase={phase} types={types} />
                   ))}
                 </div>
@@ -205,7 +202,7 @@ function TriggerContent() {
           </div>
         ) : null}
 
-        {!isLoading && !isError && !isListView && !detailData && (
+        {!isLoading && !isError && !isListView && !data && (
           <div className="text-center text-muted-foreground py-10">
             {translateTermWithParam('Web.Msg.NotFound', 'Trigger')}
           </div>
@@ -217,7 +214,6 @@ function TriggerContent() {
 
 // 列表元件 (DataTable)
 function DataList({ data }: { data: Record<string, any> | any[] }) {
-  const router = useRouter();
   const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
   const [searchInput, setSearchInput] = useState('');
   const [searchTarget, setSearchTarget] = useState('');
@@ -406,6 +402,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
           <table className="w-full text-sm text-left whitespace-nowrap">
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
               <tr>
+                <th className='p-0 w-0 h-0'></th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Id')}</th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Name')}</th>
                 <th className="px-4 py-3 font-semibold min-w-20">{translateTerm('Web.Type')}</th>
@@ -416,7 +413,10 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             </thead>
             <tbody className="divide-y divide-border/70">
               {displayList.map((item: any) => (
-                <tr key={item.id} onClick={() => router.push(`/trigger?id=${item.id}`)} className={`hover:bg-muted/50 transition-colors group cursor-pointer ${!item.active ? 'opacity-50 grayscale hover:opacity-100 hover:grayscale-0' : ''}`}>
+                <tr key={item.id} className={`relative hover:bg-muted/50 transition-colors group cursor-pointer ${!item.active ? 'opacity-50 grayscale hover:opacity-100 hover:grayscale-0' : ''}`}>
+                  <td className='p-0 w-0 h-0'>
+                    <Link href={`/trigger?id=${item.id}`} className="absolute inset-0 z-10" aria-hidden="true"/>
+                  </td>
                   <td className="px-4 py-3 font-mono text-primary group-hover:underline">{item.id}</td>
                   <td className="px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80">
                     {translateTerm(`Trigger.Name.${item.id}`, undefined, 1)}
@@ -432,14 +432,14 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                 </tr>
               ))}
               {filteredList.length === 0 && (
-                <tr><td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>
+                <tr><td colSpan={7} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>
               )}
             </tbody>
           </table>
         </div>
         {hasMore && (
           <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
-            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50">
+            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50 cursor-pointer">
               {translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})
             </Button>
           </div>

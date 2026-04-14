@@ -4,7 +4,7 @@
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
 import { Search, TableProperties } from 'lucide-react';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -39,9 +39,6 @@ function TalentContent() {
   // 透過useItemDetail取得資料
   const { data, isLoading, isError } = useItemDetail('talent', query.id);
 
-  // 相容結構
-  const detailData = isListView ? null : (data?.skill !== undefined || data?.rel ? data : data?.[query.id]);
-
   // i18n解析邏輯
   const { translateTerm, translateTermWithParam } = useAppTranslation();
 
@@ -74,7 +71,7 @@ function TalentContent() {
         )}
 
         {/* 單一內容模式 */}
-        {!isLoading && !isError && !isListView && detailData ? (
+        {!isLoading && !isError && !isListView && data ? (
           <div className="flex flex-col gap-8">
 
             {/* 基本資訊 */}
@@ -114,20 +111,20 @@ function TalentContent() {
             </div>
 
             {/* 技能內容 */}
-            {detailData.skill && detailData.skill !== '' && (
+            {data.skill && data.skill !== '' && (
               <div className="flex flex-col gap-4">
                 <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTerm('Web.SkillContent')}</h2>
-                <TalentSkillTable skillId={detailData.skill} maxLevel={detailData.level} talent={query.id} />
+                <TalentSkillTable skillId={data.skill} maxLevel={data.level} talent={query.id} />
               </div>
             )}
 
             {/* 下位技能 */}
-            {detailData.low && detailData.low.length > 0 && (
+            {data.low && data.low.length > 0 && (
               <div className="flex flex-col gap-4">
                 <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTerm('Web.LowerTalent')}</h2>
                 <div className="bg-card border rounded-xl p-5 shadow-sm">
                   <div className="flex flex-wrap gap-2">
-                    {detailData.low.map((lowId: string) => (
+                    {data.low.map((lowId: string) => (
                       <div key={lowId} className="px-3 py-1.5 bg-muted/40 border border-border/50 rounded-md text-sm hover:border-primary/40 transition-colors">
                         <ParsedText text={`[*Label.Talent,${lowId}*]`} />
                       </div>
@@ -138,11 +135,11 @@ function TalentContent() {
             )}
 
             {/* 關聯項目 */}
-            {detailData.rel && (
+            {data.rel && (
               <div className="flex flex-col gap-4 mt-2">
                 <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTerm('Web.Relations')}</h2>
                 <div className="flex flex-col gap-3">
-                  {Object.entries(detailData.rel).map(([phase, types]) => (
+                  {Object.entries(data.rel).map(([phase, types]) => (
                     <DataRelation key={phase} phase={phase} types={types} />
                   ))}
                 </div>
@@ -151,7 +148,7 @@ function TalentContent() {
           </div>
         ) : null}
 
-        {!isLoading && !isError && !isListView && !detailData && (
+        {!isLoading && !isError && !isListView && !data && (
           <div className="text-center text-muted-foreground py-10">
             {translateTermWithParam('Web.Msg.NotFound', 'Talent')}
           </div>
@@ -163,7 +160,6 @@ function TalentContent() {
 
 // 列表元件 (DataTable)
 function DataList({ data }: { data: Record<string, any> | any[] }) {
-  const router = useRouter();
   const { translateTerm, translateTermWithParam } = useAppTranslation();
   const [searchInput, setSearchInput] = useState('');
   const [searchTarget, setSearchTarget] = useState('');
@@ -205,18 +201,6 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
   }, [filteredList, page]);
   const hasMore = displayList.length < filteredList.length;
 
-  // 處理列表點擊事件
-  const handleRowClick = (e: React.MouseEvent, id: string) => {
-    if (e.ctrlKey || e.metaKey) window.open(`/talent?id=${id}`, '_blank');
-    else router.push(`/talent?id=${id}`);
-  };
-  const handleRowAuxClick = (e: React.MouseEvent, id: string) => {
-    if (e.button === 1) window.open(`/talent?id=${id}`, '_blank');
-  };
-  const handleRowMouseDown = (e: React.MouseEvent) => {
-    if (e.button === 1) e.preventDefault();
-  };
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
@@ -235,6 +219,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
           <table className="w-full text-sm text-left whitespace-nowrap">
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
               <tr>
+                <th className='p-0 w-0 h-0'></th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Id')}</th>
                 <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.Name')}</th>
                 <th className="px-4 py-3 font-semibold min-w-48 w-full">{translateTerm('Web.Desc')}</th>
@@ -242,7 +227,10 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             </thead>
             <tbody className="divide-y divide-border/70">
               {displayList.map((item: any) => (
-                <tr key={item.id} onMouseDown={handleRowMouseDown} onClick={(e) => handleRowClick(e, item.id)} onAuxClick={(e) => handleRowAuxClick(e, item.id)} className="hover:bg-muted/50 transition-colors group cursor-pointer">
+                <tr key={item.id} className="relative hover:bg-muted/50 transition-colors group cursor-pointer">
+                  <td className='p-0 w-0 h-0'>
+                    <Link href={`/talent?id=${item.id}`} className="absolute inset-0 z-10" aria-hidden="true" />
+                  </td>
                   <td className="px-4 py-3 font-mono text-primary group-hover:underline">{item.id}</td>
                   <td className="px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80">{translateTerm(`PlayerTalent.Name.${item.id}`, undefined, 1)}</td>
                   <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`PlayerTalent.Desc.${item.id}`, undefined, 1)}>
@@ -250,11 +238,17 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                   </td>
                 </tr>
               ))}
-              {filteredList.length === 0 && (<tr><td colSpan={3} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>)}
+              {filteredList.length === 0 && (<tr><td colSpan={4} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>)}
             </tbody>
           </table>
         </div>
-        {hasMore && (<div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center"><Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50">{translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})</Button></div>)}
+        {hasMore && (
+          <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
+            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50 cursor-pointer">
+              {translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

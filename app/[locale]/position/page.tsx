@@ -4,7 +4,7 @@
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
 import { Search, TableProperties } from 'lucide-react';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -46,9 +46,6 @@ function PositionContent() {
   // 側邊欄開啟狀態
   const isOpen = useSidebarStore(state => state.isOpen);
 
-  // 相容兩種結構(所有/單一)
-  const detailData = isListView ? null : (data?.period ? data : data?.[query.id]);
-
   if (!mounted) return null;
 
   return (
@@ -75,7 +72,7 @@ function PositionContent() {
         )}
 
         {/* 單一地點內容模式 */}
-        {!isLoading && !isError && !isListView && detailData ? (
+        {!isLoading && !isError && !isListView && data ? (
           <div className="flex flex-col gap-8">
 
             {/* 基本資訊 */}
@@ -103,15 +100,15 @@ function PositionContent() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-border/50 pt-4">
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Period')}</div>
-                      <div className="font-semibold text-sm text-foreground">{translateParagraph(detailData.period)}</div>
+                      <div className="font-semibold text-sm text-foreground">{translateParagraph(data.period)}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Label.Position')}</div>
-                      <div className="font-semibold text-sm text-foreground">{translateParagraph(detailData.position)}</div>
+                      <div className="font-semibold text-sm text-foreground">{translateParagraph(data.position)}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Action')}</div>
-                      <div className="font-semibold text-sm text-foreground">{translateParagraph(detailData.action)}</div>
+                      <div className="font-semibold text-sm text-foreground">{translateParagraph(data.action)}</div>
                     </div>
                   </div>
                 </div>
@@ -119,21 +116,21 @@ function PositionContent() {
             </div>
 
             {/* 事件列表 */}
-            {detailData.event && Object.keys(detailData.event).length > 0 && (
+            {data.event && Object.keys(data.event).length > 0 && (
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
                   <h2 className="text-lg font-bold whitespace-nowrap">{translateTermWithParam('Web.List', 'Web.Label.Event')}</h2>
                 </div>
-                <EventTable events={detailData.event} />
+                <EventTable events={data.event} />
               </div>
             )}
 
             {/* 關聯項目 */}
-            {detailData.rel && (
+            {data.rel && (
               <div className="flex flex-col gap-4 mt-2">
                 <h2 className="pb-2 text-lg font-bold border-b border-border/50 whitespace-nowrap">{translateTerm('Web.Relations')}</h2>
                 <div className="flex flex-col gap-3">
-                  {Object.entries(detailData.rel).map(([phase, types]) => (
+                  {Object.entries(data.rel).map(([phase, types]) => (
                     <DataRelation key={phase} phase={phase} types={types} />
                   ))}
                 </div>
@@ -142,7 +139,7 @@ function PositionContent() {
           </div>
         ) : null}
 
-        {!isLoading && !isError && !isListView && !detailData && (
+        {!isLoading && !isError && !isListView && !data && (
           <div className="text-center text-muted-foreground py-10">
             {translateTermWithParam('Web.NotFound', 'Web.Label.Position')}
           </div>
@@ -154,7 +151,6 @@ function PositionContent() {
 
 // 地點列表元件 (DataTable)
 function DataList({ data }: { data: Record<string, any> | any[] }) {
-  const router = useRouter();
   const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
   const [searchInput, setSearchInput] = useState('');
   const [searchTarget, setSearchTarget] = useState('');
@@ -265,18 +261,6 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
   }, [filteredList, page]);
   const hasMore = displayList.length < filteredList.length;
 
-  // 處理列表點擊事件
-  const handleRowClick = (e: React.MouseEvent, id: string) => {
-    if (e.ctrlKey || e.metaKey) window.open(`/position?id=${id}`, '_blank');
-    else router.push(`/position?id=${id}`);
-  };
-  const handleRowAuxClick = (e: React.MouseEvent, id: string) => {
-    if (e.button === 1) window.open(`/position?id=${id}`, '_blank');
-  };
-  const handleRowMouseDown = (e: React.MouseEvent) => {
-    if (e.button === 1) e.preventDefault();
-  };
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
@@ -332,6 +316,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
           <table className="w-full text-sm text-left whitespace-nowrap">
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
               <tr>
+                <th className='p-0 w-0 h-0'></th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Id')}</th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Period')}</th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Position')}</th>
@@ -340,7 +325,10 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             </thead>
             <tbody className="divide-y divide-border/70">
               {displayList.map((item: any) => (
-                <tr key={item.id} onMouseDown={handleRowMouseDown} onClick={(e) => handleRowClick(e, item.id)} onAuxClick={(e) => handleRowAuxClick(e, item.id)} className="hover:bg-muted/50 transition-colors group cursor-pointer">
+                <tr key={item.id} className="relative hover:bg-muted/50 transition-colors group cursor-pointer">
+                  <td className='p-0 w-0 h-0'>
+                    <Link href={`/position?id=${item.id}`} className="absolute inset-0 z-10" aria-hidden="true"/>
+                  </td>
                   <td className="px-4 py-3 font-mono text-primary group-hover:underline">{item.id}</td>
                   <td className="px-4 py-3 text-muted-foreground">{translateParagraph(item.period)}</td>
                   <td className="px-4 py-3 text-muted-foreground">{translateParagraph(item.position) || '-'}</td>
@@ -348,7 +336,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                 </tr>
               ))}
               {filteredList.length === 0 && (
-                <tr><td colSpan={4} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>
+                <tr><td colSpan={5} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>
               )}
             </tbody>
           </table>
@@ -357,7 +345,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
         {/* 載入更多按鈕 */}
         {hasMore && (
           <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
-            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50">
+            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50 cursor-pointer">
               {translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})
             </Button>
           </div>

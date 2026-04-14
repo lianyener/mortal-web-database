@@ -4,7 +4,7 @@
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
 import { CircleArrowRight, Search, TableProperties } from 'lucide-react';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -40,9 +40,6 @@ function BattleContent() {
   // 透過useItemDetail取得資料
   const { data, isLoading, isError } = useItemDetail('battle', query.id);
 
-  // 相容兩種結構(所有/單一)
-  const detailData = isListView ? null : (data?.type ? data : data?.[query.id]);
-
   // i18n解析邏輯
   const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
 
@@ -58,7 +55,7 @@ function BattleContent() {
     { key: 'neutral', label: translateTerm('Web.Neutral') }
   ];
   const groupCount = groups.reduce((count, g) => {
-    if (detailData?.[g.key]?.name && detailData[g.key].name.length > 0) count++;
+    if (data?.[g.key]?.name && data[g.key].name.length > 0) count++;
     return count;
   }, 0);
 
@@ -86,7 +83,7 @@ function BattleContent() {
         )}
 
         {/* 單一戰鬥內容模式 */}
-        {!isLoading && !isError && !isListView && detailData ? (
+        {!isLoading && !isError && !isListView && data ? (
           <div className="flex flex-col gap-8">
 
             {/* 基本資訊 */}
@@ -120,7 +117,7 @@ function BattleContent() {
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Type')}</div>
                       <div className="font-semibold text-foreground">
-                        {translateTerm(`EnemyTeam.${detailData.type}`)}
+                        {translateTerm(`EnemyTeam.${data.type}`)}
                       </div>
                     </div>
                   </div>
@@ -132,13 +129,13 @@ function BattleContent() {
                     </div>
                   </div>
 
-                  {detailData.remark && (Array.isArray(detailData.remark) ? detailData.remark.length > 0 : true) && (
+                  {data.remark && (Array.isArray(data.remark) ? data.remark.length > 0 : true) && (
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Remark')}</div>
                       <div className="px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50">
-                        {Array.isArray(detailData.remark)
-                          ? detailData.remark.map((r: string, i: number) => <div key={i}>{translateParagraph(r)}</div>)
-                          : translateParagraph(detailData.remark)}
+                        {Array.isArray(data.remark)
+                          ? data.remark.map((r: string, i: number) => <div key={i}>{translateParagraph(r)}</div>)
+                          : translateParagraph(data.remark)}
                       </div>
                     </div>
                   )}
@@ -157,9 +154,9 @@ function BattleContent() {
                   {/* 戰役陣容 */}
                   <div className={`grid grid-cols-1 sm:grid-cols-${groupCount} gap-4 mb-3`}>
                     {groups.map(group => {
-                      if (!detailData[group.key]?.name || detailData[group.key].name.length === 0) return null;
-                      const list = detailData[group.key].name;
-                      const people = String(detailData[group.key].people);
+                      if (!data[group.key]?.name || data[group.key].name.length === 0) return null;
+                      const list = data[group.key].name;
+                      const people = String(data[group.key].people);
                       return (
                         <div key={group.key} className="flex flex-col gap-2">
                           <h3 className="font-bold text-primary border-b border-border/40 pb-1.5">{group.label}</h3>
@@ -186,7 +183,7 @@ function BattleContent() {
                   <div className='pt-3'>
                     <h3 className="font-bold text-primary border-b border-border/40 pb-1.5">{translateTerm('Web.End')}</h3>
                     <div className="flex flex-col items-start pt-2 gap-1 text-sm/loose">
-                      {detailData.end && detailData.end.map((item: any, i: number) => (
+                      {data.end && data.end.map((item: any, i: number) => (
                         <div key={i} className='flex items-start w-full py-0.5 gap-1 rounded-md transition-colors hover:bg-muted/80'>
                           <span className="pl-1.5 text-muted-foreground shrink-0 select-none">{i + 1}.</span>
                           <div className="flex flex-wrap items-center gap-x-0.5 gap-y-1 flex-1 min-w-0">
@@ -209,13 +206,13 @@ function BattleContent() {
             )}
 
             {/* 關聯項目 */}
-            {detailData.rel && (
+            {data.rel && (
               <div className="flex flex-col gap-4 mt-2">
                 <h2 className="text-lg font-bold border-b border-border/50 pb-2">
                   {translateTerm('Web.Relations')}
                 </h2>
                 <div className="flex flex-col gap-3">
-                  {Object.entries(detailData.rel).map(([phase, types]) => (
+                  {Object.entries(data.rel).map(([phase, types]) => (
                     <DataRelation key={phase} phase={phase} types={types} />
                   ))}
                 </div>
@@ -224,7 +221,7 @@ function BattleContent() {
           </div>
         ) : null}
 
-        {!isLoading && !isError && !isListView && !detailData && (
+        {!isLoading && !isError && !isListView && !data && (
           <div className="text-center text-muted-foreground py-10">
             {translateTermWithParam('Web.Msg.NotFound', 'Battle')}
           </div>
@@ -236,7 +233,6 @@ function BattleContent() {
 
 // 列表元件 (DataTable)
 function DataList({ data }: { data: Record<string, any> | any[] }) {
-  const router = useRouter();
   const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
   const [searchInput, setSearchInput] = useState('');
   const [searchTarget, setSearchTarget] = useState('');
@@ -293,18 +289,6 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
   }, [filteredList, page]);
   const hasMore = displayList.length < filteredList.length;
 
-  // 處理列表點擊事件
-  const handleRowClick = (e: React.MouseEvent, id: string) => {
-    if (e.ctrlKey || e.metaKey) window.open(`/battle?id=${id}`, '_blank');
-    else router.push(`/battle?id=${id}`);
-  };
-  const handleRowAuxClick = (e: React.MouseEvent, id: string) => {
-    if (e.button === 1) window.open(`/battle?id=${id}`, '_blank');
-  };
-  const handleRowMouseDown = (e: React.MouseEvent) => {
-    if (e.button === 1) e.preventDefault();
-  };
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
@@ -346,6 +330,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
           <table className="w-full text-sm text-left whitespace-nowrap">
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
               <tr>
+                <th className='p-0 w-0 h-0'></th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Id')}</th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Name')}</th>
                 <th className="px-4 py-3 font-semibold min-w-20">{translateTerm('Web.Type')}</th>
@@ -354,7 +339,10 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             </thead>
             <tbody className="divide-y divide-border/70">
               {displayList.map((item: any) => (
-                <tr key={item.id} onMouseDown={handleRowMouseDown} onClick={(e) => handleRowClick(e, item.id)} onAuxClick={(e) => handleRowAuxClick(e, item.id)} className="hover:bg-muted/50 transition-colors group cursor-pointer">
+                <tr key={item.id} className="relative hover:bg-muted/50 transition-colors group cursor-pointer">
+                  <td className='p-0 w-0 h-0'>
+                    <Link href={`/battle?id=${item.id}`} className="absolute inset-0 z-10" aria-hidden="true"/>
+                  </td>
                   <td className="px-4 py-3 font-mono text-primary group-hover:underline">{item.id}</td>
                   <td className="px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80">
                     {translateTerm(`Battle.Name.${item.id}`, undefined, 1)}
@@ -368,14 +356,14 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                 </tr>
               ))}
               {filteredList.length === 0 && (
-                <tr><td colSpan={4} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>
+                <tr><td colSpan={5} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>
               )}
             </tbody>
           </table>
         </div>
         {hasMore && (
           <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
-            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50">
+            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50 cursor-pointer">
               {translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})
             </Button>
           </div>

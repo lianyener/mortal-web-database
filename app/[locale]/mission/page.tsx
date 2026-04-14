@@ -172,7 +172,7 @@ function MissionContent() {
 
 // 列表元件 (DataTable)
 function DataList({ data }: { data: Record<string, any> | any[] }) {
-  const { translateTerm, translateTermWithParam } = useAppTranslation();
+  const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
   const [searchInput, setSearchInput] = useState('');
   const [searchTarget, setSearchTarget] = useState('');
   const [page, setPage] = useState(1);
@@ -258,7 +258,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                     {translateTerm(`Mission.Name.${item.id}`, undefined, 1)}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground whitespace-normal">
-                    {item.init ? <ParsedText text={`[*Label.Trigger,${item.init}*]`} /> : <span className="opacity-50">-</span>}
+                    {item.init ? translateParagraph(`[*Label.Trigger,${item.init}*]`) : <span className="opacity-50">-</span>}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`Mission.Desc.${item.id}`, undefined, 1)}>
                     <div className="line-clamp-2">{translateTerm(`Mission.Desc.${item.id}`, undefined, 1)}</div>
@@ -266,14 +266,14 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                 </tr>
               ))}
               {filteredList.length === 0 && (
-                <tr><td colSpan={4} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>
+                <tr><td colSpan={5} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>
               )}
             </tbody>
           </table>
         </div>
         {hasMore && (
           <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
-            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50">
+            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50 cursor-pointer">
               {translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})
             </Button>
           </div>

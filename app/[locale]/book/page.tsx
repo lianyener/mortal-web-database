@@ -4,7 +4,7 @@
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useQueryStates, parseAsString } from 'nuqs';
 import { Search, TableProperties } from 'lucide-react';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -39,9 +39,6 @@ function BookContent() {
 
   // 透過useItemDetail取得資料
   const { data, isLoading, isError } = useItemDetail('book', query.id);
-
-  // 相容結構
-  const detailData = isListView ? null : (data?.rel ? data : data?.[query.id]);
 
   // i18n解析邏輯
   const { translateTerm, translateTermWithParam } = useAppTranslation();
@@ -78,7 +75,7 @@ function BookContent() {
         )}
 
         {/* 單一內容模式 */}
-        {!isLoading && !isError && !isListView && detailData ? (
+        {!isLoading && !isError && !isListView && data ? (
           <div className="flex flex-col gap-8">
 
             {/* 基本資訊 */}
@@ -107,15 +104,15 @@ function BookContent() {
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Type')}</div>
-                      <div className="font-semibold text-foreground">{getTypeLabel(detailData.type)}</div>
+                      <div className="font-semibold text-foreground">{getTypeLabel(data.type)}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.MaxLevel')}</div>
-                      <div className="font-semibold text-foreground">{detailData.level}</div>
+                      <div className="font-semibold text-foreground">{data.level}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Cost')}</div>
-                      <div className="font-semibold text-foreground">{detailData.cost}</div>
+                      <div className="font-semibold text-foreground">{data.cost}</div>
                     </div>
                   </div>
 
@@ -130,19 +127,19 @@ function BookContent() {
             </div>
 
             {/* 秘笈內容 */}
-            {detailData.levels && detailData.levels.length > 0 && (
+            {data.levels && data.levels.length > 0 && (
               <div className="flex flex-col gap-4">
                 <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTermWithParam('Web.Content', 'Book')}</h2>
-                <BookLevelTable levels={detailData.levels} />
+                <BookLevelTable levels={data.levels} />
               </div>
             )}
 
             {/* 關聯項目 */}
-            {detailData.rel && Object.values(detailData.rel).some(obj => Object.keys(Object(obj)).length > 0) && (
+            {data.rel && Object.values(data.rel).some(obj => Object.keys(Object(obj)).length > 0) && (
               <div className="flex flex-col gap-4 mt-2">
                 <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTerm('Web.Relations')}</h2>
                 <div className="flex flex-col gap-3">
-                  {Object.entries(detailData.rel).map(([phase, types]) => (
+                  {Object.entries(data.rel).map(([phase, types]) => (
                     <DataRelation key={phase} phase={phase} types={types} />
                   ))}
                 </div>
@@ -151,7 +148,7 @@ function BookContent() {
           </div>
         ) : null}
 
-        {!isLoading && !isError && !isListView && !detailData && (
+        {!isLoading && !isError && !isListView && !data && (
           <div className="text-center text-muted-foreground py-10">
             {translateTermWithParam('Web.Msg.NotFound', 'Book')}
           </div>
@@ -163,7 +160,6 @@ function BookContent() {
 
 // 列表元件 (DataTable)
 function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], getTypeLabel: (t: string) => string }) {
-  const router = useRouter();
   const { translateTerm, translateTermWithParam } = useAppTranslation();
   const [searchInput, setSearchInput] = useState('');
   const [searchTarget, setSearchTarget] = useState('');
@@ -220,18 +216,6 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
   }, [filteredList, page]);
   const hasMore = displayList.length < filteredList.length;
 
-  // 處理列點擊事件 (支援中鍵與 Ctrl 另開分頁)
-  const handleRowClick = (e: React.MouseEvent, id: string) => {
-    if (e.ctrlKey || e.metaKey) window.open(`/book?id=${id}`, '_blank');
-    else router.push(`/book?id=${id}`);
-  };
-  const handleRowAuxClick = (e: React.MouseEvent, id: string) => {
-    if (e.button === 1) window.open(`/book?id=${id}`, '_blank');
-  };
-  const handleRowMouseDown = (e: React.MouseEvent) => {
-    if (e.button === 1) e.preventDefault();
-  };
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
@@ -264,6 +248,7 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
           <table className="w-full text-sm text-left whitespace-nowrap">
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
               <tr>
+                <th className='p-0 w-0 h-0'></th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Id')}</th>
                 <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.Name')}</th>
                 <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Type')}</th>
@@ -272,7 +257,10 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
             </thead>
             <tbody className="divide-y divide-border/70">
               {displayList.map((item: any) => (
-                <tr key={item.id} onMouseDown={handleRowMouseDown} onClick={(e) => handleRowClick(e, item.id)} onAuxClick={(e) => handleRowAuxClick(e, item.id)} className="hover:bg-muted/50 transition-colors group cursor-pointer">
+                <tr key={item.id} className="relative hover:bg-muted/50 transition-colors group cursor-pointer">
+                  <td className='p-0 w-0 h-0'>
+                    <Link href={`/book?id=${item.id}`} className="absolute inset-0 z-10" aria-hidden="true" />
+                  </td>
                   <td className="px-4 py-3 font-mono text-primary group-hover:underline">{item.id}</td>
                   <td className="px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80">{translateTerm(`Book.Name.${item.id}`, undefined, 1)}</td>
                   <td className="px-4 py-3 text-muted-foreground whitespace-normal">{getTypeLabel(item.type)}</td>
@@ -281,11 +269,17 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
                   </td>
                 </tr>
               ))}
-              {filteredList.length === 0 && (<tr><td colSpan={4} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>)}
+              {filteredList.length === 0 && (<tr><td colSpan={5} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>)}
             </tbody>
           </table>
         </div>
-        {hasMore && (<div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center"><Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50">{translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})</Button></div>)}
+        {hasMore && (
+          <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
+            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50 cursor-pointer">
+              {translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
