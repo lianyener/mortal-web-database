@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 
@@ -90,7 +90,7 @@ export function ParsedText({ text }: { text: string }) {
               // 側邊欄狀態
               const sidebarState = useSidebarStore.getState();
               const sidebarParams = (sidebarState.isOpen && sidebarState.category && sidebarState.id)
-                ? `&sidebar=${sidebarState.category}&sidebarId=${sidebarState.id}`
+                ? `?sidebar=${sidebarState.category}&sidebarId=${sidebarState.id}`
                 : '';
 
               // 依分類處理點擊行為
@@ -103,7 +103,7 @@ export function ParsedText({ text }: { text: string }) {
                 case 'Position':
                 case 'Trigger':
                 case 'Mission':
-                  router.push(`/${category.toLowerCase()}?id=${targetId}${sidebarParams}`);
+                  router.push(`/${category.toLowerCase()}/${targetId}${sidebarParams}`);
                   break;
 
                 // 開啟側邊欄
