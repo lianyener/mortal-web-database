@@ -1,15 +1,13 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { Inter, Sometype_Mono, Chiron_Hei_HK } from 'next/font/google';
+import { Sometype_Mono, Chiron_Hei_HK } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { GlobalSidebar } from '@/components/sidebar/GlobalSidebar';
 import { QueryProvider } from '@/components/providers/QueryProvider';
-import { cn } from '@/lib/utils';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const sometypeMono = Sometype_Mono({ subsets: ['latin'], fallback: [], variable: '--font-sometype-mono' });
 const chironHei = Chiron_Hei_HK({ subsets: ['latin'], fallback: [], variable: '--font-chiron-hei' });
 
@@ -40,7 +38,7 @@ export default async function RootLayout({
 
   return (
     // 忽略因瀏覽器擴充功能注入導致的 Hydration 警告
-    <html lang={locale} className={cn("h-full", "antialiased", sometypeMono.variable, inter.variable, chironHei.variable)} suppressHydrationWarning>
+    <html lang={locale} className={`h-full antialiased ${sometypeMono.variable} ${chironHei.variable}`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider messages={messages} locale={locale}>
           <QueryProvider>
