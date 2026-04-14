@@ -276,7 +276,7 @@ function FlagInfo({ id, data }: any) {
                   <div>
                     <div className="mb-1.5 text-xs text-muted-foreground">{translateTerm('Web.ValueDef')}</div>
                     {item.value && Object.keys(item.value).length > 0 ? (
-                      <div className="font-(family-name:--font-script)">
+                      <div className="font-mixed">
                         {Object.entries(item.value).map(([valKey, valText]: [string, any]) => (
                           <div key={valKey} className="flex my-0.5 gap-2">
                             <span className="w-8 px-1.5 py-0.5 text-secondary-foreground text-center bg-secondary rounded border shrink-0">{valKey}</span>

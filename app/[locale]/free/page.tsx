@@ -1,0 +1,469 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
+
+import { useState, useEffect, Suspense, useMemo } from 'react';
+import { useQueryStates, parseAsString } from 'nuqs';
+import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, Search, TableProperties, Filter, CircleCheck } from 'lucide-react';
+import { Link, useRouter } from '@/i18n/navigation';
+import { useAppTranslation } from '@/hooks/useAppTranslation';
+import { useItemDetail } from '@/hooks/queries/useItemDetail';
+import { useSidebarStore } from '@/store/useSidebarStore';
+import { DataRelation } from '@/components/shared/DataRelation';
+import { ParsedText } from '@/components/shared/ParsedText';
+import { TopNavbar } from '@/components/layout/TopNavbar';
+import { Button } from '@/components/ui/button';
+import { ButtonGroup } from "@/components/ui/button-group";
+
+export default function FreePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-muted-foreground tracking-widest animate-pulse">Loading...</div>}>
+      <FreeContent />
+    </Suspense>
+  );
+}
+
+function FreeContent() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  // 全域分岐收合控制狀態
+  const [treeActionId, setTreeActionId] = useState(0);
+  const [isGlobalExpand, setIsGlobalExpand] = useState(true);
+
+  // 網址參數 (預設載入 index_free)
+  const [query] = useQueryStates({
+    id: parseAsString.withDefault('index_free'),
+  });
+
+  // 判斷啟用列表模式
+  const isListView = (query.id === 'index_free');
+
+  // 透過useItemDetail取得資料 (維持使用 script)
+  const { data, isLoading, isError } = useItemDetail('script', query.id);
+
+  // 目標劇本資料
+  const contentArray = data?.content || [];
+
+  // i18n解析邏輯
+  const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
+
+  // 側邊欄開啟狀態
+  const isOpen = useSidebarStore(state => state.isOpen);
+
+  // 取得該劇本所有可用的 effect 類別
+  const availableEffects = useMemo(() => Array.isArray(data?.effects) ? data.effects : [], [data]);
+  const [selectedEffects, setSelectedEffects] = useState<string[]>([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // 當載入新劇本時，預設全選所有 effect 類別
+  useEffect(() => {
+    setSelectedEffects(availableEffects);
+  }, [availableEffects]);
+
+  if (!mounted) return null;
+
+  return (
+    <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'md:pr-128 lg:pr-144' : ''}`}>
+      <TopNavbar />
+      <div className="max-w-5xl mx-auto px-6 space-y-6">
+        {isLoading && (
+          <div className="text-center text-muted-foreground py-10 tracking-widest animate-pulse">
+            {translateTermWithParam('Web.Msg.Loading', 'Free')}
+          </div>
+        )}
+        {isError && (
+          <div className="text-center text-destructive py-10 bg-destructive/10 rounded-md">
+            {translateTermWithParam('Web.Msg.LoadError', 'Free')}
+          </div>
+        )}
+
+        {!isLoading && !isError && isListView && data && (
+          <DataList data={data} />
+        )}
+
+        {!isLoading && !isError && !isListView && data ? (
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b border-border/50 pb-2">
+                <h2 className="text-lg font-bold whitespace-nowrap">{translateTermWithParam('Web.Info', 'Free')}</h2>
+                <div className="flex items-center">
+                  <Button asChild variant="outline" size="sm" className="h-8 px-2.5 text-xs">
+                    <Link href="/free">
+                      <TableProperties className="mr-1.5 size-3.5 rotate-180 text-muted-foreground" />
+                      {translateTerm('Web.ReturnList')}
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+              <div className="p-5 border rounded-xl shadow-sm bg-card">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
+                      <div className="font-semibold text-foreground break-all">{query.id}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
+                      <div className="font-semibold text-foreground">{translateTerm(`Script.Name.${query.id}`)}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc')}</div>
+                    <div className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+                      {translateTerm(`Script.Desc.${query.id}`, undefined, 1) || translateTerm('System.NA')}
+                    </div>
+                  </div>
+                  {data.remark && (Array.isArray(data.remark) ? data.remark.length > 0 : true) && (
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Remark')}</div>
+                      <div className="px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50">
+                        {Array.isArray(data.remark)
+                          ? data.remark.map((r: string, i: number) =>
+                            <div key={i}><ParsedText text={translateParagraph(r, 1, false)} /></div>
+                          ) : <ParsedText text={translateParagraph(data.remark, 1, false)} />}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {data.content && data.content.length > 0 && (
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between border-b border-border/50 pb-2">
+                  <h2 className="mr-1 text-lg font-bold whitespace-nowrap">{translateTerm('Web.BranchContent')}</h2>
+                  <div className="flex flex-wrap justify-end items-center gap-2">
+                    {availableEffects.length > 0 && (
+                      <div className="relative" title={translateTerm('Web.Msg.FilterSwitch')}>
+                        <Button variant="outline" size="sm" onClick={() => setIsFilterOpen(!isFilterOpen)} className="h-8 px-2.5 text-xs">
+                          <Filter className="mr-1.5 size-3.5 text-muted-foreground" />
+                          {translateTerm('Web.FilterSwitch')} ({selectedEffects.length}/{availableEffects.length})
+                        </Button>
+                        {isFilterOpen && (
+                          <>
+                            <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
+                            <div className="absolute right-0 sm:right-auto sm:left-0 top-full mt-1 w-max min-w-44 bg-popover/95 backdrop-blur-sm border rounded-md shadow-lg z-50 p-2 flex flex-col gap-1 max-h-[60vh] overflow-y-auto">
+                              <div className="flex items-center justify-between px-1 pb-1 mb-1 border-b border-border/50">
+                                <button className="text-xs text-primary hover:underline font-semibold" onClick={() => setSelectedEffects(availableEffects)}>{translateTerm('Web.SelectAll')}</button>
+                                <button className="text-xs text-muted-foreground hover:underline font-semibold" onClick={() => setSelectedEffects([])}>{translateTerm('Web.DeselectAll')}</button>
+                              </div>
+                              {availableEffects.map((effect: any) => (
+                                <label key={effect} className="flex items-center gap-2 px-2 py-1.5 hover:bg-muted/80 rounded cursor-pointer select-none">
+                                  <input
+                                    type="checkbox"
+                                    className="rounded border-primary/50 text-primary focus:ring-primary size-3.5"
+                                    checked={selectedEffects.includes(effect)}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedEffects([...selectedEffects, effect]);
+                                      } else {
+                                        setSelectedEffects(selectedEffects.filter(x => x !== effect));
+                                      }
+                                    }}
+                                  />
+                                  <span className="text-sm flex items-center gap-1.5">
+                                    <span className="text-muted-foreground opacity-80">{translateTerm(`LabelIcon.${effect}`)}</span>
+                                    <span className="font-semibold">{translateTerm(`Web.Label.${effect}`)}</span>
+                                  </span>
+                                </label>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+                    <ButtonGroup>
+                      <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(true); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
+                        <UnfoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
+                        {translateTerm('Web.ExpandAll')}
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => { setIsGlobalExpand(false); setTreeActionId(v => v + 1); }} className="h-8 px-2.5 text-xs">
+                        <FoldVertical className="mr-1.5 size-3.5 text-muted-foreground" />
+                        {translateTerm('Web.CollapseAll')}
+                      </Button>
+                    </ButtonGroup>
+                  </div>
+                </div>
+                <div className="bg-card border rounded-xl p-5 shadow-sm overflow-x-auto font-mixed">
+                  <div className="flex flex-col min-w-max sm:min-w-0">
+                    {contentArray.map((node: any, idx: number) => (
+                      <DataContent
+                        key={idx} node={node}
+                        treeActionId={treeActionId} isGlobalExpand={isGlobalExpand}
+                        selectedEffects={selectedEffects}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 關聯項目 */}
+            {data.rel && (
+              <div className="flex flex-col gap-4 mt-2">
+                <h2 className="pb-2 text-lg font-bold border-b border-border/50 whitespace-nowrap">{translateTerm('Web.Relations')}</h2>
+                <div className="flex flex-col gap-3">
+                  {Object.entries(data.rel).map(([phase, types]) => (
+                    <DataRelation key={phase} phase={phase} types={types} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : null}
+
+        {!isLoading && !isError && !isListView && !data && (
+          <div className="text-center text-muted-foreground py-10">
+            {translateTermWithParam('Web.NotFound', 'Web.Label.Free')}
+          </div>
+        )}
+      </div>
+    </main>
+  );
+}
+
+// 列表元件 (DataTable)
+function DataList({ data }: { data: Record<string, any> | any[] }) {
+  const router = useRouter();
+  const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
+  const [searchInput, setSearchInput] = useState('');
+  const [searchTarget, setSearchTarget] = useState('');
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 100;
+
+  const list = useMemo(() => {
+    if (!data) return [];
+    return Array.isArray(data) ? data : Object.entries(data).map(([id, val]: any) => ({
+      id,
+      ...(typeof val === 'object' ? val : {})
+    }));
+  }, [data]);
+
+  const handleSearch = () => {
+    setSearchTarget(searchInput);
+    setPage(1);
+  };
+
+  const [searchableList, setSearchableList] = useState<any[]>([]);
+  const [isBuildingCache, setIsBuildingCache] = useState(false);
+
+  useEffect(() => {
+    if (!list || list.length === 0) return;
+    setIsBuildingCache(true);
+    const timer = setTimeout(() => {
+      const mapped = list.map((item: any) => {
+        const id = item.id || '';
+        const idText = id.toLowerCase();
+        const nameText = translateTerm(`Script.Name.${id}`, undefined, 1).toLowerCase();
+        const descText = translateTerm(`Script.Desc.${id}`, undefined, 1).toLowerCase();
+        const keywordText = translateTerm(`Script.Keyword.${id}`, undefined, 1).toLowerCase();
+        const searchText = translateParagraph(item.searchText || '').toLowerCase();
+        return {
+          ...item,
+          _searchString: `${idText} ${nameText} ${descText} ${keywordText} ${searchText}`
+        };
+      });
+      setSearchableList(mapped);
+      setIsBuildingCache(false);
+    }, 10);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [list]);
+
+  const filteredList = useMemo(() => {
+    const sourceList = searchableList.length > 0 ? searchableList : list;
+    if (!searchTarget) return sourceList;
+    const searchLower = searchTarget.trim().toLowerCase();
+    const searchTerms = searchLower.split(/\s+/).filter(Boolean);
+
+    return sourceList.filter((item: any) => {
+      const targetString = item._searchString || `${item.id} ${translateTerm(`Script.Name.${item.id}`)} ${translateTerm(`Script.Desc.${item.id}`)} ${translateTerm(`Script.Keyword.${item.id}`)}`.toLowerCase();
+      return searchTerms.every(term => targetString.includes(term));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchableList, list, searchTarget]);
+
+  const displayList = useMemo(() => {
+    return filteredList.slice(0, page * itemsPerPage);
+  }, [filteredList, page]);
+  const hasMore = displayList.length < filteredList.length;
+
+  // 處理列點擊事件 (支援中鍵與 Ctrl 另開分頁)
+  const handleRowClick = (e: React.MouseEvent, id: string) => {
+    if (e.ctrlKey || e.metaKey) window.open(`/free?id=${id}`, '_blank');
+    else router.push(`/free?id=${id}`);
+  };
+  const handleRowAuxClick = (e: React.MouseEvent, id: string) => {
+    if (e.button === 1) window.open(`/free?id=${id}`, '_blank');
+  };
+  const handleRowMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 1) e.preventDefault();
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Free')}</h2>
+          {isBuildingCache && <span className="text-xs text-muted-foreground animate-pulse">({translateTerm('Web.Msg.BuildingCache')})</span>}
+        </div>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <ButtonGroup className="flex-1">
+            <input
+              type="text"
+              placeholder={translateTerm('Web.Msg.SearchPlaceholder')}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+              className="px-3 text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors sm:w-64"
+            />
+            <Button variant="outline" size="sm" onClick={handleSearch} className="px-2">
+              <Search className="size-4 opacity-70" />
+            </Button>
+          </ButtonGroup>
+        </div>
+      </div>
+      <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left whitespace-nowrap">
+            <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
+              <tr>
+                <th className="px-4 py-3 font-semibold w-24">{translateTerm('Web.Id')}</th>
+                <th className="px-4 py-3 font-semibold min-w-37.5">{translateTerm('Web.Name')}</th>
+                <th className="px-4 py-3 font-semibold min-w-50 w-full">{translateTerm('Web.Desc')}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/70">
+              {displayList.map((item: any) => (
+                <tr key={item.id} onMouseDown={handleRowMouseDown} onClick={(e) => handleRowClick(e, item.id)} onAuxClick={(e) => handleRowAuxClick(e, item.id)} className="hover:bg-muted/50 transition-colors group cursor-pointer">
+                  <td className="px-4 py-3 font-mono text-primary group-hover:underline">{item.id}</td>
+                  <td className="px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80">
+                    {translateTerm(`Script.Name.${item.id}`, undefined, 1)}
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`Script.Desc.${item.id}`, undefined, 1)}>
+                    <div className="line-clamp-2">{translateTerm(`Script.Desc.${item.id}`, undefined, 1)}</div>
+                  </td>
+                </tr>
+              ))}
+              {filteredList.length === 0 && (
+                <tr><td colSpan={3} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {hasMore && (
+          <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
+            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50">
+              {translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// 以下 Tree 元件與 script/page.tsx 相同，直接重用
+function DataContent({ node, treeActionId, isGlobalExpand, selectedEffects }: { node: any, treeActionId: number, isGlobalExpand: boolean, selectedEffects?: string[] }) {
+  const { translateTerm } = useAppTranslation();
+  if (!node) return null;
+  if (node.form === 'effect') {
+    const textStr = typeof node.text === 'string' ? node.text : '';
+    const effectItems = textStr.split(' / ');
+    return (
+      <div className="flex items-start gap-2 px-3 py-0.5 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
+        <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-1.25" />
+        <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
+          {effectItems.map((item: string, idx: number) => (
+            <div key={idx} className="flex items-center whitespace-nowrap">
+              <ParsedText text={item} />
+              {idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  if (node.form === 'branch') {
+    if (node.type === 'Switch' && selectedEffects && Array.isArray(node.effects) && node.effects.length > 0) {
+      const hasSelectedEffect = node.effects.some((e: string) => selectedEffects.includes(e));
+      if (!hasSelectedEffect) return null;
+    }
+    const textStr = typeof node.text === 'string' ? node.text : '';
+    const branchTextItems = textStr.split(' / ');
+    const label = branchTextItems.shift();
+    return (
+      <div>
+        <div className="flex items-start px-2 py-0.5 gap-2 font-bold text-primary text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
+          <div className="shrink-0"><ParsedText text={label} /></div>
+          {node.type === 'Dice' && branchTextItems.length > 0 && (
+            <div className='flex items-start gap-2'>
+              <CircleCheck className='size-4 shrink-0 text-muted-foreground/50 mt-1.25' />
+              <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
+                {branchTextItems.map((item: string, idx: number) => (
+                  <div key={idx} className="flex items-center whitespace-nowrap"><ParsedText text={item} />{idx < branchTextItems.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}</div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col pl-1 ml-2">
+          {node.branches?.map((branch: any) => <BranchItem key={branch.index} branch={branch} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} selectedEffects={selectedEffects} />)}
+        </div>
+      </div>
+    );
+  }
+  if (node.form === 'perform') {
+    return (
+      <div className="flex items-start gap-2 px-3 py-0.5 text-foreground text-sm/loose rounded-md hover:bg-muted/80 transition-colors">
+        <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-1.25" />
+        <div className="flex-1"><ParsedText text={node.text} /></div>
+      </div>
+    );
+  }
+  return <div className="px-3 py-0.5 text-sm/loose bg-destructive/10 text-destructive rounded-md border">{translateTerm('Web.UnknownNode')}: {JSON.stringify(node)}</div>;
+}
+
+function BranchItem({ branch, treeActionId, isGlobalExpand, selectedEffects }: { branch: any, treeActionId: number, isGlobalExpand: boolean, selectedEffects?: string[] }) {
+  const [isExpanded, setIsExpanded] = useState(isGlobalExpand);
+  const { translateTerm } = useAppTranslation();
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { if (treeActionId > 0) setIsExpanded(isGlobalExpand); }, [treeActionId, isGlobalExpand]);
+  const isSingleEffect = branch.content?.length === 1 && branch.content[0].form === 'effect';
+  const effectItems = isSingleEffect && typeof branch.content[0].text === 'string' ? branch.content[0].text.split(' / ') : [];
+  const effectsList = Array.isArray(branch.effects) ? branch.effects : [];
+  return (
+    <div className="flex flex-col">
+      <div className={`flex items-start px-3 py-0.5 -mx-0.5 gap-1 font-semibold text-sm/loose rounded-md transition-colors hover:bg-muted/80 ${isSingleEffect ? '' : 'cursor-pointer'}`} onClick={() => { if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return; if (!isSingleEffect) setIsExpanded(!isExpanded); }}>
+        <div className="flex items-center gap-1 shrink-0 w-10.5">
+          <span className="shrink-0 flex items-center justify-center w-4 text-muted-foreground">{isSingleEffect ? <Minus className="size-4" /> : (isExpanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />)}</span>
+          <span className="shrink-0 flex-1 text-right text-muted-foreground">{branch.index}.</span>
+        </div>
+        <div className="flex flex-wrap items-center -ml-3.5 gap-x-0.5 gap-y-1 flex-1 min-w-0">
+          <div className="wrap-break-word ml-3.5 mr-1"><ParsedText text={branch.text} /></div>
+          {branch.condition && <span className="flex items-center pl-1 gap-0.5 leading-[22.25px] text-muted-foreground rounded border"><Lock className="size-3.5 shrink-0 text-muted-foreground/70" /><span className='mr-1'><ParsedText text={branch.condition} /></span></span>}
+          {!isSingleEffect && !isExpanded && (
+            <div className="flex items-center min-w-10 opacity-60 text-sm select-none pl-1 hover:opacity-90 transition-opacity" title={effectsList.length > 0 ? effectsList.map((e: string) => translateTerm(`Web.Label.${e}`)).join(', ') : ''}>
+              <CircleFadingPlus className="size-4 shrink-0 text-muted-foreground/70 mr-1.5" />
+              <div className="truncate tracking-widest">{effectsList.map((e: any) => translateTerm(`LabelIcon.${e}`, undefined, 0)).filter(Boolean).join('')}</div>
+              <span className="ml-0.5 text-muted-foreground/70 font-bold tracking-tighter">...</span>
+            </div>
+          )}
+          {isSingleEffect && (
+            <div className="flex items-start gap-1.5 ml-1 text-foreground font-normal">
+              <CircleArrowRight className="size-4 shrink-0 text-muted-foreground/50 mt-1.25" />
+              <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1 min-w-0">
+                {effectItems.map((item: string, idx: number) => <div key={idx} className="flex items-center whitespace-nowrap"><ParsedText text={item} />{idx < effectItems.length - 1 && <span className="text-muted-foreground/30 ml-2 select-none">/</span>}</div>)}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      {!isSingleEffect && isExpanded && (
+        <div className="flex flex-col pl-4 ml-4 mb-2 border-l-2 border-border/80">
+          {branch.content?.map((subNode: any, idx: number) => <DataContent key={idx} node={subNode} treeActionId={treeActionId} isGlobalExpand={isGlobalExpand} selectedEffects={selectedEffects} />)}
+        </div>
+      )}
+    </div>
+  );
+}
