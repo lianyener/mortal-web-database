@@ -113,6 +113,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [list, searchTarget, activeOnly, typeFilter, yearFilter, monthFilter, stageFilter]);
 
+  // 分頁顯示
   const displayList = useMemo(() => {
     return filteredList.slice(0, page * itemsPerPage);
   }, [filteredList, page]);

@@ -41,7 +41,6 @@ function TriggerDetailContent() {
 
         {/* 詳細資料模式 */}
         {!isLoading && !isError && data ? <DataDetail data={data} id={id} /> : null}
-
         {!isLoading && !isError && !data && <div className='text-center text-muted-foreground py-10'>{translateTermWithParam('Web.Msg.NotFound', 'Trigger')}</div>}
       </div>
     </main>
