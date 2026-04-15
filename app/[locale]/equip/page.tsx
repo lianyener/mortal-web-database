@@ -1,55 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect, Suspense, useMemo } from 'react';
-import { useQueryStates, parseAsString } from 'nuqs';
-import { Search, TableProperties } from 'lucide-react';
+import { useState, Suspense, useMemo } from 'react';
+import { Search } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { useSidebarStore } from '@/store/useSidebarStore';
-import { DataRelation } from '@/components/shared/DataRelation';
-import { ParsedText } from '@/components/shared/ParsedText';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
-import { ButtonGroup } from "@/components/ui/button-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ButtonGroup } from '@/components/ui/button-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function EquipPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-muted-foreground tracking-widest animate-pulse">Loading...</div>}>
+    <Suspense fallback={<div className='min-h-screen flex items-center justify-center text-muted-foreground tracking-widest animate-pulse'>Loading...</div>}>
       <EquipContent />
     </Suspense>
   );
 }
 
 function EquipContent() {
-
-  const [mounted, setMounted] = useState(false);
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => setMounted(true), []);
-
-  // 網址參數
-  const [query] = useQueryStates({
-    id: parseAsString.withDefault('all'),
-  });
-
-  // 判斷啟用列表模式
-  const isListView = (query.id === 'all');
-
-  // 透過useItemDetail取得資料
-  const { data, isLoading, isError } = useItemDetail('equip', query.id);
-
-  // i18n解析邏輯
   const { translateTerm, translateTermWithParam } = useAppTranslation();
+  const { data, isLoading, isError } = useItemDetail('equip', 'all');
 
-  // 側邊欄開啟狀態
-  const isOpen = useSidebarStore(state => state.isOpen);
-
-  if (!mounted) return null;
+  const isOpen = useSidebarStore((state) => state.isOpen);
 
   // 類型翻譯
-  const getTypeLabel = (type: string) => type ? (translateTerm(`System.Upgrade.${type}`) || type) : translateTerm('System.NA');
+  const getTypeLabel = (type: string) => (type ? translateTerm(`System.Upgrade.${type}`) || type : translateTerm('System.NA'));
 
   return (
     <main className={`min-h-screen bg-background text-foreground pb-20 transition-[padding] duration-300 ease-in-out ${isOpen ? 'md:pr-128 lg:pr-144' : ''}`}>
@@ -57,121 +35,20 @@ function EquipContent() {
       <TopNavbar />
 
       {/* 主要閱讀區塊 */}
-      <div className="max-w-5xl mx-auto px-6 space-y-6 transition-all duration-300">
-        {isLoading && (
-          <div className="text-center text-muted-foreground py-10 tracking-widest animate-pulse">
-            {translateTermWithParam('Web.Msg.Loading', 'Equip')}
-          </div>
-        )}
-        {isError && (
-          <div className="text-center text-destructive py-10 bg-destructive/10 rounded-md">
-            {translateTermWithParam('Web.Msg.LoadError', 'Equip')}
-          </div>
-        )}
+      <div className='max-w-5xl mx-auto px-6 space-y-6 transition-all duration-300'>
+        {isLoading && <div className='text-center text-muted-foreground py-10 tracking-widest animate-pulse'>{translateTermWithParam('Web.Msg.Loading', 'Equip')}</div>}
+        {isError && <div className='text-center text-destructive py-10 bg-destructive/10 rounded-md'>{translateTermWithParam('Web.Msg.LoadError', 'Equip')}</div>}
 
         {/* 列表模式 */}
-        {!isLoading && !isError && isListView && data && (
-          <DataList data={data} getTypeLabel={getTypeLabel} />
-        )}
-
-        {/* 單一內容模式 */}
-        {!isLoading && !isError && !isListView && data ? (
-          <div className="flex flex-col gap-8">
-
-            {/* 基本資訊 */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                <h2 className="text-lg font-bold">{translateTermWithParam('Web.Info', 'Equip')}</h2>
-                <div className="flex items-center">
-                  <Button asChild variant="outline" size="sm" className="h-8 px-2.5 text-xs">
-                    <Link href="/equip">
-                      <TableProperties className="mr-1.5 size-3.5 rotate-180 text-muted-foreground" />
-                      {translateTerm('Web.ReturnList')}
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-              <div className="p-5 border rounded-xl shadow-sm bg-card">
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Id')}</div>
-                      <div className="font-semibold text-foreground break-all">{query.id}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Name')}</div>
-                      <div className="font-semibold text-foreground">{translateTerm(`Equip.Name.${query.id}`, undefined, 1)}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Type')}</div>
-                      <div className="font-semibold text-foreground">{getTypeLabel(data.type)}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Faction')}</div>
-                      <div className="font-semibold text-foreground">{data.faction}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.CostPerTime')}</div>
-                      <div className="font-semibold text-foreground">{data.cost}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.MaxLevel')}</div>
-                      <div className="font-semibold text-foreground">{data.level}</div>
-                    </div>
-                  </div>
-
-                  <div className="border-t border-border/50 pt-4">
-                    <div className="text-xs text-muted-foreground mb-1">{translateTerm('Web.Desc')}</div>
-                    <div className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
-                      {translateTerm(`Equip.Desc.${query.id}`, undefined, 1) || translateTerm('System.NA')}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 裝備等級內容 */}
-            {data.levels && data.levels.length > 0 && (
-              <div className="flex flex-col gap-4">
-                <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTermWithParam('Web.Content', 'Equip')}</h2>
-                <EquipLevelTable levels={data.levels} />
-              </div>
-            )}
-
-            {/* 開發項目內容 */}
-            {data.evolution && data.evolution.length > 0 && (
-              <div className="flex flex-col gap-4">
-                <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTerm('Web.Evolution')}</h2>
-                <EvolutionTable evolutions={data.evolution} />
-              </div>
-            )}
-
-            {/* 關聯項目 */}
-            {data.rel && (
-              <div className="flex flex-col gap-4 mt-2">
-                <h2 className="pb-2 text-lg font-bold border-b border-border/50">{translateTerm('Web.Relations')}</h2>
-                <div className="flex flex-col gap-3">
-                  {Object.entries(data.rel).map(([phase, types]) => (
-                    <DataRelation key={phase} phase={phase} types={types} />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        ) : null}
-
-        {!isLoading && !isError && !isListView && !data && (
-          <div className="text-center text-muted-foreground py-10">
-            {translateTermWithParam('Web.Msg.NotFound', 'Equip')}
-          </div>
-        )}
+        {!isLoading && !isError && data && <DataList data={data} getTypeLabel={getTypeLabel} />}
+        {!isLoading && !isError && !data && <div className='text-center text-muted-foreground py-10'>{translateTermWithParam('Web.Msg.NotFound', 'Equip')}</div>}
       </div>
     </main>
   );
 }
 
 // 列表元件 (DataTable)
-function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], getTypeLabel: (t: string) => string }) {
+function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[]; getTypeLabel: (t: string) => string }) {
   const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
   const [searchInput, setSearchInput] = useState('');
   const [searchTarget, setSearchTarget] = useState('');
@@ -182,19 +59,17 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
   // 緩存清單
   const list = useMemo(() => {
     if (!data) return [];
-    const arr = Array.isArray(data) ? data : Object.entries(data).map(([id, val]: any) => ({
-      id,
-      ...(typeof val === 'object' ? val : {})
-    }));
-    // 預設以 ID 進行排序
+    const arr = Object.entries(data).map(([id, val]: any) => ({ id, ...(typeof val === 'object' ? val : {}) }));
     return arr.sort((a, b) => a.id.localeCompare(b.id));
   }, [data]);
 
   // 提取唯一的 Type 選項
   const typeOptions = useMemo(() => {
     const types = new Set<string>();
-    list.forEach((item: any) => { if (item.type) types.add(item.type); });
-    return Array.from(types).sort((a, b) => a.localeCompare(b));
+    list.forEach((item: any) => {
+      if (item.type) types.add(item.type);
+    });
+    return Array.from(types);
   }, [list]);
 
   // 執行搜尋
@@ -208,9 +83,7 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
     let sourceList = list;
 
     // 類型篩選
-    if (typeFilter !== 'all') {
-      sourceList = sourceList.filter((item: any) => (item.type || '') === typeFilter);
-    }
+    if (typeFilter !== 'all') sourceList = sourceList.filter((item: any) => (item.type || '') === typeFilter);
 
     if (!searchTarget) return sourceList;
     const searchLower = searchTarget.trim().toLowerCase();
@@ -219,7 +92,7 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
     return sourceList.filter((item: any) => {
       const evoString = item.evolution ? item.evolution.map((evo: any) => translateParagraph(evo.name)).join(' ') : '';
       const targetString = `${item.id} ${translateTerm(`Equip.Name.${item.id}`)} ${getTypeLabel(item.type)} ${translateTerm(`Equip.Desc.${item.id}`, undefined, 0)} ${evoString}`.toLowerCase();
-      return searchTerms.every(term => targetString.includes(term));
+      return searchTerms.every((term) => targetString.includes(term));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [list, searchTarget, typeFilter]);
@@ -230,188 +103,89 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[], g
   const hasMore = displayList.length < filteredList.length;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2">
-        <div className="flex items-center gap-2">
-          <h2 className="text-lg font-bold">{translateTermWithParam('Web.List', 'Equip')}</h2>
+    <div className='flex flex-col gap-4'>
+      <div className='flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2'>
+        <div className='flex items-center gap-2'>
+          <h2 className='text-lg font-bold'>{translateTermWithParam('Web.List', 'Equip')}</h2>
         </div>
-        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-
+        <div className='flex flex-wrap items-center gap-2 w-full sm:w-auto'>
           {/* 類型篩選 */}
           <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="h-8! text-sm min-w-32 max-w-48 truncate hover:bg-muted/50 transition-colors">
+            <SelectTrigger className='h-8! text-sm min-w-32 max-w-48 truncate hover:bg-muted/50 transition-colors'>
               <SelectValue placeholder={translateTerm('Web.Type')} />
             </SelectTrigger>
             <SelectContent className='min-w-28' position='popper'>
-              <SelectItem value="all">{translateTerm('Web.Type')} - {translateTerm('Web.Term.All')}</SelectItem>
-              {typeOptions.map(o => (
-                <SelectItem key={o} value={o}>{getTypeLabel(o)}</SelectItem>
+              <SelectItem value='all'>
+                {translateTerm('Web.Type')} - {translateTerm('Web.Term.All')}
+              </SelectItem>
+              {typeOptions.map((o) => (
+                <SelectItem key={o} value={o}>
+                  {getTypeLabel(o)}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
 
-          <ButtonGroup className="flex-1 xl:flex-none">
-            <input type="text" placeholder={translateTerm('Web.Msg.SearchPlaceholder')} value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }} className="px-3 text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors sm:w-64" />
-            <Button variant="outline" size="sm" onClick={handleSearch} className="px-2"><Search className="size-4 opacity-70" /></Button>
+          <ButtonGroup className='flex-1 xl:flex-none'>
+            <input
+              type='text'
+              placeholder={translateTerm('Web.Msg.SearchPlaceholder')}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSearch();
+              }}
+              className='px-3 text-sm border rounded-md bg-muted/50 focus:outline-none focus:bg-background transition-colors sm:w-64'
+            />
+            <Button variant='outline' size='sm' onClick={handleSearch} className='px-2'>
+              <Search className='size-4 opacity-70' />
+            </Button>
           </ButtonGroup>
         </div>
       </div>
-      <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left whitespace-nowrap">
-            <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
+      <div className='bg-card border rounded-xl shadow-sm overflow-hidden'>
+        <div className='overflow-x-auto'>
+          <table className='w-full text-sm text-left whitespace-nowrap'>
+            <thead className='bg-muted/50 text-muted-foreground border-b border-border/50'>
               <tr>
                 <th className='p-0 w-0 h-0'></th>
-                <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Id')}</th>
-                <th className="px-4 py-3 font-semibold min-w-32">{translateTerm('Web.Name')}</th>
-                <th className="px-4 py-3 font-semibold min-w-24">{translateTerm('Web.Type')}</th>
-                <th className="px-4 py-3 font-semibold min-w-48 w-full">{translateTerm('Web.Desc')}</th>
+                <th className='px-4 py-3 font-semibold min-w-24'>{translateTerm('Web.Id')}</th>
+                <th className='px-4 py-3 font-semibold min-w-32'>{translateTerm('Web.Name')}</th>
+                <th className='px-4 py-3 font-semibold min-w-24'>{translateTerm('Web.Type')}</th>
+                <th className='px-4 py-3 font-semibold min-w-48 w-full'>{translateTerm('Web.Desc')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border/70">
+            <tbody className='divide-y divide-border/70'>
               {displayList.map((item: any) => (
-                <tr key={item.id} className="relative hover:bg-muted/50 transition-colors group cursor-pointer">
+                <tr key={item.id} className='relative hover:bg-muted/50 transition-colors group cursor-pointer'>
                   <td className='p-0 w-0 h-0'>
-                    <Link href={`/equip?id=${item.id}`} className="absolute inset-0 z-10" aria-hidden="true" />
+                    <Link href={`/equip/${item.id}`} className='absolute inset-0 z-10' aria-hidden='true' />
                   </td>
-                  <td className="px-4 py-3 font-mono text-primary group-hover:underline">{item.id}</td>
-                  <td className="px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80">{translateTerm(`Equip.Name.${item.id}`, undefined, 1)}</td>
-                  <td className="px-4 py-3 text-muted-foreground whitespace-normal">{getTypeLabel(item.type)}</td>
-                  <td className="px-4 py-3 text-muted-foreground whitespace-normal max-w-xs" title={translateTerm(`Equip.Desc.${item.id}`, undefined, 1)}>
-                    <div className="line-clamp-2">{translateTerm(`Equip.Desc.${item.id}`, undefined, 1)}</div>
+                  <td className='px-4 py-3 font-mono text-primary group-hover:underline'>{item.id}</td>
+                  <td className='px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80'>{translateTerm(`Equip.Name.${item.id}`, undefined, 1)}</td>
+                  <td className='px-4 py-3 text-muted-foreground whitespace-normal'>{getTypeLabel(item.type)}</td>
+                  <td className='px-4 py-3 text-muted-foreground whitespace-normal max-w-xs' title={translateTerm(`Equip.Desc.${item.id}`, undefined, 1)}>
+                    <div className='line-clamp-2'>{translateTerm(`Equip.Desc.${item.id}`, undefined, 1)}</div>
                   </td>
                 </tr>
               ))}
-              {filteredList.length === 0 && (<tr><td colSpan={5} className="px-4 py-12 text-center text-muted-foreground">{translateTerm('Web.Msg.NoData')}</td></tr>)}
+              {filteredList.length === 0 && (
+                <tr>
+                  <td colSpan={5} className='px-4 py-12 text-center text-muted-foreground'>
+                    {translateTerm('Web.Msg.NoData')}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
         {hasMore && (
-          <div className="p-4 border-t border-border/50 bg-muted/20 flex justify-center">
-            <Button variant="outline" onClick={() => setPage(p => p + 1)} className="w-full sm:w-auto min-w-50 cursor-pointer">
+          <div className='p-4 border-t border-border/50 bg-muted/20 flex justify-center'>
+            <Button variant='outline' onClick={() => setPage((p) => p + 1)} className='w-full sm:w-auto min-w-50 cursor-pointer'>
               {translateTerm('Web.LoadMore')} ({displayList.length} / {filteredList.length})
             </Button>
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-// 裝備等級列表元件 (DataTable)
-function EquipLevelTable({ levels }: { levels: any[] }) {
-  const { translateTerm, translateParagraph } = useAppTranslation();
-
-  // 檢查是否包含各項效果資料，作為顯示欄位的依據
-  const hasCombat = levels.some((lvl: any) => lvl.combat && lvl.combat.length > 0);
-  const hasBattle = levels.some((lvl: any) => lvl.battle && lvl.battle.length > 0);
-  const hasEffect = levels.some((lvl: any) => lvl.effect && lvl.effect.length > 0);
-
-  // 通用列表渲染函式
-  const renderList = (list: string[]) => {
-    list = list.flatMap(item => translateParagraph(item).split('  '));
-    if (!list || list.length === 0) return <span className="text-muted-foreground/50">-</span>;
-    return (
-      <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
-        {list.map((item: string, j: number) => (
-          <div key={j} className="flex items-center whitespace-nowrap">
-            {translateTerm("LabelIcon.Effect")}{item}
-            {j < list.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  return (
-    <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left whitespace-nowrap">
-          <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
-            <tr>
-              <th className="px-4 py-3 font-semibold min-w-20">{translateTerm('Web.Level')}</th>
-              <th className="px-4 py-3 font-semibold min-w-20">{translateTerm('Web.Point')}</th>
-              {hasCombat && <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.CombatEffect')} ({translateTerm('Web.Term.Cumulative')})</th>}
-              {hasBattle && <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.BattleEffect')} ({translateTerm('Web.Term.Cumulative')})</th>}
-              {hasEffect && <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.Effect')} ({translateTerm('Web.Term.Cumulative')})</th>}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border/70 font-mixed">
-            {levels.map((lvl: any, i: number) => (
-              <tr key={i} className="hover:bg-muted/50 transition-colors group">
-                <td className="px-4 py-3.5 align-top text-foreground/75 font-semibold">Lv.{i + 1}</td>
-                <td className="px-4 py-3.5 align-top">{lvl.point}</td>
-                {hasCombat && <td className="px-4 py-3.5 align-top whitespace-normal">{renderList(lvl.combat)}</td>}
-                {hasBattle && <td className="px-4 py-3.5 align-top whitespace-normal">{renderList(lvl.battle)}</td>}
-                {hasEffect && <td className="px-4 py-3.5 align-top whitespace-normal">
-                  <div className="flex flex-wrap items-center gap-y-1 gap-x-2 flex-1">
-                    {lvl.effect.map((eff: string, j: number) => (
-                      <div key={j} className="flex items-center whitespace-nowrap">
-                        <ParsedText text={eff} />
-                        {j < lvl.effect.length - 1 && <span className="text-muted-foreground/30 ml-2">/</span>}
-                      </div>
-                    ))}
-                  </div>
-                </td>}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-// 開發項目列表元件 (DataTable)
-function EvolutionTable({ evolutions }: { evolutions: any[] }) {
-  const { translateTerm } = useAppTranslation();
-
-  return (
-    <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left whitespace-nowrap">
-          <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
-            <tr>
-              <th className="px-4 py-3 font-semibold min-w-32">{translateTerm('Web.Id')}</th>
-              <th className="px-4 py-3 font-semibold min-w-40">{translateTerm('Web.Name')}</th>
-              <th className="px-4 py-3 font-semibold min-w-60 w-full">{translateTerm('Web.Condition')}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border/70 font-mixed">
-            {evolutions.map((evo: any, i: number) => {
-              // 嘗試從 name (如 [*Equip.Name.Knife_11*]) 提取 ID
-              const match = typeof evo.name === 'string' ? evo.name.match(/Label\.Equip,([^*]+)/) : null;
-              const targetId = match ? match[1] : '-';
-
-              return (
-                <tr key={i} className="hover:bg-muted/50 transition-colors group">
-                  <td className="px-4 py-3.5 align-top text-primary">
-                    {targetId !== '-' ? (
-                      <Link href={`/equip?id=${targetId}`} className="hover:underline">
-                        {targetId}
-                      </Link>
-                    ) : targetId}
-                  </td>
-                  <td className="px-4 py-3.5 align-top text-foreground whitespace-normal">
-                    <ParsedText text={evo.name} />
-                  </td>
-                  <td className="px-4 py-3 text-foreground/80 align-top whitespace-normal">
-                    {evo.condition && evo.condition.length > 0 ? (
-                      <div className="flex flex-col gap-1.5">
-                        {evo.condition.map((cond: string, j: number) => (
-                          <div key={j} className="flex items-start gap-1.5">
-                            <span className="text-muted-foreground shrink-0 mt-0.5">{j + 1}.</span>
-                            <div><ParsedText text={cond} /></div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : <span className="text-muted-foreground/50">-</span>}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
       </div>
     </div>
   );
