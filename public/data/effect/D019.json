@@ -1,0 +1,1 @@
+{"state":"Debuff","type":"Unknown","plural":false,"noRepeat":false,"round":2,"show":true,"rel":{"post":{"Effect":[]},"pre":{"Effect":["S131","S131_1"]},"inter":{"Combat":["CL_1406_01","CL_S0204_01_03","CL_1214_01","CL_1214_02"]}}}

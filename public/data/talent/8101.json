@@ -1,1 +1,1 @@
-{"skill":"S8101","level":0,"low":[],"rel":{"pre":{"Book":["2000"]}}}
+{"level":1,"skills":["S8101_1"],"low":[],"rel":{"post":{"Effect":["S8101_1"]},"pre":{"Book":["2000"]}}}

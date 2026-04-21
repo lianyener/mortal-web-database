@@ -1,1 +1,1 @@
-{"skill":"E003","level":0,"low":[],"rel":{"pre":{"Book":["8007"]}}}
+{"level":1,"skills":["E003_1","D301_1"],"low":[],"rel":{"post":{"Effect":["E003_1","D301_1"]},"pre":{"Book":["8007"]}}}

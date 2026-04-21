@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.E20005.0.0*]","1":"[*Flag.E20005.0.1*]"}}],"init":0,"rel":{"post":{"Position":["Door_02"]},"pre":{"Script":["door_free_512_01","door_02_507","S0026_01"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.E20005.0.0*]","1":"[*Flag.E20005.0.1*]"}}],"init":0,"rel":{"post":{"Position":["Door_02"]},"pre":{"Script":["door_02_507","door_free_512_01","S0026_01"]}}}

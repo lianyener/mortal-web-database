@@ -1,1 +1,1 @@
-{"skill":"B304","level":3,"low":[],"rel":{"pre":{"Script":["ch0_meeting_option_03_02_01","ch5_4_8_7_1","ch5_4_8_9","ch8_2_6_1"]}}}
+{"level":3,"skills":["B304_1","B304_2","B304_3"],"low":[],"rel":{"post":{"Effect":["B304_1","B304_2","B304_3"]},"pre":{"Script":["ch0_meeting_option_03_02_01","ch5_4_8_7_1","ch5_4_8_9","ch8_2_6_1"]}}}

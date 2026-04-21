@@ -1,1 +1,1 @@
-{"skill":"S8127","level":0,"low":["8103"],"rel":{"pre":{"Script":["S0213_02"]}}}
+{"level":1,"skills":["S8127_1"],"low":["8103"],"rel":{"post":{"Effect":["S8127_1"]},"pre":{"Script":["S0213_02"]}}}

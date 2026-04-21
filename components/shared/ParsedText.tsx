@@ -63,13 +63,10 @@ export function ParsedText({ text }: { text: string }) {
           if (match) {
             const category = match[1];
             const targetId = (match[2] ?? '').split(',')[0];
-            
+
             // 是否為連結
             let isLink = true;
             switch (category) {
-              case 'Buff':
-              case 'Debuff':
-              case 'Support':
               case 'Stat':
               case 'Enemy':
               case 'Story':
@@ -107,6 +104,11 @@ export function ParsedText({ text }: { text: string }) {
                   break;
 
                 // 開啟側邊欄
+                case 'Buff':
+                case 'Debuff':
+                case 'Support':
+                  sidebarState.openSidebar('Effect', targetId.split('.')[0]);
+                  break;
                 case 'Flag':
                 case 'RelationshipFlag':
                   sidebarState.openSidebar('Flag', targetId.split('.')[0]);
@@ -148,8 +150,12 @@ export function ParsedText({ text }: { text: string }) {
 
             // 只有emoji -> 找不到用詞
             if (translated == translateTerm(`LabelIcon.${category}`)) {
-              contentNode = `${translated}${translateTermWithParam('Web.Unknown', `Web.Label.${category}`)}(${targetId.split('.')[0]})`;
-              isLink = false;
+              if (category === 'Effect') {
+                contentNode = `${translated}${targetId}`;
+              } else {
+                contentNode = `${translated}${translateTermWithParam('Web.Unknown', `Web.Label.${category}`)}(${targetId.split('.')[0]})`;
+                isLink = false;
+              }
             }
 
             return (

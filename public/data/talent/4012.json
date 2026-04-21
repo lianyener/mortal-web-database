@@ -1,1 +1,1 @@
-{"skill":"B412","level":0,"low":[],"rel":{"pre":{"Book":["8101","8102"],"Script":["ch0_1_1"]}}}
+{"level":1,"skills":["B412_1"],"low":[],"rel":{"post":{"Effect":["B412_1"]},"pre":{"Book":["8101","8102"],"Script":["ch0_1_1"]}}}
