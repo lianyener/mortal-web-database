@@ -1,1 +1,1 @@
-{"state":"Buff","type":"Unknown","plural":false,"noRepeat":false,"round":2,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_1217_01"]}}}
+{"state":"Buff","type":"Count","plural":false,"noRepeat":false,"round":2,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_1217_01"]}}}

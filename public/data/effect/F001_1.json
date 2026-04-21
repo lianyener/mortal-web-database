@@ -1,1 +1,1 @@
-{"state":"Buff","type":"Unknown","plural":false,"noRepeat":false,"round":1,"show":true,"rel":{"post":{"Effect":[]}}}
+{"state":"Buff","type":"Countdown","plural":false,"noRepeat":false,"round":1,"show":true,"rel":{"post":{"Effect":[]}}}

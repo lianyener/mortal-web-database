@@ -63,6 +63,7 @@ export function TopNavbar() {
         { titleKey: 'Web.Label.Special', href: '/special' },
         { titleKey: 'Web.Label.Misc', href: '/misc' },
         { titleKey: 'Web.Label.Talent', href: '/talent' },
+        { titleKey: 'Web.Label.Effect', href: '/effect' },
         { titleKey: 'Web.Label.Achievement', href: null },
         { titleKey: 'Web.Label.End', href: null },
         { titleKey: 'Web.Label.Dead', href: null },

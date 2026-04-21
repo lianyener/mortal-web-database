@@ -1,1 +1,1 @@
-{"state":"Buff","type":"Unknown","plural":false,"noRepeat":false,"round":1,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_S0802_02_03_01","CL_S0802_02_10","CL_S0802_02_09","CL_1315_01","CL_1814_02","CL_1811_01","CL_1814_01","CL_S0208_02_02"]}}}
+{"state":"Buff","type":"Countdown","plural":false,"noRepeat":false,"round":1,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_S0802_02_03_01","CL_S0802_02_10","CL_S0802_02_09","CL_1315_01","CL_1814_02","CL_1811_01","CL_1814_01","CL_S0208_02_02"]}}}

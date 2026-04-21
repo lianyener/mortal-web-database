@@ -1,1 +1,1 @@
-{"state":"Buff","type":"Unknown","plural":false,"noRepeat":false,"round":1,"show":true,"rel":{"post":{"Effect":[]},"pre":{"Talent":["1010"],"Effect":["B110_5","B111_5","S907"]}}}
+{"state":"Buff","type":"Count","plural":false,"noRepeat":false,"round":1,"show":true,"rel":{"post":{"Effect":[]},"pre":{"Talent":["1010"],"Effect":["B110_5","B111_5","S907"]}}}

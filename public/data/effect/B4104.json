@@ -1,1 +1,1 @@
-{"state":"Buff","type":"Unknown","plural":false,"noRepeat":false,"round":1,"show":true,"rel":{"post":{"Effect":[]},"pre":{"Talent":["4104"]},"inter":{"Combat":["CL_S0021_02"]}}}
+{"state":"Buff","type":"Count","plural":false,"noRepeat":false,"round":1,"show":true,"rel":{"post":{"Effect":[]},"pre":{"Talent":["4104"]},"inter":{"Combat":["CL_S0021_02"]}}}
