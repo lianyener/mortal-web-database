@@ -1,1 +1,1 @@
-{"level":1,"skills":["G003_1"],"low":[],"rel":{"post":{"Effect":["G003_1"]},"pre":{"Book":["6003"],"Script":["talk_brother3_option_03"]}}}
+{"level":0,"skills":[["G003","G003_1"]],"low":[],"rel":{"post":{"Effect":["G003","G003_1"]},"pre":{"Book":["6003"],"Script":["talk_brother3_option_03"]}}}

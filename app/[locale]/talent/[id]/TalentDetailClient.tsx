@@ -88,10 +88,10 @@ function DataDetail({ data, id }: { data: any; id: string }) {
       </div>
 
       {/* 技能內容 */}
-      {data.skill && data.skill !== '' && (
+      {data.skills && data.skills.length !== 0 && (
         <div className='flex flex-col gap-4'>
-          <h2 className='pb-2 text-lg font-bold border-b border-border/50'>{translateTerm('Web.SkillContent')}</h2>
-          <TalentSkillTable skillId={data.skill} maxLevel={data.level} talent={id} />
+          <h2 className='pb-2 text-lg font-bold border-b border-border/50'>{translateTerm('Web.CombatEffect')}</h2>
+          <TalentSkillTable skills={data.skills} />
         </div>
       )}
 
@@ -127,16 +127,8 @@ function DataDetail({ data, id }: { data: any; id: string }) {
 }
 
 // 技能等級表格元件
-function TalentSkillTable({ skillId, maxLevel, talent }: { skillId: string; maxLevel: number; talent: string }) {
+function TalentSkillTable({ skills }: { skills: string[][] }) {
   const { translateTerm } = useAppTranslation();
-
-  // 建立各等級清單
-  const levels = [];
-  if (maxLevel > 0) {
-    for (let i = 1; i <= maxLevel; i++) levels.push(i);
-  } else {
-    levels.push(0);
-  }
 
   return (
     <div className='bg-card border rounded-xl shadow-sm overflow-hidden'>
@@ -150,37 +142,26 @@ function TalentSkillTable({ skillId, maxLevel, talent }: { skillId: string; maxL
             </tr>
           </thead>
           <tbody className='divide-y divide-border/70 font-mixed'>
-            {levels.map((lvl) => {
-              let displayLevel = lvl;
-              let nameKey = `CombatSkill.Name.${skillId}_${lvl}`;
-              let descKey = `CombatSkill.Desc.${skillId}_${lvl}`;
+            {skills.map((skillLevel, index) => {
+              return skillLevel.map((skillId, i) => {
+                const skip = translateTerm(`CombatSkill.Name.${skillId}`, undefined, 0) === '';
 
-              // 處理 level = 0 的防呆退路邏輯
-              if (lvl === 0) {
-                displayLevel = 1;
-                const baseName = translateTerm(`CombatSkill.Name.${skillId}`, undefined, 0);
-                if (baseName && baseName !== '') {
-                  nameKey = `CombatSkill.Name.${skillId}`;
-                  descKey = `CombatSkill.Desc.${skillId}`;
-                } else {
-                  nameKey = `CombatSkill.Name.${skillId}_1`;
-                  descKey = `CombatSkill.Desc.${skillId}_1`;
-                }
-              }
-
-              return (
-                <tr key={lvl} className='hover:bg-muted/50 transition-colors group'>
-                  <td className='px-4 py-3.5 align-top text-foreground/75 font-semibold'>Lv.{displayLevel}</td>
-                  <td className='px-4 py-3.5 align-top font-bold text-foreground whitespace-normal'>
-                    {translateTerm(nameKey, undefined, 0) || `${translateTerm(`PlayerTalent.Name.${talent}`, undefined, 1)}Lv${displayLevel}`}
-                  </td>
-                  <td className='px-4 py-3.5 align-top text-muted-foreground whitespace-normal'>{translateTerm(descKey, undefined, 0) || translateTerm('System.NA')}</td>
-                </tr>
-              );
+                return (!skip ? (
+                  <tr key={`${index}_${i}`} className='hover:bg-muted/50 transition-colors group' >
+                    <td className='px-4 py-3.5 align-top text-foreground/75 font-semibold'>Lv.{index}</td>
+                    <td className='px-4 py-3.5 align-top font-bold text-foreground whitespace-normal'>
+                      <ParsedText text={`[*Label.Effect,${skillId}*]`} />
+                    </td>
+                    <td className='px-4 py-3.5 align-top text-muted-foreground whitespace-normal'>
+                      {translateTerm(`CombatSkill.Desc.${skillId}`, undefined, 0) || translateTerm('System.NA')}
+                    </td>
+                  </tr>
+                ) : null);
+              });
             })}
           </tbody>
         </table>
       </div>
-    </div>
+    </div >
   );
 }

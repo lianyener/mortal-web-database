@@ -1,1 +1,1 @@
-{"level":1,"skills":["F003_1","D017"],"low":[],"rel":{"post":{"Effect":["F003_1","D017"],"Script":["ch8_4_6_1"]},"pre":{"Book":["2002"]}}}
+{"level":0,"skills":[["F003","F003_1","D017"]],"low":[],"rel":{"post":{"Effect":["F003","F003_1","D017"],"Script":["ch8_4_6_1"]},"pre":{"Book":["2002"]}}}

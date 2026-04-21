@@ -1,1 +1,1 @@
-{"state":"Buff","type":"Resident","plural":false,"noRepeat":false,"round":-1,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_1814_02","CL_1814_01","CL_1803_04","CL_S0208_02_02"]}}}
+{"state":"Buff","type":"Resident","plural":false,"noRepeat":false,"round":-1,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_1814_02","CL_1803_04","CL_1814_01","CL_S0208_02_02"]}}}

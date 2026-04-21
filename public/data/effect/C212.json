@@ -1,1 +1,1 @@
-{"state":"Support","type":"Resident","plural":true,"noRepeat":false,"round":-1,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_1103_01","CL_1805_01"]}}}
+{"state":"Support","type":"Resident","plural":true,"noRepeat":false,"round":-1,"show":true,"rel":{"post":{"Effect":["D020","D017"]},"inter":{"Combat":["CL_1103_01","CL_1805_01"]}}}

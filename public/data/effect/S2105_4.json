@@ -1,1 +1,1 @@
-{"state":"Buff","type":"Resident","plural":false,"noRepeat":false,"round":-1,"show":false,"rel":{"post":{"Effect":[]},"pre":{"Talent":["2105"]}}}
+{"state":"Buff","type":"Resident","plural":false,"noRepeat":false,"round":-1,"show":false,"rel":{"post":{"Effect":["S2105_4_1"]},"pre":{"Talent":["2105"]}}}

@@ -1,1 +1,1 @@
-{"level":1,"skills":["S9112_1"],"low":[],"rel":{"post":{"Effect":["S9112_1"],"Script":["ch8_4_8_1"]},"pre":{"Script":["S0208_05_05"]}}}
+{"level":0,"skills":[["S9112"]],"low":[],"rel":{"post":{"Effect":["S9112"],"Script":["ch8_4_8_1"]},"pre":{"Script":["S0208_05_05"]}}}

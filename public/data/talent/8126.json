@@ -1,1 +1,1 @@
-{"level":1,"skills":["S8126_1"],"low":["8103"],"rel":{"post":{"Effect":["S8126_1"]},"pre":{"Script":["S0213_02"]}}}
+{"level":0,"skills":[["S8126","S8126_1"]],"low":["8103"],"rel":{"post":{"Effect":["S8126","S8126_1"]},"pre":{"Script":["S0213_02"]}}}

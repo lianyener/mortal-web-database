@@ -1,1 +1,1 @@
-{"level":1,"skills":["B005_1"],"low":[],"rel":{"post":{"Effect":["B005_1"]},"pre":{"Book":["1000"]}}}
+{"level":0,"skills":[["B005","C103"]],"low":[],"rel":{"post":{"Effect":["B005","C103"]},"pre":{"Book":["1000"]}}}
