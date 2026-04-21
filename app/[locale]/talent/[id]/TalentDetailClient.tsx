@@ -51,6 +51,8 @@ function TalentDetailContent() {
 function DataDetail({ data, id }: { data: any; id: string }) {
   const { translateTerm, translateTermWithParam } = useAppTranslation();
 
+  const hasValidSkills = data.skills?.some((skillLevel: string[]) => skillLevel.some((skillId) => translateTerm(`CombatSkill.Name.${skillId}`, undefined, 0) !== ''));
+
   return (
     <div className='flex flex-col gap-8'>
       {/* 基本資訊 */}
@@ -88,7 +90,7 @@ function DataDetail({ data, id }: { data: any; id: string }) {
       </div>
 
       {/* 技能內容 */}
-      {data.skills && data.skills.length !== 0 && (
+      {hasValidSkills && (
         <div className='flex flex-col gap-4'>
           <h2 className='pb-2 text-lg font-bold border-b border-border/50'>{translateTerm('Web.CombatEffect')}</h2>
           <TalentSkillTable skills={data.skills} />
@@ -146,22 +148,20 @@ function TalentSkillTable({ skills }: { skills: string[][] }) {
               return skillLevel.map((skillId, i) => {
                 const skip = translateTerm(`CombatSkill.Name.${skillId}`, undefined, 0) === '';
 
-                return (!skip ? (
-                  <tr key={`${index}_${i}`} className='hover:bg-muted/50 transition-colors group' >
+                return !skip ? (
+                  <tr key={`${index}_${i}`} className='hover:bg-muted/50 transition-colors group'>
                     <td className='px-4 py-3.5 align-top text-foreground/75 font-semibold'>Lv.{index}</td>
                     <td className='px-4 py-3.5 align-top font-bold text-foreground whitespace-normal'>
                       <ParsedText text={`[*Label.Effect,${skillId}*]`} />
                     </td>
-                    <td className='px-4 py-3.5 align-top text-muted-foreground whitespace-normal'>
-                      {translateTerm(`CombatSkill.Desc.${skillId}`, undefined, 0) || translateTerm('System.NA')}
-                    </td>
+                    <td className='px-4 py-3.5 align-top text-muted-foreground whitespace-normal'>{translateTerm(`CombatSkill.Desc.${skillId}`, undefined, 0) || translateTerm('System.NA')}</td>
                   </tr>
-                ) : null);
+                ) : null;
               });
             })}
           </tbody>
         </table>
       </div>
-    </div >
+    </div>
   );
 }
