@@ -67,6 +67,7 @@ export function TopNavbar() {
         { titleKey: 'Web.Label.Achievement', href: null },
         { titleKey: 'Web.Label.End', href: null },
         { titleKey: 'Web.Label.Dead', href: null },
+        { titleKey: 'Web.Label.Time', href: '/time' },
         { titleKey: 'Web.Label.GroupStat', href: '/groupstat' }
       ]
     },
