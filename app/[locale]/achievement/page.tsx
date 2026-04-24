@@ -10,7 +10,6 @@ import { useSidebarStore } from '@/store/useSidebarStore';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { ParsedText } from '@/components/shared/ParsedText';
 
 export default function AchievementPage() {
   return (
@@ -124,7 +123,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
             <tbody className='divide-y divide-border/70'>
               {displayList.map((item: any) => {
                 const awardText = translateTerm(`Library.Award.${item.id}`, undefined, 0).trim();
-                
+
                 return (
                   <tr key={item.id} className='relative hover:bg-muted/50 transition-colors group cursor-pointer'>
                     <td className='p-0 w-0 h-0'>
@@ -135,13 +134,9 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                       {translateTerm(`Library.Title.${item.id}`, undefined, 1) || translateTerm('System.NA')}
                     </td>
                     <td className='px-4 py-3 text-muted-foreground whitespace-normal max-w-sm font-mixed' title={translateTerm(`Library.Desc.${item.id}`, undefined, 1)}>
-                      <div className='line-clamp-2'><ParsedText text={translateTerm(`Library.Desc.${item.id}`, undefined, 1)} /></div>
+                      <div className='line-clamp-2'>{translateTerm(`Library.Desc.${item.id}`, undefined, 1)}</div>
                     </td>
-                    <td className='px-4 py-3 text-muted-foreground'>
-                      {awardText !== '' && (
-                        <Gift className='size-5' />
-                      )}
-                    </td>
+                    <td className='px-4 py-3 text-muted-foreground'>{awardText !== '' && <Gift className='size-5' />}</td>
                   </tr>
                 );
               })}

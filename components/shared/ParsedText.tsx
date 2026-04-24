@@ -4,7 +4,6 @@ import { useSidebarStore } from '@/store/useSidebarStore';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 
 export function ParsedText({ text }: { text: string }) {
-
   const router = useRouter();
   const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
 
@@ -18,13 +17,11 @@ export function ParsedText({ text }: { text: string }) {
   return (
     <>
       {parts.map((part, index) => {
-
         // 條件式加底
         if (part.startsWith('[%') && part.endsWith('%]')) {
           const content = part.slice(2, -2);
           return (
-            <span key={index} className="inline-block px-1 mx-0.5 text-sm/[22.25px] font-semibold rounded bg-amber-600/10">
-
+            <span key={index} className='inline-block px-1 mx-0.5 text-sm/[22.25px] font-semibold rounded bg-amber-600/10'>
               {/* 遞迴處理內部文字 */}
               <ParsedText text={content} />
             </span>
@@ -35,8 +32,7 @@ export function ParsedText({ text }: { text: string }) {
         if (part.startsWith('[#') && part.endsWith('#]')) {
           const content = part.slice(2, -2);
           return (
-            <span key={index} className="inline-block px-1 mx-0.5 text-sm/[20.75px] border rounded">
-
+            <span key={index} className='inline-block px-1 mx-0.5 text-sm/[20.75px] border rounded'>
               {/* 遞迴處理內部文字 */}
               <ParsedText text={content} />
             </span>
@@ -45,16 +41,18 @@ export function ParsedText({ text }: { text: string }) {
 
         // 用詞翻譯
         else if (part.startsWith('[*') && part.endsWith('*]')) {
-
           const content = part.slice(2, -2);
           const translated = translateParagraph(part, 0);
           const baseKey = content.split(',')[0].trim();
           let contentNode: React.ReactNode;
 
           if (translated === content || translated === baseKey) {
-            contentNode = <span className="text-destructive text-xs bg-destructive/10 px-1 rounded" title="Missing translation">{part}</span>;
-          }
-          else {
+            contentNode = (
+              <span className='text-destructive text-xs bg-destructive/10 px-1 rounded' title='Missing translation'>
+                {part}
+              </span>
+            );
+          } else {
             contentNode = translated;
           }
 
@@ -77,7 +75,6 @@ export function ParsedText({ text }: { text: string }) {
 
             // 設定點擊事件
             const handleClick = (e: React.MouseEvent) => {
-
               // 選取文字時不觸發跳轉
               if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return;
 
@@ -86,9 +83,7 @@ export function ParsedText({ text }: { text: string }) {
 
               // 側邊欄狀態
               const sidebarState = useSidebarStore.getState();
-              const sidebarParams = (sidebarState.isOpen && sidebarState.category && sidebarState.id)
-                ? `?sidebar=${sidebarState.category}&sidebarId=${sidebarState.id}`
-                : '';
+              const sidebarParams = sidebarState.isOpen && sidebarState.category && sidebarState.id ? `?sidebar=${sidebarState.category}&sidebarId=${sidebarState.id}` : '';
 
               // 依分類處理點擊行為
               switch (category) {
@@ -159,8 +154,14 @@ export function ParsedText({ text }: { text: string }) {
             }
 
             return (
-              <span key={index} onClick={isLink ? handleClick : undefined} role="button" tabIndex={0} title={titleText}
-                className={`inline-flex items-center font-semibold text-inherit transition-colors hover:text-current/80 ${isLink ? 'cursor-pointer' : ''}`}>
+              <span
+                key={index}
+                onClick={isLink ? handleClick : undefined}
+                role='button'
+                tabIndex={0}
+                title={titleText}
+                className={`inline-flex items-center font-semibold text-inherit transition-colors hover:text-current/80 ${isLink ? 'cursor-pointer' : ''}`}
+              >
                 {contentNode}
               </span>
             );

@@ -126,7 +126,8 @@ export function GlobalSidebar() {
                 'effect',
                 'groupstat',
                 'time',
-                'achievement'
+                'achievement',
+                'end'
               ].includes(String(category).toLowerCase()) && (
                 <Button asChild variant='outline' size='sm' className='h-8 w-8 shadow-sm text-muted-foreground hover:bg-muted transition-colors' title={translateTerm('Web.OpenInMainPage')}>
                   <Link href={`/${category.toLowerCase()}/${id}`}>
