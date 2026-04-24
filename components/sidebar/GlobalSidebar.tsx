@@ -108,9 +108,26 @@ export function GlobalSidebar() {
           <div className='flex items-center gap-2 shrink-0'>
             {category &&
               id &&
-              ['mission', 'trigger', 'position', 'script', 'combat', 'battle', 'flag', 'character', 'book', 'equip', 'special', 'misc', 'free', 'talent', 'effect', 'groupstat'].includes(
-                String(category).toLowerCase()
-              ) && (
+              [
+                'mission',
+                'trigger',
+                'position',
+                'script',
+                'combat',
+                'battle',
+                'flag',
+                'character',
+                'book',
+                'equip',
+                'special',
+                'misc',
+                'free',
+                'talent',
+                'effect',
+                'groupstat',
+                'time',
+                'achievement'
+              ].includes(String(category).toLowerCase()) && (
                 <Button asChild variant='outline' size='sm' className='h-8 w-8 shadow-sm text-muted-foreground hover:bg-muted transition-colors' title={translateTerm('Web.OpenInMainPage')}>
                   <Link href={`/${category.toLowerCase()}/${id}`}>
                     <ExternalLink className='size-3.5' />
