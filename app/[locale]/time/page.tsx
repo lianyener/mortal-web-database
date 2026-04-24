@@ -71,7 +71,8 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
     const searchTerms = searchLower.split(/\s+/).filter(Boolean);
 
     return list.filter((item: any) => {
-      const targetString = `${item.id} ${translateTerm(`Trigger.Name.${item.id}`)}`.toLowerCase();
+      const targetString =
+        `${item.id} ${translateTerm(`Time.Name.${item.id}`, undefined, 0) || translateTerm(`Trigger.Name.${item.id}`, undefined, 0) || translateTerm(`Script.Name.${item.id.toLowerCase()}`, undefined, 0)}`.toLowerCase();
       return searchTerms.every((term) => targetString.includes(term));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,7 +116,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
               <tr>
                 <th className='p-0 w-0 h-0'></th>
                 <th className='px-4 py-3 font-semibold min-w-32'>{translateTerm('Web.Id')}</th>
-                <th className='px-4 py-3 font-semibold min-w-64 w-full'>{translateTerm('Web.Name')}</th>
+                <th className='px-4 py-3 font-semibold min-w-64'>{translateTerm('Web.Name')}</th>
               </tr>
             </thead>
             <tbody className='divide-y divide-border/70'>
@@ -126,7 +127,10 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                   </td>
                   <td className='px-4 py-3 font-mono text-primary group-hover:underline'>{item.id}</td>
                   <td className='px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80'>
-                    {translateTerm(`Trigger.Name.${item.id}`, undefined, 1) || translateTerm('System.NA')}
+                    {translateTerm(`Time.Name.${item.id}`, undefined, 0) ||
+                      translateTerm(`Trigger.Name.${item.id}`, undefined, 0) ||
+                      translateTerm(`Script.Name.${item.id.toLowerCase()}`, undefined, 0) ||
+                      translateTerm('System.NA')}
                   </td>
                 </tr>
               ))}

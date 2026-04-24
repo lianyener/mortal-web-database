@@ -55,7 +55,7 @@ function DataDetail({ data, id }: { data: any; id: string }) {
       {/* 基本資訊 */}
       <div className='flex flex-col gap-4'>
         <div className='flex items-center justify-between border-b border-border/50 pb-2'>
-          <h2 className='text-lg font-bold'>{translateTermWithParam('Web.Info', 'Time') || '時間變數資訊'}</h2>
+          <h2 className='text-lg font-bold'>{translateTermWithParam('Web.Info', 'Time')}</h2>
           <div className='flex items-center'>
             <Button asChild variant='outline' size='sm' className='h-8 px-2.5 text-xs'>
               <Link href='/time'>
@@ -74,7 +74,7 @@ function DataDetail({ data, id }: { data: any; id: string }) {
               </div>
               <div>
                 <div className='text-xs text-muted-foreground mb-1'>{translateTerm('Web.Name')}</div>
-                <div className='font-semibold text-foreground'>{translateTerm(`Trigger.Name.${id}`)}</div>
+                <div className='font-semibold text-foreground'>{translateTerm(`Time.Name.${id}`, undefined, 0) || translateTerm(`Trigger.Name.${id}`, undefined, 0) || translateTerm(`Script.Name.${id.toLowerCase()}`, undefined, 0)}</div>
               </div>
             </div>
           </div>
