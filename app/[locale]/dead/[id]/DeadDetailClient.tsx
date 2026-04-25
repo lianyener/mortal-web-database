@@ -79,7 +79,7 @@ function DataDetail({ data, id }: { data: any; id: string }) {
             </div>
             <div className='border-t border-border/50 pt-4'>
               <div className='text-xs text-muted-foreground mb-1'>{translateTerm('Web.Desc')}</div>
-              <div className='text-sm leading-relaxed text-foreground font-mixed'>{translateTerm(`Library.Desc.${id}`, undefined, 1) || translateTerm('System.NA')}</div>
+              <div className='text-sm leading-relaxed text-foreground font-mixed'>{translateTerm(`Library.Desc.${id}`, undefined, 1).trim() || translateTerm('System.NA')}</div>
             </div>
           </div>
         </div>

@@ -116,7 +116,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                 <th className='p-0 w-0 h-0'></th>
                 <th className='px-4 py-3 font-semibold min-w-20'>{translateTerm('Web.Id')}</th>
                 <th className='px-4 py-3 font-semibold min-w-48'>{translateTerm('Web.Name')}</th>
-                <th className='px-4 py-3 font-semibold min-w-64 w-full'>{translateTerm('Web.Desc')}</th>
+                <th className='px-4 py-3 font-semibold min-w-48 w-full'>{translateTerm('Web.Desc')}</th>
               </tr>
             </thead>
             <tbody className='divide-y divide-border/70'>
@@ -127,8 +127,11 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                   </td>
                   <td className='px-4 py-3 font-mono text-primary group-hover:underline'>{item.id}</td>
                   <td className='px-4 py-3 font-bold whitespace-normal transition-colors group-hover:text-primary/80'>{translateTerm(`Library.Title.${item.id}`, undefined, 1)}</td>
-                  <td className='px-4 py-3 text-muted-foreground whitespace-normal max-w-sm font-mixed' title={translateTerm(`Library.Desc.${item.id}`, undefined, 1)}>
-                    <div className='line-clamp-2'>{translateTerm(`Library.Desc.${item.id}`, undefined, 1)}</div>
+                  <td
+                    className='px-4 py-3 text-muted-foreground whitespace-normal max-w-sm font-mixed'
+                    title={translateTerm(`Library.Desc.${item.id}`, undefined, 1).trim() || translateTerm('System.NA')}
+                  >
+                    <div className='line-clamp-2'>{translateTerm(`Library.Desc.${item.id}`, undefined, 1).trim() || translateTerm('System.NA')}</div>
                   </td>
                 </tr>
               ))}
