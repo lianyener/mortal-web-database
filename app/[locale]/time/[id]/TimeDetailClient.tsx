@@ -74,7 +74,9 @@ function DataDetail({ data, id }: { data: any; id: string }) {
               </div>
               <div>
                 <div className='text-xs text-muted-foreground mb-1'>{translateTerm('Web.Name')}</div>
-                <div className='font-semibold text-foreground'>{translateTerm(`Time.Name.${id}`, undefined, 0) || translateTerm(`Trigger.Name.${id}`, undefined, 0) || translateTerm(`Script.Name.${id.toLowerCase()}`, undefined, 0)}</div>
+                <div className='font-semibold text-foreground'>
+                  {translateTerm(`Time.Name.${id}`, undefined, 0) || translateTerm(`Trigger.Name.${id}`, undefined, 0) || translateTerm(`Script.Name.${id.toLowerCase()}`, undefined, 0)}
+                </div>
               </div>
             </div>
           </div>

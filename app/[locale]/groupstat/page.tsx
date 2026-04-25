@@ -88,7 +88,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
     <div className='flex flex-col gap-4'>
       <div className='flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-2'>
         <div className='flex items-center gap-2'>
-          <h2 className='text-lg font-bold'>{translateTermWithParam('Web.List', 'GroupStat') || '群組變數清單'}</h2>
+          <h2 className='text-lg font-bold'>{translateTermWithParam('Web.List', 'GroupStat')}</h2>
         </div>
         <div className='flex flex-wrap items-center gap-2 w-full sm:w-auto'>
           {/* 搜尋框 */}
@@ -129,7 +129,9 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
                     {translateTerm(`GroupStat.${item.id}._`) || translateTerm(`GroupStat.${item.id}`)}
                   </td>
                   <td className='px-4 py-3 text-muted-foreground whitespace-normal max-w-sm font-mixed' title={item.content}>
-                    <div className='line-clamp-2'><ParsedText text={item.content} /></div>
+                    <div className='line-clamp-2'>
+                      <ParsedText text={item.content} />
+                    </div>
                   </td>
                 </tr>
               ))}
