@@ -127,7 +127,8 @@ export function GlobalSidebar() {
                 'groupstat',
                 'time',
                 'achievement',
-                'end'
+                'end',
+                'dead'
               ].includes(String(category).toLowerCase()) && (
                 <Button asChild variant='outline' size='sm' className='h-8 w-8 shadow-sm text-muted-foreground hover:bg-muted transition-colors' title={translateTerm('Web.OpenInMainPage')}>
                   <Link href={`/${category.toLowerCase()}/${id}`}>
@@ -171,8 +172,14 @@ function SidebarContent({ category, id, data }: any) {
 function DefaultInfo({ category, id, data }: any) {
   const { translateTerm, translateTermWithParam } = useAppTranslation();
   const name = translateTermWithParam(`LabelName.${category}`, id);
-  const categoryAlias = category === 'Talent' ? 'PlayerTalent' : category;
-  const desc = translateTerm(`${categoryAlias}.Desc.${id}`, undefined, 0);
+  const categoryAlias: { [key: string]: string } = {
+    Talent: 'PlayerTalent',
+    Dead: 'Library',
+    End: 'Library',
+    Achievement: 'Library',
+    Effect: 'CombatSkill'
+  };
+  const desc = translateTerm(`${categoryAlias[category] ?? category}.Desc.${id}`, undefined, 0);
 
   return (
     <div className='flex flex-col gap-5'>
