@@ -168,7 +168,7 @@ export function ParsedText({ text }: { text: string }) {
                 tipDesc = translateTerm(`GroupStat.${targetId}.Desc`, undefined, 0);
                 break;
               case 'Time':
-                tipName = translateTerm(`Time.${targetId}`, undefined, 0) + ` (${targetId})`;
+                tipName = (translateTerm(`Time.Name.${targetId}`, undefined, 0) || translateTerm(`Trigger.Name.${targetId}`, undefined, 0) || translateTerm(`Script.Name.${targetId.toLowerCase()}`, undefined, 0)) + ` (${targetId})`;
                 break;
               case 'Position':
                 tipName = translateTerm(`Position.Action.${targetId}`, undefined, 0) + ` (${targetId})`;
