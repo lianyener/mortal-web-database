@@ -1,19 +1,10 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"main": ".open-next/worker.js",
 	"name": "mortal-web-database",
 	"compatibility_date": "2026-04-26",
 	"compatibility_flags": [
 		"nodejs_compat",
 		"global_fetch_strictly_public"
-	],
-	"services": [
-		{
-			// Self-reference service binding, the service name must match the worker name
-			// see https://opennext.js.org/cloudflare/caching
-			"binding": "WORKER_SELF_REFERENCE",
-			"service": "mortal-web-database"
-		}
 	],
 	"pages_build_output_dir": ".open-next/assets"
 }
