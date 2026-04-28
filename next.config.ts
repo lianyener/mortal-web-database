@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   // 設定
+  output: 'standalone'
 };
 
 // 本機開發環境載入 OpenNext 的 Cloudflare 模擬器
