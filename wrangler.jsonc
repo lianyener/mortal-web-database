@@ -23,5 +23,6 @@
 		// Enable image optimization
 		// see https://opennext.js.org/cloudflare/howtos/image
 		"binding": "IMAGES"
-	}
+	},
+	"pages_build_output_dir": ".open-next/assets"
 }
