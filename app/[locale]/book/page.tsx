@@ -67,7 +67,7 @@ function DataList({ data, getTypeLabel }: { data: Record<string, any> | any[]; g
   const typeOptions = useMemo(() => {
     const types = new Set<string>();
     list.forEach((item: any) => {
-      types.add(item.type || 0);
+      if (item.type) types.add(item.type);
     });
     return Array.from(types).sort((a, b) => a.localeCompare(b));
   }, [list]);
