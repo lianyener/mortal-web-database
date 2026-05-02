@@ -61,7 +61,6 @@ function DataDetail({ data, id }: { data: any; id: string }) {
 
   // 當載入新劇本時，預設全選所有 effect 類別
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedEffects(availableEffects);
   }, [availableEffects]);
 
