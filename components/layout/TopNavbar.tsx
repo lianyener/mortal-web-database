@@ -50,7 +50,8 @@ export function TopNavbar() {
         { titleKey: 'Web.Label.Free', href: '/free' },
         { titleKey: 'Web.Label.Script', href: '/script' },
         { titleKey: 'Web.Label.Combat', href: '/combat' },
-        { titleKey: 'Web.Label.Battle', href: '/battle' }
+        { titleKey: 'Web.Label.Battle', href: '/battle' },
+        { titleKey: 'Web.Label.EventTable', href: '/event' }
       ]
     },
     {
