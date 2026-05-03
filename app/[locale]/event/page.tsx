@@ -289,6 +289,8 @@ function CombatBranchItem({ branch }: { branch: any }) {
 // --- 單項事件內容分配器 ---
 
 const FlowContent = ({ flow, scriptData, combatData, battleData }: any) => {
+  const { translateTerm } = useAppTranslation();
+
   if (flow.type === 'Script' && scriptData?.[flow.id]) {
     const content = scriptData[flow.id].content;
     if (!content || content.length === 0) return <span className='text-muted-foreground italic'>-</span>;
@@ -302,10 +304,19 @@ const FlowContent = ({ flow, scriptData, combatData, battleData }: any) => {
   }
 
   if (flow.type === 'Combat' && combatData?.[flow.id]) {
-    const content = combatData[flow.id].content;
+    const combat = combatData[flow.id];
+    const content = combat.content;
     if (!content || content.length === 0) return <span className='text-muted-foreground italic'>-</span>;
     return (
       <div className='flex flex-col p-0 m-0 min-w-max sm:min-w-0 font-mixed'>
+        {combat.enemy && (
+          <div className='flex items-start gap-2 mb-2 pb-2 border-b border-border/40 text-sm'>
+            <span className='font-bold text-primary/80 shrink-0'>{translateTerm('Web.Enemy')}:</span>
+            <div className='flex-1 min-w-0'>
+              <ParsedText text={combat.enemy} />
+            </div>
+          </div>
+        )}
         {content.map((node: any, idx: number) => (
           <CombatNode key={idx} node={node} />
         ))}
@@ -314,10 +325,37 @@ const FlowContent = ({ flow, scriptData, combatData, battleData }: any) => {
   }
 
   if (flow.type === 'Battle' && battleData?.[flow.id]) {
-    const end = battleData[flow.id].end;
+    const battle = battleData[flow.id];
+    const end = battle.end;
     if (!end || end.length === 0) return <span className='text-muted-foreground italic'>-</span>;
+
+    const battleGroups = [
+      { key: 'friend', label: translateTerm('Web.Friend') },
+      { key: 'enemy', label: translateTerm('Web.Enemy') },
+      { key: 'neutral', label: translateTerm('Web.Neutral') }
+    ];
+
     return (
       <div className='flex flex-col items-start text-sm/relaxed font-mixed'>
+        <div className='flex flex-col gap-1 w-full mb-2 pb-2 border-b border-border/40'>
+          {battleGroups.map((g) => {
+            const groupData = battle[g.key];
+            if (!groupData?.name || groupData.name.length === 0) return null;
+            return (
+              <div key={g.key} className='flex items-start gap-2 text-sm'>
+                <span className='font-bold text-primary/80 shrink-0'>{g.label}:</span>
+                <div className='flex flex-wrap items-center gap-x-1.5 gap-y-0.5 flex-1 min-w-0'>
+                  {groupData.name.map((n: string, i: number) => (
+                    <div key={i} className='whitespace-nowrap'><ParsedText text={n} /></div>
+                  ))}
+                  <span className='text-muted-foreground text-xs ml-0.5 flex items-center'>
+                    (<ParsedText text={String(groupData.people)} /> {translateTerm('Web.People')})
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
         {end.map((item: any, i: number) => (
           <div key={i} className='flex items-start w-full py-0.25 gap-1'>
             <span className='pl-0.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
@@ -382,6 +420,42 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
   useEffect(() => {
     setPage(1);
   }, [activeOnly, typeFilter]);
+
+  // 處理 Hash 定位與自動翻頁
+  useEffect(() => {
+    if (list.length === 0) return;
+
+    const locateHash = () => {
+      if (typeof window !== 'undefined' && window.location.hash) {
+        const targetId = decodeURIComponent(window.location.hash.substring(1));
+        if (!targetId) return;
+
+        const targetIndex = list.findIndex((item: any) =>
+          item.id === targetId ||
+          item.mission === targetId ||
+          item.eventFlow?.some((f: any) => f.id === targetId)
+        );
+
+        if (targetIndex !== -1) {
+          setPage((currentPage) => {
+            const requiredPage = Math.ceil((targetIndex + 1) / itemsPerPage);
+            return requiredPage > currentPage ? requiredPage : currentPage;
+          });
+          
+          setTimeout(() => {
+            const el = document.getElementById(targetId);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 300);
+        }
+      }
+    };
+
+    locateHash(); // 初始化時執行
+
+    window.addEventListener('hashchange', locateHash);
+    return () => window.removeEventListener('hashchange', locateHash);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [list]); // 僅依賴 list
 
   // 過濾清單
   const filteredList = useMemo(() => {
@@ -500,12 +574,12 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                         {idx === 0 && (
                           <>
                             <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                              <div className='font-mono text-primary break-all'>{trigger.mission}</div>
+                              <div id={trigger.mission} className='scroll-mt-24 font-mono text-primary break-all'>{trigger.mission}</div>
                               <div className='font-bold mt-1'>{translateTerm(`Mission.Name.${trigger.mission}`)}</div>
                               <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`Mission.Desc.${trigger.mission}`, undefined, 0)}</div>
                             </td>
                             <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                              <div className='font-mono text-primary break-all'>{trigger.id}</div>
+                              <div id={trigger.id} className='scroll-mt-24 font-mono text-primary break-all'>{trigger.id}</div>
                               <div className='font-bold mt-1'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
                               <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
                             </td>
@@ -543,7 +617,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                           </>
                         )}
                         <td className='p-2 align-top border-r border-border/30 whitespace-normal bg-background/30'>
-                          <div className='font-mono text-primary/80 break-all'>{flow.id}</div>
+                          <div id={flow.id} className='scroll-mt-24 font-mono text-primary/80 break-all'>{flow.id}</div>
                           <div className='font-bold mt-1'>{translateTerm(`${flow.type}.Name.${flow.id}`)}</div>
                           <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`${flow.type}.Desc.${flow.id}`, undefined, 0)}</div>
                         </td>
@@ -555,12 +629,12 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                   ) : (
                     <tr>
                       <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
-                        <div className='font-mono text-primary break-all'>{trigger.mission}</div>
+                        <div id={trigger.mission} className='scroll-mt-24 font-mono text-primary break-all'>{trigger.mission}</div>
                         <div className='font-bold mt-1'>{translateTerm(`Mission.Name.${trigger.mission}`)}</div>
                         <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`Mission.Desc.${trigger.mission}`, undefined, 0)}</div>
                       </td>
                       <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
-                        <div className='font-mono text-primary break-all'>{trigger.id}</div>
+                        <div id={trigger.id} className='scroll-mt-24 font-mono text-primary break-all'>{trigger.id}</div>
                         <div className='font-bold mt-1'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
                         <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
                       </td>
