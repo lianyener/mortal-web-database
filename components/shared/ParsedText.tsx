@@ -1,11 +1,12 @@
 import React from 'react';
-import { useRouter } from '@/i18n/navigation';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 
 export function ParsedText({ text }: { text: string }) {
   const router = useRouter();
+  const pathname = usePathname() || '';
   const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
 
   if (!text) return null;
@@ -96,7 +97,16 @@ export function ParsedText({ text }: { text: string }) {
                 case 'Position':
                 case 'Trigger':
                 case 'Mission':
-                  router.push(`/${category.toLowerCase()}/${targetId}${sidebarParams}`);
+                  // 在事件總表頁面中，點擊這些類型的連結改為直接定位 Hash
+                  if (pathname.endsWith('/event')) {
+                    if (window.location.hash === `#${targetId}`) {
+                      window.dispatchEvent(new HashChangeEvent('hashchange')); // Hash 沒變時強制觸發
+                    } else {
+                      window.location.hash = targetId;
+                    }
+                  } else {
+                    router.push(`/${category.toLowerCase()}/${targetId}${sidebarParams}`);
+                  }
                   break;
 
                 // 開啟側邊欄

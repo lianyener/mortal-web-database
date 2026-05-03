@@ -443,8 +443,23 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
           });
           
           setTimeout(() => {
-            const el = document.getElementById(targetId);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            // 重組帶有 trigger.id 保證唯一性的複合 DOM ID
+            const trigger = list[targetIndex];
+            let elId = `trigger-${trigger.id}`;
+            if (trigger.mission === targetId) {
+              elId = `mission-${trigger.id}-${trigger.mission}`;
+            } else if (trigger.eventFlow?.some((f: any) => f.id === targetId)) {
+              const flowIdx = trigger.eventFlow.findIndex((f: any) => f.id === targetId);
+              elId = `flow-${trigger.id}-${targetId}-${flowIdx}`;
+            }
+
+            const el = document.getElementById(elId);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth' });
+              // 高光提示動畫
+              el.classList.add('bg-primary/20', 'ring-1', 'ring-primary', 'rounded-sm', 'transition-all', 'duration-500');
+              setTimeout(() => el.classList.remove('bg-primary/20', 'ring-1', 'ring-primary'), 2000);
+            }
           }, 300);
         }
       }
@@ -454,7 +469,6 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
 
     window.addEventListener('hashchange', locateHash);
     return () => window.removeEventListener('hashchange', locateHash);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [list]); // 僅依賴 list
 
   // 過濾清單
@@ -574,12 +588,12 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                         {idx === 0 && (
                           <>
                             <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                              <div id={trigger.mission} className='scroll-mt-24 font-mono text-primary break-all'>{trigger.mission}</div>
+                              <div id={`mission-${trigger.id}-${trigger.mission}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{trigger.mission}</div>
                               <div className='font-bold mt-1'>{translateTerm(`Mission.Name.${trigger.mission}`)}</div>
                               <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`Mission.Desc.${trigger.mission}`, undefined, 0)}</div>
                             </td>
                             <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                              <div id={trigger.id} className='scroll-mt-24 font-mono text-primary break-all'>{trigger.id}</div>
+                              <div id={`trigger-${trigger.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{trigger.id}</div>
                               <div className='font-bold mt-1'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
                               <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
                             </td>
@@ -617,7 +631,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                           </>
                         )}
                         <td className='p-2 align-top border-r border-border/30 whitespace-normal bg-background/30'>
-                          <div id={flow.id} className='scroll-mt-24 font-mono text-primary/80 break-all'>{flow.id}</div>
+                          <div id={`flow-${trigger.id}-${flow.id}-${idx}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary/80 break-all'>{flow.id}</div>
                           <div className='font-bold mt-1'>{translateTerm(`${flow.type}.Name.${flow.id}`)}</div>
                           <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`${flow.type}.Desc.${flow.id}`, undefined, 0)}</div>
                         </td>
@@ -629,12 +643,12 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                   ) : (
                     <tr>
                       <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
-                        <div id={trigger.mission} className='scroll-mt-24 font-mono text-primary break-all'>{trigger.mission}</div>
+                        <div id={`mission-${trigger.id}-${trigger.mission}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{trigger.mission}</div>
                         <div className='font-bold mt-1'>{translateTerm(`Mission.Name.${trigger.mission}`)}</div>
                         <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`Mission.Desc.${trigger.mission}`, undefined, 0)}</div>
                       </td>
                       <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
-                        <div id={trigger.id} className='scroll-mt-24 font-mono text-primary break-all'>{trigger.id}</div>
+                        <div id={`trigger-${trigger.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{trigger.id}</div>
                         <div className='font-bold mt-1'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
                         <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
                       </td>
