@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◎[*Custom.Free*]:[*Label.Free,free*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["free"]},"from":{"Script":["ch7_5_5_1"],"Trigger":["M6003_03"],"Mission":["main"]}},"remark":[],"effects":["Free"]}
+{"content":[{"form":"effect","text":"◎[*Custom.Free*]:[*Label.Free,CS_free*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["CS_free"]},"from":{"Script":["ch7_5_5_1"],"Trigger":["M6003_03"],"Mission":["main"]}},"remark":[],"effects":["Free"]}

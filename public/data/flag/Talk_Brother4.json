@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.Talk_Brother4.0.0*]","1":"[*Flag.Talk_Brother4.0.1*]"}}],"init":0,"rel":{"pre":{"Trigger":["Room1"]},"post":{"Script":["free","room_001"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.Talk_Brother4.0.0*]","1":"[*Flag.Talk_Brother4.0.1*]"}}],"init":0,"rel":{"pre":{"Trigger":["Room1"]},"post":{"Script":["CS_free","room_001"]}}}

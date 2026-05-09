@@ -390,6 +390,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
   // 篩選器狀態
   const [activeOnly, setActiveOnly] = useState(true);
   const [typeFilter, setTypeFilter] = useState('all');
+  const [sheetFilter, setSheetFilter] = useState('all');
 
   // 篩選選項
   const typeOptions = ['Main', 'Sub', 'Free'];
@@ -400,6 +401,21 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
     const arr = Object.entries(triggerData).map(([id, val]: any) => ({ id, ...(typeof val === 'object' ? val : {}) }));
     return arr.sort((a, b) => (a.orderKey || '').localeCompare(b.orderKey || ''));
   }, [triggerData]);
+
+  // Sheet 篩選選項
+  const sheetOptions = [
+    'BeforeExternalStudy',
+    'NoExternalStudy',
+    'KongtongStudy',
+    'QingchengStudy',
+    'Brother1Leave',
+    'InviteGroom',
+    'WulinAssembly',
+    'BeforeWestWulin',
+    'SectDestroy',
+    'WestWulin',
+    'Hopeless'
+  ];
 
   // Helper: 格式化時間
   const formatTime = (timeObj: any) => {
@@ -419,7 +435,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
   // 篩選變更時回到第一頁
   useEffect(() => {
     setPage(1);
-  }, [activeOnly, typeFilter]);
+  }, [activeOnly, typeFilter, sheetFilter]);
 
   // 處理 Hash 定位與自動翻頁
   useEffect(() => {
@@ -477,6 +493,14 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
 
     if (activeOnly) sourceList = sourceList.filter((item: any) => item.active === true && item.script);
     if (typeFilter !== 'all') sourceList = sourceList.filter((item: any) => item.type === typeFilter);
+    
+    if (sheetFilter !== 'all') {
+      if (sheetFilter === 'unset') {
+        sourceList = sourceList.filter((item: any) => !item.sheet);
+      } else {
+        sourceList = sourceList.filter((item: any) => item.sheet === sheetFilter);
+      }
+    }
 
     if (!searchTarget) return sourceList;
     const searchLower = searchTarget.trim().toLowerCase();
@@ -495,7 +519,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
       return searchTerms.every((term) => targetString.includes(term));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [list, searchTarget, activeOnly, typeFilter]);
+  }, [list, searchTarget, activeOnly, typeFilter, sheetFilter]);
 
   // 分頁顯示
   const displayList = useMemo(() => {
@@ -537,6 +561,26 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                   {translateTerm(`Web.Label.${o}`)}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+
+          {/* Sheet 篩選 */}
+          <Select value={sheetFilter} onValueChange={setSheetFilter}>
+            <SelectTrigger className='h-8! text-sm min-w-28 hover:bg-muted/50 transition-colors'>
+              <SelectValue placeholder={translateTerm('Web.Sheet')} />
+            </SelectTrigger>
+            <SelectContent className='min-w-28' position='popper'>
+              <SelectItem value='all'>
+                {translateTerm('Web.Sheet')} - {translateTerm('Web.Term.All')}
+              </SelectItem>
+              {sheetOptions.map((s) => (
+                <SelectItem key={s} value={s}>
+                  {translateTerm(`Sheet.${s}`)}
+                </SelectItem>
+              ))}
+              <SelectItem value='unset'>
+                {translateTerm('Web.Term.Unset')}
+              </SelectItem>
             </SelectContent>
           </Select>
 

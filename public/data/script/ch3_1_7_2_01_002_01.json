@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"[*Label.Stat,martial-point*]+4"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TempScript*]1"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Script":["ch3_1_7_2_01_002"]}},"remark":[],"effects":["Stat","Script"]}
+{"content":[{"form":"effect","text":"[*Label.Stat,martial-point*]+4"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TempScript*]1"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Script":["ch3_1_7_2_01_002"],"Position":["Ch_3_1_7_2_01"]}},"remark":[],"effects":["Stat","Script"]}
