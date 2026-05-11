@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouter, usePathname } from '@/i18n/navigation';
+import { useRouter, usePathname, Link } from '@/i18n/navigation';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
@@ -66,6 +66,14 @@ export function ParsedText({ text }: { text: string }) {
 
             // 是否為連結
             let isLink = true;
+            let isPageNav = false;
+            let isHashNav = false;
+            let isNewWindow = false;
+            let href = '';
+
+            const inEventPage = pathname.endsWith('/event');
+            const inRandomPage = pathname.endsWith('/random');
+
             switch (category) {
               case 'Stat':
               case 'Enemy':
@@ -73,12 +81,62 @@ export function ParsedText({ text }: { text: string }) {
               case 'Place':
                 isLink = false;
                 break;
+              case 'Script':
+              case 'Combat':
+              case 'Battle':
+                if (inEventPage || inRandomPage) {
+                  isHashNav = true;
+                  href = `#${targetId}`;
+                } else {
+                  isPageNav = true;
+                  href = `/${category.toLowerCase()}/${targetId}`;
+                }
+                break;
+              case 'Trigger':
+                if (inEventPage) {
+                  isHashNav = true;
+                  href = `#${targetId}`;
+                } else {
+                  isPageNav = true;
+                  isNewWindow = inRandomPage;
+                  href = `/${category.toLowerCase()}/${targetId}`;
+                }
+                break;
+              case 'Position':
+                if (inRandomPage) {
+                  isHashNav = true;
+                  href = `#${targetId}`;
+                } else {
+                  isPageNav = true;
+                  isNewWindow = inEventPage;
+                  href = `/${category.toLowerCase()}/${targetId}`;
+                }
+                break;
+              case 'Free':
+              case 'Mission':
+                if (inEventPage || inRandomPage) {
+                  isPageNav = true;
+                  isNewWindow = true;
+                  href = `/${category.toLowerCase()}/${targetId}`;
+                } else {
+                  isPageNav = true;
+                  href = `/${category.toLowerCase()}/${targetId}`;
+                }
+                break;
             }
 
             // 設定點擊事件
             const handleClick = (e: React.MouseEvent) => {
               // 選取文字時不觸發跳轉
-              if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return;
+              if (typeof window !== 'undefined' && window.getSelection()?.toString().length) {
+                e.preventDefault();
+                return;
+              }
+
+              // 允許原生的新分頁行為 (Ctrl+Click, 中鍵等) 不被覆寫
+              if ((isPageNav || isHashNav) && (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey || e.button !== 0)) {
+                return;
+              }
 
               // 阻止事件冒泡
               e.stopPropagation();
@@ -87,28 +145,29 @@ export function ParsedText({ text }: { text: string }) {
               const sidebarState = useSidebarStore.getState();
               const sidebarParams = sidebarState.isOpen && sidebarState.category && sidebarState.id ? `?sidebar=${sidebarState.category}&sidebarId=${sidebarState.id}` : '';
 
+              if (isHashNav) {
+                e.preventDefault();
+                if (window.location.hash === href) {
+                  window.dispatchEvent(new HashChangeEvent('hashchange')); // Hash 沒變時強制觸發
+                } else {
+                  window.location.hash = targetId;
+                }
+                return;
+              }
+
+              if (isPageNav) {
+                e.preventDefault();
+                if (isNewWindow) {
+                  const resolvedHref = e.currentTarget.getAttribute('href') || href;
+                  window.open(`${resolvedHref}${sidebarParams}`, '_blank');
+                } else {
+                  router.push(`${href}${sidebarParams}`);
+                }
+                return;
+              }
+
               // 依分類處理點擊行為
               switch (category) {
-                // 跳轉獨立頁面
-                case 'Script':
-                case 'Free':
-                case 'Combat':
-                case 'Battle':
-                case 'Position':
-                case 'Trigger':
-                case 'Mission':
-                  // 在事件總表頁面中，點擊這些類型的連結改為直接定位 Hash
-                  if (pathname.endsWith('/event')) {
-                    if (window.location.hash === `#${targetId}`) {
-                      window.dispatchEvent(new HashChangeEvent('hashchange')); // Hash 沒變時強制觸發
-                    } else {
-                      window.location.hash = targetId;
-                    }
-                  } else {
-                    router.push(`/${category.toLowerCase()}/${targetId}${sidebarParams}`);
-                  }
-                  break;
-
                 // 開啟側邊欄
                 case 'Buff':
                 case 'Debuff':
@@ -201,17 +260,38 @@ export function ParsedText({ text }: { text: string }) {
                 break;
             }
 
+            const className = `inline-flex items-center font-semibold text-inherit transition-colors hover:text-current/80 ${isLink ? 'cursor-pointer' : ''}`;
+            let triggerContent;
+
+            if (isPageNav) {
+              triggerContent = (
+                <Link href={href} target={isNewWindow ? '_blank' : undefined} onClick={handleClick} className={className}>
+                  {contentNode}
+                </Link>
+              );
+            } else if (isHashNav) {
+              triggerContent = (
+                <a href={href} onClick={handleClick} className={className}>
+                  {contentNode}
+                </a>
+              );
+            } else {
+              triggerContent = (
+                <span
+                  onClick={isLink ? handleClick : undefined}
+                  role={isLink ? 'button' : undefined}
+                  tabIndex={isLink ? 0 : undefined}
+                  className={className}
+                >
+                  {contentNode}
+                </span>
+              );
+            }
+
             return (
               <HoverCard key={index} openDelay={200} closeDelay={100}>
                 <HoverCardTrigger asChild>
-                  <span
-                    onClick={isLink ? handleClick : undefined}
-                    role={isLink ? 'button' : undefined}
-                    tabIndex={isLink ? 0 : undefined}
-                    className={`inline-flex items-center font-semibold text-inherit transition-colors hover:text-current/80 ${isLink ? 'cursor-pointer' : ''}`}
-                  >
-                    {contentNode}
-                  </span>
+                  {triggerContent}
                 </HoverCardTrigger>
                 {(tipName || tipDesc) && (
                   <HoverCardContent className='w-80 z-50 flex flex-col gap-1.5' align='start' sideOffset={4}>

@@ -292,7 +292,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                               <>
                                 <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap'>
                                   <div className='font-bold text-foreground'>{translateTerm(`Position.Class.${rEv.class}`)}</div>
-                                  <div className='text-xs text-muted-foreground mt-1'>Seq: {rEv.seq}</div>
+                                  <div className='text-muted-foreground mt-1'>{rEv.seq}</div>
                                 </td>
                                 <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
                                   <div className='flex flex-col gap-3 font-mixed'>
@@ -328,8 +328,8 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                             )}
                             <td className='p-2 align-top border-r border-border/30 whitespace-normal bg-background/30'>
                               <div id={`flow-${posItem.id}-${rId}-${flow.id}-${fIdx}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary/80 break-all'>{flow.id}</div>
-                              <div className='font-bold mt-1'>{translateTerm(`${flow.type}.Name.${flow.id}`)}</div>
-                              <div className='text-xs text-muted-foreground mt-1'>{translateTerm(`${flow.type}.Desc.${flow.id}`, undefined, 0)}</div>
+                              <div className='font-bold mt-1 break-all'>{translateTerm(`${flow.type}.Name.${flow.id}`)}</div>
+                              <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`${flow.type}.Desc.${flow.id}`, undefined, 0)}</div>
                             </td>
                             <td className='p-2 align-top whitespace-normal bg-background/30'>
                               <FlowContent flow={flow} scriptData={scriptData} combatData={combatData} battleData={battleData} />
@@ -354,7 +354,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                           )}
                           <td className='p-2 align-top border-r border-border/30 whitespace-nowrap'>
                             <div className='font-bold text-foreground'>{translateTerm(`Position.Class.${rEv.class}`)}</div>
-                            <div className='text-xs text-muted-foreground mt-1'>Seq: {rEv.seq}</div>
+                            <div className='text-muted-foreground mt-1'>{rEv.seq}</div>
                           </td>
                           <td className='p-2 align-top border-r border-border/30 whitespace-normal'>
                             <div className='flex flex-col gap-3 font-mixed'>
