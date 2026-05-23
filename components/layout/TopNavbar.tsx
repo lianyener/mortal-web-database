@@ -77,7 +77,7 @@ export function TopNavbar() {
       titleKey: 'Web.About',
       items: [
         { titleKey: 'Web.Introduce', href: '/about' },
-        { titleKey: 'Web.UpdateLog', href: null }
+        { titleKey: 'Web.UpdateLog', href: '/updatelog' }
       ]
     }
   ];
