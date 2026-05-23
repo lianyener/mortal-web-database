@@ -18,43 +18,34 @@ export default function AboutPage() {
 
 interface SiteData {
   introduction?: string[];
-  guides?: {
-    category: string;
-    items: {
-      title: string;
-      content: string;
-    }[];
-  }[];
-  faqs?: {
-    category: string;
-    items: {
-      q: string;
-      a: string;
-    }[];
-  }[];
-  links?: {
-    title: string;
-    desc: string;
-    url: string;
-    icon: string;
-  }[];
+  guides?: { category: string; items: { title: string; content: string }[] }[];
+  faqs?: { category: string; items: { q: string; a: string }[] }[];
+  links?: { title: string; desc: string; url: string; icon: string }[];
   copyright?: string[];
 }
 
 const getIconComponent = (iconName: string) => {
   switch (iconName?.toLowerCase()) {
-    case 'github': return SiGithub;
-    case 'globe': return Globe;
-    case 'discord': return SiDiscord;
+    case 'github':
+      return SiGithub;
+    case 'globe':
+      return Globe;
+    case 'discord':
+      return SiDiscord;
     case 'messagesquare':
-    case 'forum': return MessageSquare;
-    case 'steam': return SiSteam;
-    case 'gamepad2':
+    case 'forum':
+      return MessageSquare;
+    case 'steam':
+      return SiSteam;
     case 'twitter':
-    case 'x': return SiX;
-    case 'facebook': return SiFacebook;
-    case 'externallink': return ExternalLink;
-    default: return LinkIcon;
+    case 'x':
+      return SiX;
+    case 'facebook':
+      return SiFacebook;
+    case 'externallink':
+      return ExternalLink;
+    default:
+      return LinkIcon;
   }
 };
 
@@ -85,7 +76,6 @@ function AboutContent() {
 
       {/* 主要閱讀區塊 */}
       <div className='max-w-4xl mx-auto px-6 space-y-16 py-10 sm:py-16'>
-        
         {isLoading ? (
           <div className='text-center text-muted-foreground py-20 tracking-widest animate-pulse'>{translateTermWithParam('Web.Msg.Loading', 'About')}</div>
         ) : !siteData ? (
@@ -198,7 +188,13 @@ function AboutContent() {
                   {siteData.links.map((link, idx) => {
                     const IconComponent = getIconComponent(translateTerm(link.icon));
                     return (
-                      <a key={idx} href={translateTerm(link.url)} target="_blank" rel="noreferrer" className='flex flex-col p-4 border border-border/60 rounded-lg bg-card hover:border-primary/50 hover:shadow-md transition-all group'>
+                      <a
+                        key={idx}
+                        href={translateTerm(link.url)}
+                        target='_blank'
+                        rel='noreferrer'
+                        className='flex flex-col p-4 border border-border/60 rounded-lg bg-card hover:border-primary/50 hover:shadow-md transition-all group'
+                      >
                         <div className='flex items-center gap-2 font-bold text-primary group-hover:underline mb-1.5 truncate'>
                           <IconComponent className='size-5 shrink-0' />
                           {translateTerm(link.title)}
@@ -233,7 +229,6 @@ function AboutContent() {
             )}
           </>
         )}
-
       </div>
     </main>
   );

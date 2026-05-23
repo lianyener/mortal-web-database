@@ -20,11 +20,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// 靜態語系輸出清單
-// export function generateStaticParams() {
-//   return [{ locale: 'zh-tw' }];
-// }
-
 export default async function RootLayout({
   children,
   params

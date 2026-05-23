@@ -59,7 +59,6 @@ function UpdateLogContent() {
 
       {/* 主要閱讀區塊 */}
       <div className='max-w-4xl mx-auto px-6 space-y-16 py-10 sm:py-16'>
-        
         {isLoading ? (
           <div className='text-center text-muted-foreground py-20 tracking-widest animate-pulse'>{translateTermWithParam('Web.Msg.Loading', 'UpdateLog')}</div>
         ) : !siteData || !siteData.Log ? (
@@ -73,7 +72,7 @@ function UpdateLogContent() {
               </div>
               <h2 className='text-2xl font-bold tracking-wide'>{translateTerm('Web.UpdateLog')}</h2>
             </div>
-            
+
             {/* 內容列表 */}
             <div className='grid gap-8'>
               {siteData.Log.map((log) => (
@@ -82,21 +81,19 @@ function UpdateLogContent() {
                   <h3 className='text-lg font-semibold text-foreground/90 flex items-center gap-1.5 border-b border-border/40 pb-1.5'>
                     <ChevronRight className='size-4 text-primary' />
                     <span>{log.Date}</span>
-                    <span className="text-muted-foreground text-sm font-medium ml-2">{translateTerm('Web.GameVersion')}: v{log.GameVersion}</span>
+                    <span className='text-muted-foreground text-sm font-medium ml-2'>
+                      {translateTerm('Web.GameVersion')}: v{log.GameVersion}
+                    </span>
                   </h3>
-                  
+
                   {/* 更新項目卡片 */}
                   <div className='flex flex-col gap-4'>
                     {log.Content.map((item, i) => (
                       <div key={i} className='bg-card border border-border/60 rounded-lg p-4 sm:p-5 shadow-sm flex flex-col gap-3'>
                         {/* 標籤 */}
                         <div className='flex items-center gap-2'>
-                          <span className='px-2.5 py-0.5 rounded-md bg-secondary text-secondary-foreground text-xs font-bold tracking-wider'>
-                            {translateTerm(`Web.Term.${item.Type}`)}
-                          </span>
-                          <span className='px-2.5 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-bold tracking-wider'>
-                            {translateTerm(`Web.Label.${item.Category}`)}
-                          </span>
+                          <span className='px-2.5 py-0.5 rounded-md bg-secondary text-secondary-foreground text-xs font-bold tracking-wider'>{translateTerm(`Web.Term.${item.Type}`)}</span>
+                          <span className='px-2.5 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-bold tracking-wider'>{translateTerm(`Web.Label.${item.Category}`)}</span>
                         </div>
                         {/* 文字內容（支援 ParsedText 處理標籤） */}
                         <div className='text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap flex-1'>
