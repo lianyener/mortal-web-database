@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 // 初始化 next-intl 外掛
@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   // 設定
+  experimental: { optimizePackageImports: ['lucide-react'] }
 };
 
 // 匯出時，一定要用 withNextIntl 包裹起來！

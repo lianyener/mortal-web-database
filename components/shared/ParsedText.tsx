@@ -123,6 +123,10 @@ export function ParsedText({ text }: { text: string }) {
                   href = `/${category.toLowerCase()}/${targetId}`;
                 }
                 break;
+              case 'Page':
+                isPageNav = true;
+                href = `/${targetId.toLowerCase()}`;
+                break;
             }
 
             // 設定點擊事件
@@ -253,6 +257,7 @@ export function ParsedText({ text }: { text: string }) {
               case 'Story':
               case 'Place':
               case 'Enemy':
+              case 'Page':
                 break;
               default:
                 tipName = translateTerm(`${i18nCategory}.Name.${targetId}`, undefined, 1) + ` (${targetId})`;
@@ -308,7 +313,16 @@ export function ParsedText({ text }: { text: string }) {
         }
 
         // 普通文字
-        return <span key={index}>{part}</span>;
+        return (
+          <span key={index}>
+            {part.split(/(?:\r?\n|\\n)/).map((line, i, arr) => (
+              <React.Fragment key={i}>
+                {line}
+                {i < arr.length - 1 && <br />}
+              </React.Fragment>
+            ))}
+          </span>
+        );
       })}
     </>
   );
