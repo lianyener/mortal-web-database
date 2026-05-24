@@ -1,12 +1,30 @@
 'use client';
 
-import { Link } from '@/i18n/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
+import { useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
-import { ChevronDown, Sun, Moon, Menu, X } from 'lucide-react';
+import { ChevronDown, Sun, Moon, Menu, X, Globe } from 'lucide-react';
 
 export function TopNavbar() {
   const { translateTerm, translateTermWithParam } = useAppTranslation();
+  const pathname = usePathname();
+  const router = useRouter();
+  const locale = useLocale();
+
+  // 語系設定
+  const locales = [
+    { code: 'zh-tw', label: '繁體中文' },
+    { code: 'zh-cn', label: '简体中文' },
+    { code: 'kr', label: '한국어' }
+  ];
+
+  const switchLocale = (newLocale: string) => {
+    // 確保一併帶上現有 query parameters
+    const search = typeof window !== 'undefined' ? window.location.search : '';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    router.replace(`${pathname}${search}` as any, { locale: newLocale });
+  };
 
   // 深淺色模式切換邏輯
   const [mounted, setMounted] = useState(false);
@@ -131,6 +149,28 @@ export function TopNavbar() {
             >
               {mounted ? isDark ? <Moon className='size-4' /> : <Sun className='size-4' /> : <div className='size-4' />}
             </button>
+
+            {/* 語系切換下拉選單 (桌機版) */}
+            <div className='relative group'>
+              <button className='p-2 rounded-full bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary'>
+                <Globe className='size-4' />
+              </button>
+              <div className='absolute top-full hidden group-hover:block pt-1 min-w-32 z-30 right-0'>
+                <div className='bg-card border border-border/50 rounded-lg shadow-lg py-1.5 flex flex-col'>
+                  {locales.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => switchLocale(l.code)}
+                      className={`px-4 py-2 text-sm text-left font-medium transition-colors hover:bg-muted hover:text-primary ${
+                        locale === l.code ? 'text-primary bg-primary/5' : 'text-foreground'
+                      }`}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* 行動版按鈕群組 */}
@@ -177,6 +217,32 @@ export function TopNavbar() {
                 </div>
               </div>
             ))}
+
+              {/* 語系切換區塊 (行動版) */}
+              <div className='h-px bg-border/50 my-1'></div>
+              <div className='flex flex-col gap-2.5'>
+                <div className='font-bold text-primary text-sm flex items-center gap-2'>
+                  <Globe className='size-4' /> Language
+                </div>
+                <div className='grid grid-cols-2 gap-2'>
+                  {locales.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        switchLocale(l.code);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`px-3 py-2 text-sm text-left rounded-md transition-colors font-medium border ${
+                        locale === l.code
+                          ? 'bg-primary/10 text-primary border-primary/20'
+                          : 'text-foreground bg-muted/40 hover:bg-primary/10 hover:text-primary border-transparent'
+                      }`}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
           </div>
         )}
       </div>
