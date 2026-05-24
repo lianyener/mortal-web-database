@@ -69,6 +69,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
 
   useEffect(() => {
     if (!list || list.length === 0) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsBuildingCache(true);
 
     const timer = setTimeout(() => {

@@ -14,19 +14,11 @@ const chironHei = Chiron_Hei_HK({ subsets: ['latin'], fallback: [], variable: '-
 // 頁面標題
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
-  return {
-    title: t.has('Web.SiteTitle') ? t('Web.SiteTitle') : "Mortal Web Database",
-    description: t.has('Web.SiteDescription') ? t('Web.SiteDescription') : "Mortal Web Database 遊戲資料庫",
-  };
+  const siteTitle = t.has('Web.SiteTitle') ? t('Web.SiteTitle') : 'Mortal Web Database';
+  return { title: { template: `%s - ${siteTitle}`, default: siteTitle }, description: t('About.introduction.0') };
 }
 
-export default async function RootLayout({
-  children,
-  params
-}: Readonly<{
-  children: React.ReactNode;
-  params: Promise<{ locale?: string }>;
-}>) {
+export default async function RootLayout({ children, params }: Readonly<{ children: React.ReactNode; params: Promise<{ locale?: string }> }>) {
   // 取得在 i18n/request.ts 定義的 messages
   const { locale = 'zh-tw' } = await params;
   const messages = await getMessages({ locale });
@@ -34,7 +26,7 @@ export default async function RootLayout({
   return (
     // 忽略因瀏覽器擴充功能注入導致的 Hydration 警告
     <html lang={locale} className={`h-full antialiased ${sometypeMono.variable} ${chironHei.variable}`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col">
+      <body className='min-h-full flex flex-col'>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <QueryProvider>
             <NuqsAdapter>

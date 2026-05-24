@@ -1,11 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslations, TranslationValues } from 'next-intl';
 
-export function useAppTranslation() {
-  const t = useTranslations();
-
-  // 快取常用之翻譯物件
-  const { translateTerm, translateParagraph, translateTermWithParam } = useMemo(() => {
+export function createAppTranslator(t: ReturnType<typeof useTranslations>) {
     const tTermWithParam = (text: string, param: string, defaultText: number = 2): string => {
       if (param.includes('.')) param = tTerm(param, undefined, 1);
       return tTerm(text, { 0: param }, defaultText);
@@ -70,7 +66,13 @@ export function useAppTranslation() {
     };
 
     return { translateTerm: tTerm, translateParagraph: tParagraph, translateTermWithParam: tTermWithParam };
-  }, [t]);
+}
 
-  return { t, translateTerm, translateParagraph, translateTermWithParam };
+export function useAppTranslation() {
+  const t = useTranslations();
+  
+  // 快取常用之翻譯物件
+  const translators = useMemo(() => createAppTranslator(t), [t]);
+
+  return { t, ...translators };
 }
