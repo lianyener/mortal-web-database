@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 
 export function GlobalSidebar() {
   const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
 
   // 設定URL Query參數
@@ -325,7 +326,7 @@ function DataRelation({ phase, types }: { phase: string; types: any }) {
           if (!Array.isArray(ids) || ids.length === 0) return null;
 
           return (
-            <div key={type} className='flex flex-col sm:flex-row gap-1 sm:gap-3 border-b border-border/40 pb-2 last:border-0 last:pb-0'>
+            <div key={type} className='flex flex-col sm:flex-row gap-1 sm:gap-3 border-b border-border/40 pb-2 last:border-0 last:pb-0 whitespace-nowrap'>
               <span className='font-semibold text-muted-foreground w-18 shrink-0'>{translateTerm(`Web.Label.${type}`)}</span>
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5 flex-1'>
                 {ids.map((id: string) => (
