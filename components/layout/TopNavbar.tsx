@@ -16,7 +16,8 @@ export function TopNavbar() {
   const locales = [
     { code: 'zh-tw', label: '繁體中文' },
     { code: 'zh-cn', label: '简体中文' },
-    { code: 'kr', label: '한국어' }
+    { code: 'kr', label: '한국어' },
+    { code: 'jp', label: '日本語' }
   ];
 
   const switchLocale = (newLocale: string) => {
