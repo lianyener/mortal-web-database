@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AlertCircle, CheckCircle2, Loader2, Send } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { AlertCircle, CheckCircle2, Loader2, Send, Bug } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
@@ -19,7 +20,7 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
   const [email, setEmail] = useState('');
   const [category, setCategory] = useState('數值錯漏');
   const [content, setContent] = useState('');
-  const [botCheck, setBotCheck] = useState(''); // 蜜罐防禦欄位
+  const [botCheck, setBotCheck] = useState('');
 
   // 系統/發送狀態
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,7 +39,6 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
       if (savedNickname) setNickname(savedNickname);
       if (savedEmail) setEmail(savedEmail);
 
-      // 檢查是否仍在 60 秒冷卻時間內
       if (lastSubmitTime) {
         const diff = Math.floor((Date.now() - parseInt(lastSubmitTime, 10)) / 1000);
         if (diff < 60) {
@@ -46,7 +46,6 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
         }
       }
 
-      // 重置前次提交狀態
       setSubmitStatus('idle');
       setErrorMessage('');
     }
@@ -73,17 +72,14 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
     setErrorMessage('');
 
     try {
-      // 儲存常用個人資訊至 localStorage
       localStorage.setItem('mortal_reporter_nickname', nickname.trim());
       localStorage.setItem('mortal_reporter_email', email.trim());
 
-      // 採集瀏覽器與螢幕資訊
       const userAgent = window.navigator.userAgent;
       const resolution = `${window.screen.width}x${window.screen.height}`;
       const currentUrl = window.location.pathname + window.location.search;
       const currentTitle = document.title;
 
-      // 發送 API 請求給 Next.js 中繼路由
       const res = await fetch('/api/report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -96,7 +92,7 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
           title: currentTitle,
           userAgent,
           resolution,
-          bot_check: botCheck, // 正常玩家會是空字串
+          bot_check: botCheck,
         }),
       });
 
@@ -106,13 +102,11 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
         throw new Error(data.error || translateTerm('Web.Report.ErrSubmitFail'));
       }
 
-      // 成功後處理：記錄冷卻時間、清空內容、切換狀態
       localStorage.setItem('mortal_last_report_time', Date.now().toString());
       setCooldown(60);
       setContent('');
       setSubmitStatus('success');
 
-      // 2.5 秒後自動關閉視窗
       setTimeout(() => {
         onClose();
         setSubmitStatus('idle');
@@ -128,10 +122,11 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
     }
   };
 
-  if (!isOpen) return null;
+  // SSR 防呆與關閉判斷
+  if (!isOpen || typeof document === 'undefined') return null;
 
-  return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in-0'>
+  return createPortal(
+    <div className='fixed inset-0 z-9999 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in-0'>
       <div 
         className='relative w-full max-w-lg p-6 bg-card border border-border rounded-xl shadow-lg'
         onClick={(e) => e.stopPropagation()}
@@ -139,12 +134,12 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
         {/* 標題與說明 */}
         <div className='flex items-center justify-between pb-3 border-b border-border/50'>
           <div className='flex items-center gap-2'>
-            <span className='text-xl'>🐞</span>
+            <Bug className='size-5 text-primary' />
             <h3 className='text-lg font-bold'>{translateTerm('Web.Report.Title')}</h3>
           </div>
           <button 
             onClick={onClose} 
-            className='text-muted-foreground hover:text-foreground p-1 text-sm rounded-md hover:bg-muted'
+            className='text-muted-foreground hover:text-foreground p-1 text-sm rounded-md hover:bg-muted cursor-pointer'
             disabled={isSubmitting}
           >
             ✕
@@ -162,8 +157,8 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
           /* 填寫表單畫面 */
           <form onSubmit={handleSubmit} className='space-y-4 mt-4 text-sm'>
             
-            {/* 蜜罐防禦 (Honeypot) - 真人看不見 */}
-            <div className='absolute -left-2500 top-0' aria-hidden='true'>
+            {/* 蜜罐防禦 (Honeypot) */}
+            <div className='absolute left-[-9999px] top-0' aria-hidden='true'>
               <input 
                 type='text' 
                 name='bot_check' 
@@ -182,7 +177,7 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
               </span>
             </div>
 
-            {/* 暱稱與 Email (雙欄) */}
+            {/* 暱稱與 Email */}
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
               <div className='space-y-1'>
                 <label className='font-medium text-foreground'>{translateTerm('Web.Report.Nickname')}</label>
@@ -217,10 +212,10 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
                 <SelectTrigger className='w-full h-9'>
                   <SelectValue placeholder={translateTerm('Web.Report.CategoryPlaceholder')} />
                 </SelectTrigger>
-                <SelectContent position='popper'>
+                <SelectContent position='popper' className='z-10000'>
                   <SelectItem value='數值錯漏'>{translateTerm('Web.Report.Cat.Data')}</SelectItem>
-                  <SelectItem value='翻譯問題'>{translateTerm('Web.Report.Cat.Text')}</SelectItem>
-                  <SelectItem value='功能異常'>{translateTerm('Web.Report.Cat.Bug')}</SelectItem>
+                  <SelectItem value='文本翻譯問題'>{translateTerm('Web.Report.Cat.Text')}</SelectItem>
+                  <SelectItem value='功能異常(Bug)'>{translateTerm('Web.Report.Cat.Bug')}</SelectItem>
                   <SelectItem value='建議與其他'>{translateTerm('Web.Report.Cat.Other')}</SelectItem>
                 </SelectContent>
               </Select>
@@ -256,7 +251,7 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
               <Button type='button' variant='outline' size='sm' onClick={onClose} disabled={isSubmitting}>
                 {translateTerm('Web.Report.Cancel')}
               </Button>
-              <Button type='submit' size='sm' disabled={isSubmitting || cooldown > 0} className='min-w-24 gap-1.5'>
+              <Button type='submit' size='sm' disabled={isSubmitting || cooldown > 0} className='min-w-24 gap-1.5 cursor-pointer'>
                 {isSubmitting ? (
                   <>
                     <Loader2 className='size-3.5 animate-spin' />
@@ -275,6 +270,7 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body // 指定 Portal 掛載目標為 body
   );
 }

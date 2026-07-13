@@ -143,10 +143,10 @@ export function TopNavbar() {
             {/* 分隔線 */}
             <div className='w-px h-5 bg-border/80 mx-1'></div>
 
-            {/* 問題回報按鈕 (桌機版) */}
+            {/* 問題回報按鈕 */}
             <button
               onClick={() => setIsReportOpen(true)}
-              className='flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer'
+              className='p-2 rounded-full bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer'
               title={translateTerm('Web.Report.Title')}
             >
               <Bug className='size-4' />
@@ -188,10 +188,10 @@ export function TopNavbar() {
           <div className='flex md:hidden items-center gap-2 shrink-0'>
             <button
               onClick={() => setIsReportOpen(true)}
-              className='p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer'
+              className='p-2 rounded-full bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer'
               title={translateTerm('Web.Report.Title')}
             >
-              <Globe className='size-4' />
+              <Bug className='size-4' />
             </button>
 
             <button
@@ -266,6 +266,7 @@ export function TopNavbar() {
         )}
       </div>
 
+      {/* 掛載問題回報 Modal */}
       <ReportModal isOpen={isReportOpen} onClose={() => setIsReportOpen(false)} />
     </div>
   );
