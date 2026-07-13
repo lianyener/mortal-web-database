@@ -4,13 +4,17 @@ import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
-import { ChevronDown, Sun, Moon, Menu, X, Globe } from 'lucide-react';
+import { ChevronDown, Sun, Moon, Menu, X, Globe, Bug } from 'lucide-react';
+import { ReportModal } from '@/components/common/ReportModal';
 
 export function TopNavbar() {
   const { translateTerm, translateTermWithParam } = useAppTranslation();
   const pathname = usePathname();
   const router = useRouter();
   const locale = useLocale();
+
+  // 控制問題回報 Modal 開關
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   // 語系設定
   const locales = [
@@ -21,7 +25,6 @@ export function TopNavbar() {
   ];
 
   const switchLocale = (newLocale: string) => {
-    // 確保一併帶上現有 query parameters
     const search = typeof window !== 'undefined' ? window.location.search : '';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     router.replace(`${pathname}${search}` as any, { locale: newLocale });
@@ -32,7 +35,6 @@ export function TopNavbar() {
   const [isDark, setIsDark] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 初始化時讀取本機記憶的深淺色設定，若無則依據系統偏好設定
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
@@ -128,7 +130,6 @@ export function TopNavbar() {
                           {translateTerm(item.titleKey)}
                         </Link>
                       ) : (
-                        // 尚未實作的頁面，顯示為灰色不可點擊
                         <span key={j} className='px-4 py-2 text-sm text-muted-foreground/50 cursor-not-allowed text-left font-medium select-none'>
                           {translateTerm(item.titleKey)}
                         </span>
@@ -142,10 +143,19 @@ export function TopNavbar() {
             {/* 分隔線 */}
             <div className='w-px h-5 bg-border/80 mx-1'></div>
 
+            {/* 問題回報按鈕 (桌機版) */}
+            <button
+              onClick={() => setIsReportOpen(true)}
+              className='flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer'
+              title={translateTerm('Web.Report.Title')}
+            >
+              <Bug className='size-4' />
+            </button>
+
             {/* 深淺色主題切換按鈕 */}
             <button
               onClick={toggleTheme}
-              className='p-2 rounded-full bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary'
+              className='p-2 rounded-full bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer'
               title={translateTermWithParam('Web.ThemeSwitch', isDark ? 'LightMode' : 'DarkMode')}
             >
               {mounted ? isDark ? <Moon className='size-4' /> : <Sun className='size-4' /> : <div className='size-4' />}
@@ -153,7 +163,7 @@ export function TopNavbar() {
 
             {/* 語系切換下拉選單 (桌機版) */}
             <div className='relative group'>
-              <button className='p-2 rounded-full bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary'>
+              <button className='p-2 rounded-full bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer'>
                 <Globe className='size-4' />
               </button>
               <div className='absolute top-full hidden group-hover:block pt-1 min-w-32 z-30 right-0'>
@@ -162,7 +172,7 @@ export function TopNavbar() {
                     <button
                       key={l.code}
                       onClick={() => switchLocale(l.code)}
-                      className={`px-4 py-2 text-sm text-left font-medium transition-colors hover:bg-muted hover:text-primary ${
+                      className={`px-4 py-2 text-sm text-left font-medium transition-colors hover:bg-muted hover:text-primary cursor-pointer ${
                         locale === l.code ? 'text-primary bg-primary/5' : 'text-foreground'
                       }`}
                     >
@@ -177,15 +187,23 @@ export function TopNavbar() {
           {/* 行動版按鈕群組 */}
           <div className='flex md:hidden items-center gap-2 shrink-0'>
             <button
+              onClick={() => setIsReportOpen(true)}
+              className='p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer'
+              title={translateTerm('Web.Report.Title')}
+            >
+              <Globe className='size-4' />
+            </button>
+
+            <button
               onClick={toggleTheme}
-              className='p-2 rounded-full bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary'
+              className='p-2 rounded-full bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer'
               title={translateTermWithParam('Web.ThemeSwitch', isDark ? 'LightMode' : 'DarkMode')}
             >
               {mounted ? isDark ? <Moon className='size-4' /> : <Sun className='size-4' /> : <div className='size-4' />}
             </button>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className='p-2 rounded-md bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary'
+              className='p-2 rounded-md bg-muted/50 hover:bg-muted text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer'
             >
               {isMobileMenuOpen ? <X className='size-4' /> : <Menu className='size-4' />}
             </button>
@@ -219,34 +237,36 @@ export function TopNavbar() {
               </div>
             ))}
 
-              {/* 語系切換區塊 (行動版) */}
-              <div className='h-px bg-border/50 my-1'></div>
-              <div className='flex flex-col gap-2.5'>
-                <div className='font-bold text-primary text-sm flex items-center gap-2'>
-                  <Globe className='size-4' /> Language
-                </div>
-                <div className='grid grid-cols-2 gap-2'>
-                  {locales.map((l) => (
-                    <button
-                      key={l.code}
-                      onClick={() => {
-                        switchLocale(l.code);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className={`px-3 py-2 text-sm text-left rounded-md transition-colors font-medium border ${
-                        locale === l.code
-                          ? 'bg-primary/10 text-primary border-primary/20'
-                          : 'text-foreground bg-muted/40 hover:bg-primary/10 hover:text-primary border-transparent'
-                      }`}
-                    >
-                      {l.label}
-                    </button>
-                  ))}
-                </div>
+            {/* 語系切換區塊 (行動版) */}
+            <div className='h-px bg-border/50 my-1'></div>
+            <div className='flex flex-col gap-2.5'>
+              <div className='font-bold text-primary text-sm flex items-center gap-2'>
+                <Globe className='size-4' /> Language
               </div>
+              <div className='grid grid-cols-2 gap-2'>
+                {locales.map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => {
+                      switchLocale(l.code);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`px-3 py-2 text-sm text-left rounded-md transition-colors font-medium border cursor-pointer ${
+                      locale === l.code
+                        ? 'bg-primary/10 text-primary border-primary/20'
+                        : 'text-foreground bg-muted/40 hover:bg-primary/10 hover:text-primary border-transparent'
+                    }`}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>
+
+      <ReportModal isOpen={isReportOpen} onClose={() => setIsReportOpen(false)} />
     </div>
   );
 }
