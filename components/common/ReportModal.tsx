@@ -83,17 +83,7 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
       const res = await fetch('/api/report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          category,
-          content: content.trim(),
-          nickname: nickname.trim(),
-          email: email.trim(),
-          url: currentUrl,
-          title: currentTitle,
-          userAgent,
-          resolution,
-          bot_check: botCheck,
-        }),
+        body: JSON.stringify({ category, content: content.trim(), nickname: nickname.trim(), email: email.trim(), url: currentUrl, title: currentTitle, userAgent, resolution, bot_check: botCheck })
       });
 
       const data = await res.json();
@@ -111,7 +101,6 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
         onClose();
         setSubmitStatus('idle');
       }, 2500);
-
     } catch (error: unknown) {
       const err = error as Error;
       console.error('回報發送失敗:', err);
@@ -127,21 +116,14 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
 
   return createPortal(
     <div className='fixed inset-0 z-9999 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in-0'>
-      <div 
-        className='relative w-full max-w-lg p-6 bg-card border border-border rounded-xl shadow-lg'
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className='relative w-full max-w-lg p-6 bg-card border border-border rounded-xl shadow-lg' onClick={(e) => e.stopPropagation()}>
         {/* 標題與說明 */}
         <div className='flex items-center justify-between pb-3 border-b border-border/50'>
           <div className='flex items-center gap-2'>
             <Bug className='size-5 text-primary' />
             <h3 className='text-lg font-bold'>{translateTerm('Web.Report.Title')}</h3>
           </div>
-          <button 
-            onClick={onClose} 
-            className='text-muted-foreground hover:text-foreground p-1 text-sm rounded-md hover:bg-muted cursor-pointer'
-            disabled={isSubmitting}
-          >
+          <button onClick={onClose} className='text-muted-foreground hover:text-foreground p-1 text-sm rounded-md hover:bg-muted cursor-pointer' disabled={isSubmitting}>
             ✕
           </button>
         </div>
@@ -156,17 +138,9 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
         ) : (
           /* 填寫表單畫面 */
           <form onSubmit={handleSubmit} className='space-y-4 mt-4 text-sm'>
-            
             {/* 蜜罐防禦 (Honeypot) */}
             <div className='absolute left-[-9999px] top-0' aria-hidden='true'>
-              <input 
-                type='text' 
-                name='bot_check' 
-                tabIndex={-1} 
-                value={botCheck} 
-                onChange={(e) => setBotCheck(e.target.value)} 
-                autoComplete='off'
-              />
+              <input type='text' name='bot_check' tabIndex={-1} value={botCheck} onChange={(e) => setBotCheck(e.target.value)} autoComplete='off' />
             </div>
 
             {/* 自動定位提示 */}
@@ -180,9 +154,10 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
             {/* 暱稱與 Email */}
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
               <div className='space-y-1'>
-                <label className='font-medium text-foreground'>{translateTerm('Web.Report.Nickname')}</label>
+                <div className='font-medium text-foreground'>{translateTerm('Web.Report.Nickname')}</div>
                 <input
                   type='text'
+                  name='nickname'
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value)}
                   placeholder={translateTerm('Web.Report.NicknamePlaceholder')}
@@ -191,24 +166,28 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
                 />
               </div>
               <div className='space-y-1'>
-                <label className='font-medium text-foreground'>
+                <div className='font-medium text-foreground'>
                   {translateTerm('Web.Report.Email')} <span className='text-xs text-muted-foreground'>{translateTerm('Web.Report.Optional')}</span>
-                </label>
+                </div>
                 <input
                   type='email'
+                  name='email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={translateTerm('Web.Report.EmailPlaceholder')}
                   maxLength={50}
                   className='w-full px-3 py-1.5 border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm'
+                  autoComplete='email'
                 />
               </div>
             </div>
 
             {/* 問題類別 */}
             <div className='space-y-1'>
-              <label className='font-medium text-foreground'>{translateTerm('Web.Report.Category')} <span className='text-destructive'>*</span></label>
-              <Select value={category} onValueChange={setCategory}>
+              <div className='font-medium text-foreground'>
+                {translateTerm('Web.Report.Category')} <span className='text-destructive'>*</span>
+              </div>
+              <Select name='category' value={category} onValueChange={setCategory}>
                 <SelectTrigger className='w-full h-9'>
                   <SelectValue placeholder={translateTerm('Web.Report.CategoryPlaceholder')} />
                 </SelectTrigger>
@@ -223,8 +202,12 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
 
             {/* 問題描述 */}
             <div className='space-y-1'>
-              <label className='font-medium text-foreground'>{translateTerm('Web.Report.ContentLabel')} <span className='text-destructive'>*</span></label>
+              <div className='font-medium text-foreground'>
+                {translateTerm('Web.Report.ContentLabel')} <span className='text-destructive'>*</span>
+              </div>
               <textarea
+                name='content'
+                aria-label={translateTerm('Web.Report.ContentLabel')}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder={translateTerm('Web.Report.ContentPlaceholder')}
@@ -233,9 +216,7 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
                 required
                 className='w-full p-3 border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm resize-none'
               />
-              <div className='text-right text-xs text-muted-foreground'>
-                {content.length}/500
-              </div>
+              <div className='text-right text-xs text-muted-foreground'>{content.length}/500</div>
             </div>
 
             {/* 錯誤提示 */}
@@ -258,7 +239,9 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
                     <span>{translateTerm('Web.Report.Submitting')}</span>
                   </>
                 ) : cooldown > 0 ? (
-                  <span>{translateTerm('Web.Report.Cooldown')} ({cooldown}s)</span>
+                  <span>
+                    {translateTerm('Web.Report.Cooldown')} ({cooldown}s)
+                  </span>
                 ) : (
                   <>
                     <Send className='size-3.5' />
