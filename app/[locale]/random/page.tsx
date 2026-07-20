@@ -3,9 +3,10 @@
 
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { Search } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
-import { ParsedText } from '@/components/shared/ParsedText';
+import { ParsedText, TriggerContext } from '@/components/shared/ParsedText';
 import { FlowContent } from '@/components/shared/FlowContent';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
@@ -88,6 +89,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
 
   // 篩選變更時回到第一頁
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
   }, [periodFilter, positionFilter]);
 
@@ -95,29 +97,53 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
   useEffect(() => {
     if (list.length === 0) return;
 
+    // 檢查 Position 是否包含目標 ID
+    const checkPositionHasTarget = (posItem: any, target: string) => {
+      if (posItem.id === target) return true;
+      // 檢查底下所有的隨機事件 (event) 裡面的 eventFlow
+      if (Object.keys(posItem.event || {}).some((k) => posItem.event[k].eventFlow?.some((f: any) => f.id === target))) {
+        return true;
+      }
+      return false;
+    };
+
     const locateHash = () => {
       if (typeof window !== 'undefined' && window.location.hash) {
-        const targetId = decodeURIComponent(window.location.hash.substring(1));
-        if (!targetId) return;
+        const rawHash = decodeURIComponent(window.location.hash.substring(1));
+        if (!rawHash) return;
 
-        const targetIndex = list.findIndex((item: any) =>
-          item.id === targetId ||
-          Object.keys(item.event || {}).some((k) => item.event[k].eventFlow?.some((f: any) => f.id === targetId))
-        );
+        // 解析 targetId 與來源 fromPositionId
+        const [targetId, queryPart] = rawHash.split('?');
+        const urlParams = new URLSearchParams(queryPart || '');
+        const fromPositionId = urlParams.get('from');
 
+        let targetIndex = -1;
+
+        // 優先檢查來源 Position 內部
+        if (fromPositionId) {
+          const localIndex = list.findIndex((item: any) => item.id === fromPositionId && checkPositionHasTarget(item, targetId));
+          if (localIndex !== -1) {
+            targetIndex = localIndex;
+          }
+        }
+
+        // 取得全域第 1 組
+        if (targetIndex === -1) {
+          targetIndex = list.findIndex((item: any) => checkPositionHasTarget(item, targetId));
+        }
+
+        // 執行換頁與定位
         if (targetIndex !== -1) {
           setPage((currentPage) => {
             const requiredPage = Math.ceil((targetIndex + 1) / itemsPerPage);
             return requiredPage > currentPage ? requiredPage : currentPage;
           });
-          
+
           setTimeout(() => {
-            // 重組帶有 position.id 保證唯一性的複合 DOM ID
             const posItem = list[targetIndex];
             let elId = `action-${posItem.id}`;
-            
+
             if (posItem.id !== targetId) {
-              // 尋找目標在哪個 event 裡
               for (const [rId, rEv] of Object.entries(posItem.event || {}) as any) {
                 const flowIdx = (rEv.eventFlow || []).findIndex((f: any) => f.id === targetId);
                 if (flowIdx !== -1) {
@@ -130,7 +156,6 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
             const el = document.getElementById(elId);
             if (el) {
               el.scrollIntoView({ behavior: 'smooth' });
-              // 高光提示動畫
               el.classList.add('bg-primary/20', 'ring-1', 'ring-primary', 'rounded-sm', 'transition-all', 'duration-500');
               setTimeout(() => el.classList.remove('bg-primary/20', 'ring-1', 'ring-primary'), 2000);
             }
@@ -139,11 +164,11 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
       }
     };
 
-    locateHash(); // 初始化時執行
+    locateHash();
 
     window.addEventListener('hashchange', locateHash);
     return () => window.removeEventListener('hashchange', locateHash);
-  }, [list]); // 僅依賴 list
+  }, [list, itemsPerPage]);
 
   // 過濾清單
   const filteredList = useMemo(() => {
@@ -151,18 +176,20 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
 
     if (periodFilter !== 'all') sourceList = sourceList.filter((item: any) => item.period === periodFilter);
     if (positionFilter !== 'all') sourceList = sourceList.filter((item: any) => item.position === positionFilter);
-    
+
     if (!searchTarget) return sourceList;
     const searchLower = searchTarget.trim().toLowerCase();
     const searchTerms = searchLower.split(/\s+/).filter(Boolean);
 
     return sourceList.filter((item: any) => {
       // 合併所有搜尋關聯字
-      const eventsText = Object.entries(item.event || {}).map(([rId, rEv]: any) => {
-        const cond = rEv.condition ? rEv.condition.join(' ') : '';
-        const flows = (rEv.eventFlow || []).map((f: any) => `${f.id} ${translateTerm(`${f.type}.Name.${f.id}`)}`).join(' ');
-        return `${translateTerm(`Position.Class.${rEv.class}`)} ${rId} ${cond} ${flows}`;
-      }).join(' ');
+      const eventsText = Object.entries(item.event || {})
+        .map(([rId, rEv]: any) => {
+          const cond = rEv.condition ? rEv.condition.join(' ') : '';
+          const flows = (rEv.eventFlow || []).map((f: any) => `${f.id} ${translateTerm(`${f.type}.Name.${f.id}`)}`).join(' ');
+          return `${translateTerm(`Position.Class.${rEv.class}`)} ${rId} ${cond} ${flows}`;
+        })
+        .join(' ');
 
       const targetString = `
         ${item.id} ${translateParagraph(item.period)} ${translateParagraph(item.position)} ${translateParagraph(item.action)}
@@ -258,23 +285,94 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
             </thead>
             {displayList.map((posItem: any) => {
               const randomEvents = Object.entries(posItem.event || {}).sort(([idA], [idB]) => idA.localeCompare(idB));
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const posRowCount = Math.max(1, randomEvents.reduce((acc, [_, rEv]: any) => acc + Math.max(1, (rEv.eventFlow || []).length), 0));
+              const posRowCount = Math.max(
+                1,
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                randomEvents.reduce((acc, [_, rEv]: any) => acc + Math.max(1, (rEv.eventFlow || []).length), 0)
+              );
 
               return (
-                <tbody
-                  key={posItem.id}
-                  className='divide-y divide-border/30 border-b border-border/70 transition-colors hover:bg-muted/20'
-                >
-                  {randomEvents.length > 0 ? (
-                    randomEvents.map(([rId, rEv]: any, rIdx: number) => {
-                      const flows = rEv.eventFlow || [];
-                      const rRowCount = Math.max(1, flows.length);
-                      
-                      return flows.length > 0 ? (
-                        flows.map((flow: any, fIdx: number) => (
-                          <tr key={`${posItem.id}-${rId}-${flow.id}-${fIdx}`}>
-                            {rIdx === 0 && fIdx === 0 && (
+                <TriggerContext.Provider key={posItem.id} value={posItem.id}>
+                  <tbody className='divide-y divide-border/30 border-b border-border/70 transition-colors hover:bg-muted/20'>
+                    {randomEvents.length > 0 ? (
+                      randomEvents.map(([rId, rEv]: any, rIdx: number) => {
+                        const flows = rEv.eventFlow || [];
+                        const rRowCount = Math.max(1, flows.length);
+
+                        return flows.length > 0 ? (
+                          flows.map((flow: any, fIdx: number) => (
+                            <tr key={`${posItem.id}-${rId}-${flow.id}-${fIdx}`}>
+                              {rIdx === 0 && fIdx === 0 && (
+                                <>
+                                  <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
+                                    {translateParagraph(posItem.period)}
+                                  </td>
+                                  <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
+                                    {translateParagraph(posItem.position) || '-'}
+                                  </td>
+                                  <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
+                                    <div id={`action-${posItem.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
+                                      <Link href={`/position/${posItem.id}`} target='_blank' rel='noreferrer' className='hover:underline'>
+                                        {posItem.id}
+                                      </Link>
+                                    </div>
+                                    <div className='font-bold mt-1 text-foreground'>{translateParagraph(posItem.action)}</div>
+                                  </td>
+                                </>
+                              )}
+                              {fIdx === 0 && (
+                                <>
+                                  <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap'>
+                                    <div className='font-bold text-foreground'>{translateTerm(`Position.Class.${rEv.class}`)}</div>
+                                    <div className='text-muted-foreground mt-1'>{rEv.seq}</div>
+                                  </td>
+                                  <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
+                                    <div className='flex flex-col gap-3 font-mixed'>
+                                      {rEv.condition && rEv.condition.length > 0 && (
+                                        <div className='flex flex-col gap-1.5'>
+                                          <div className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.Condition')}</div>
+                                          {rEv.condition.map((cond: string, i: number) => (
+                                            <div key={i} className='flex items-start w-full gap-0.5'>
+                                              <span className='pl-1.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
+                                              <div className='items-center gap-x-0.5 gap-y-1 flex-1 min-w-0'>
+                                                <ParsedText text={cond} />
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                      {rEv.rate && rEv.rate.length > 0 && (
+                                        <div className='flex flex-col gap-1.5'>
+                                          <div className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.Rate')}</div>
+                                          {rEv.rate.map((rate: string, i: number) => (
+                                            <div key={i} className='pl-1.5'>
+                                              <ParsedText text={rate} />
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                      {(!rEv.condition || rEv.condition.length === 0) && (!rEv.rate || rEv.rate.length === 0) && <span className='text-muted-foreground italic pl-1.5'>-</span>}
+                                    </div>
+                                  </td>
+                                </>
+                              )}
+                              <td className='p-2 align-top border-r border-border/30 whitespace-normal bg-background/30'>
+                                <div id={`flow-${posItem.id}-${rId}-${flow.id}-${fIdx}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary/80 break-all'>
+                                  <Link href={`/${flow.type.toLowerCase()}/${flow.id}`} target='_blank' rel='noreferrer' className='hover:underline'>
+                                    {flow.id}
+                                  </Link>
+                                </div>
+                                <div className='font-bold mt-1 break-all'>{translateTerm(`${flow.type}.Name.${flow.id}`)}</div>
+                                <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`${flow.type}.Desc.${flow.id}`, undefined, 0)}</div>
+                              </td>
+                              <td className='p-2 align-top whitespace-normal bg-background/30'>
+                                <FlowContent flow={flow} scriptData={scriptData} combatData={combatData} battleData={battleData} />
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr key={`${posItem.id}-${rId}-empty`}>
+                            {rIdx === 0 && (
                               <>
                                 <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
                                   {translateParagraph(posItem.period)}
@@ -283,133 +381,72 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                                   {translateParagraph(posItem.position) || '-'}
                                 </td>
                                 <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                                  <div id={`action-${posItem.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{posItem.id}</div>
+                                  <div id={`action-${posItem.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
+                                    <Link href={`/position/${posItem.id}`} target='_blank' rel='noreferrer' className='hover:underline'>
+                                      {posItem.id}
+                                    </Link>
+                                  </div>
                                   <div className='font-bold mt-1 text-foreground'>{translateParagraph(posItem.action)}</div>
                                 </td>
                               </>
                             )}
-                            {fIdx === 0 && (
-                              <>
-                                <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap'>
-                                  <div className='font-bold text-foreground'>{translateTerm(`Position.Class.${rEv.class}`)}</div>
-                                  <div className='text-muted-foreground mt-1'>{rEv.seq}</div>
-                                </td>
-                                <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                                  <div className='flex flex-col gap-3 font-mixed'>
-                                    {rEv.condition && rEv.condition.length > 0 && (
-                                      <div className='flex flex-col gap-1.5'>
-                                        <div className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.Condition')}</div>
-                                        {rEv.condition.map((cond: string, i: number) => (
-                                          <div key={i} className='flex items-start w-full gap-0.5'>
-                                            <span className='pl-1.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
-                                            <div className='items-center gap-x-0.5 gap-y-1 flex-1 min-w-0'>
-                                              <ParsedText text={cond} />
-                                            </div>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                    {rEv.rate && rEv.rate.length > 0 && (
-                                      <div className='flex flex-col gap-1.5'>
-                                        <div className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.Rate')}</div>
-                                        {rEv.rate.map((rate: string, i: number) => (
-                                          <div key={i} className='pl-1.5'>
-                                            <ParsedText text={rate} />
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                    {(!rEv.condition || rEv.condition.length === 0) && (!rEv.rate || rEv.rate.length === 0) && (
-                                      <span className='text-muted-foreground italic pl-1.5'>-</span>
-                                    )}
-                                  </div>
-                                </td>
-                              </>
-                            )}
-                            <td className='p-2 align-top border-r border-border/30 whitespace-normal bg-background/30'>
-                              <div id={`flow-${posItem.id}-${rId}-${flow.id}-${fIdx}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary/80 break-all'>{flow.id}</div>
-                              <div className='font-bold mt-1 break-all'>{translateTerm(`${flow.type}.Name.${flow.id}`)}</div>
-                              <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`${flow.type}.Desc.${flow.id}`, undefined, 0)}</div>
+                            <td className='p-2 align-top border-r border-border/30 whitespace-nowrap'>
+                              <div className='font-bold text-foreground'>{translateTerm(`Position.Class.${rEv.class}`)}</div>
+                              <div className='text-muted-foreground mt-1'>{rEv.seq}</div>
                             </td>
-                            <td className='p-2 align-top whitespace-normal bg-background/30'>
-                              <FlowContent flow={flow} scriptData={scriptData} combatData={combatData} battleData={battleData} />
+                            <td className='p-2 align-top border-r border-border/30 whitespace-normal'>
+                              <div className='flex flex-col gap-3 font-mixed'>
+                                {rEv.condition && rEv.condition.length > 0 && (
+                                  <div className='flex flex-col gap-1.5'>
+                                    <div className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.Condition')}</div>
+                                    {rEv.condition.map((cond: string, i: number) => (
+                                      <div key={i} className='flex items-start w-full gap-0.5'>
+                                        <span className='pl-1.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
+                                        <div className='items-center gap-x-0.5 gap-y-1 flex-1 min-w-0'>
+                                          <ParsedText text={cond} />
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                {rEv.rate && rEv.rate.length > 0 && (
+                                  <div className='flex flex-col gap-1.5'>
+                                    <div className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.Rate')}</div>
+                                    {rEv.rate.map((rate: string, i: number) => (
+                                      <div key={i} className='pl-1.5'>
+                                        <ParsedText text={rate} />
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                {(!rEv.condition || rEv.condition.length === 0) && (!rEv.rate || rEv.rate.length === 0) && <span className='text-muted-foreground italic pl-1.5'>-</span>}
+                              </div>
+                            </td>
+                            <td colSpan={2} className='px-4 py-3 align-middle text-center text-muted-foreground italic bg-background/30'>
+                              -
                             </td>
                           </tr>
-                        ))
-                      ) : (
-                        <tr key={`${posItem.id}-${rId}-empty`}>
-                          {rIdx === 0 && (
-                            <>
-                              <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
-                                {translateParagraph(posItem.period)}
-                              </td>
-                              <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
-                                {translateParagraph(posItem.position) || '-'}
-                              </td>
-                              <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                                <div id={`action-${posItem.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{posItem.id}</div>
-                                <div className='font-bold mt-1 text-foreground'>{translateParagraph(posItem.action)}</div>
-                              </td>
-                            </>
-                          )}
-                          <td className='p-2 align-top border-r border-border/30 whitespace-nowrap'>
-                            <div className='font-bold text-foreground'>{translateTerm(`Position.Class.${rEv.class}`)}</div>
-                            <div className='text-muted-foreground mt-1'>{rEv.seq}</div>
-                          </td>
-                          <td className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                            <div className='flex flex-col gap-3 font-mixed'>
-                              {rEv.condition && rEv.condition.length > 0 && (
-                                <div className='flex flex-col gap-1.5'>
-                                  <div className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.Condition')}</div>
-                                  {rEv.condition.map((cond: string, i: number) => (
-                                    <div key={i} className='flex items-start w-full gap-0.5'>
-                                      <span className='pl-1.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
-                                      <div className='items-center gap-x-0.5 gap-y-1 flex-1 min-w-0'>
-                                        <ParsedText text={cond} />
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                              {rEv.rate && rEv.rate.length > 0 && (
-                                <div className='flex flex-col gap-1.5'>
-                                  <div className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.Rate')}</div>
-                                  {rEv.rate.map((rate: string, i: number) => (
-                                    <div key={i} className='pl-1.5'>
-                                      <ParsedText text={rate} />
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                              {(!rEv.condition || rEv.condition.length === 0) && (!rEv.rate || rEv.rate.length === 0) && (
-                                <span className='text-muted-foreground italic pl-1.5'>-</span>
-                              )}
-                            </div>
-                          </td>
-                          <td colSpan={2} className='px-4 py-3 align-middle text-center text-muted-foreground italic bg-background/30'>
-                            -
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>
-                        {translateParagraph(posItem.period)}
-                      </td>
-                      <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>
-                        {translateParagraph(posItem.position) || '-'}
-                      </td>
-                      <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
-                        <div id={`action-${posItem.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{posItem.id}</div>
-                        <div className='font-bold mt-1 text-foreground'>{translateParagraph(posItem.action)}</div>
-                      </td>
-                      <td colSpan={4} className='px-4 py-3 align-middle text-center text-muted-foreground italic bg-background/30'>
-                        -
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>{translateParagraph(posItem.period)}</td>
+                        <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>{translateParagraph(posItem.position) || '-'}</td>
+                        <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
+                          <div id={`action-${posItem.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
+                            <Link href={`/position/${posItem.id}`} target='_blank' rel='noreferrer' className='hover:underline'>
+                              {posItem.id}
+                            </Link>
+                          </div>
+                          <div className='font-bold mt-1 text-foreground'>{translateParagraph(posItem.action)}</div>
+                        </td>
+                        <td colSpan={4} className='px-4 py-3 align-middle text-center text-muted-foreground italic bg-background/30'>
+                          -
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </TriggerContext.Provider>
               );
             })}
           </table>

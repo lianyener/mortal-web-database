@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useContext, createContext } from 'react';
 import { useRouter, usePathname, Link } from '@/i18n/navigation';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 
+// 記錄當前所屬的 Trigger ID
+export const TriggerContext = createContext<string | null>(null);
+
 export function ParsedText({ text }: { text: string }) {
   const router = useRouter();
   const pathname = usePathname() || '';
+  const currentTriggerId = useContext(TriggerContext);
   const { translateTerm, translateParagraph, translateTermWithParam } = useAppTranslation();
 
   if (!text) return null;
@@ -86,7 +90,7 @@ export function ParsedText({ text }: { text: string }) {
               case 'Battle':
                 if (inEventPage || inRandomPage) {
                   isHashNav = true;
-                  href = `#${targetId}`;
+                  href = currentTriggerId ? `#${targetId}?from=${currentTriggerId}` : `#${targetId}`;
                 } else {
                   isPageNav = true;
                   href = `/${category.toLowerCase()}/${targetId}`;
@@ -95,7 +99,7 @@ export function ParsedText({ text }: { text: string }) {
               case 'Trigger':
                 if (inEventPage) {
                   isHashNav = true;
-                  href = `#${targetId}`;
+                  href = currentTriggerId ? `#${targetId}?from=${currentTriggerId}` : `#${targetId}`;
                 } else {
                   isPageNav = true;
                   isNewWindow = inRandomPage;
@@ -105,7 +109,7 @@ export function ParsedText({ text }: { text: string }) {
               case 'Position':
                 if (inRandomPage) {
                   isHashNav = true;
-                  href = `#${targetId}`;
+                  href = currentTriggerId ? `#${targetId}?from=${currentTriggerId}` : `#${targetId}`;
                 } else {
                   isPageNav = true;
                   isNewWindow = inEventPage;
@@ -152,9 +156,9 @@ export function ParsedText({ text }: { text: string }) {
               if (isHashNav) {
                 e.preventDefault();
                 if (window.location.hash === href) {
-                  window.dispatchEvent(new HashChangeEvent('hashchange')); // Hash 沒變時強制觸發
+                  window.dispatchEvent(new HashChangeEvent('hashchange'));
                 } else {
-                  window.location.hash = targetId;
+                  window.location.hash = href;
                 }
                 return;
               }
@@ -229,8 +233,7 @@ export function ParsedText({ text }: { text: string }) {
                   const valDef = translateTerm(`Flag.${flagId}.${flagPhase}.${i}`, undefined, 0);
                   if (valDef) {
                     tipDesc += `\n${i}: ${valDef}`;
-                  }
-                  else {
+                  } else {
                     break;
                   }
                 }
@@ -241,7 +244,10 @@ export function ParsedText({ text }: { text: string }) {
                 tipDesc = translateTerm(`GroupStat.${targetId}.Desc`, undefined, 0);
                 break;
               case 'Time':
-                tipName = (translateTerm(`Time.Name.${targetId}`, undefined, 0) || translateTerm(`Trigger.Name.${targetId}`, undefined, 0) || translateTerm(`Script.Name.${targetId.toLowerCase()}`, undefined, 0)) + ` (${targetId})`;
+                tipName =
+                  (translateTerm(`Time.Name.${targetId}`, undefined, 0) ||
+                    translateTerm(`Trigger.Name.${targetId}`, undefined, 0) ||
+                    translateTerm(`Script.Name.${targetId.toLowerCase()}`, undefined, 0)) + ` (${targetId})`;
                 break;
               case 'Position':
                 tipName = translateTerm(`Position.Action.${targetId}`, undefined, 0) + ` (${targetId})`;
@@ -282,12 +288,7 @@ export function ParsedText({ text }: { text: string }) {
               );
             } else {
               triggerContent = (
-                <span
-                  onClick={isLink ? handleClick : undefined}
-                  role={isLink ? 'button' : undefined}
-                  tabIndex={isLink ? 0 : undefined}
-                  className={className}
-                >
+                <span onClick={isLink ? handleClick : undefined} role={isLink ? 'button' : undefined} tabIndex={isLink ? 0 : undefined} className={className}>
                   {contentNode}
                 </span>
               );
@@ -295,9 +296,7 @@ export function ParsedText({ text }: { text: string }) {
 
             return (
               <HoverCard key={index} openDelay={200} closeDelay={100}>
-                <HoverCardTrigger asChild>
-                  {triggerContent}
-                </HoverCardTrigger>
+                <HoverCardTrigger asChild>{triggerContent}</HoverCardTrigger>
                 {(tipName || tipDesc) && (
                   <HoverCardContent className='w-80 z-50 flex flex-col gap-1.5' align='start' sideOffset={4}>
                     {tipName && <div className='font-bold text-sm text-foreground'>{tipName}</div>}

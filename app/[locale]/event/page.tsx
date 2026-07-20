@@ -3,9 +3,10 @@
 
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { Search, Eye, EyeOff } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
-import { ParsedText } from '@/components/shared/ParsedText';
+import { ParsedText, TriggerContext } from '@/components/shared/ParsedText';
 import { FlowContent } from '@/components/shared/FlowContent';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
@@ -105,6 +106,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
 
   // 篩選變更時回到第一頁
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
   }, [activeOnly, typeFilter, sheetFilter]);
 
@@ -112,25 +114,46 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
   useEffect(() => {
     if (list.length === 0) return;
 
+    // 檢查 trigger 是否包含目標 ID
+    const checkTriggerHasTarget = (trigger: any, target: string) => {
+      if (trigger.id === target || trigger.mission === target) return true;
+      if (trigger.eventFlow?.some((f: any) => f.id === target)) return true;
+      return false;
+    };
+
     const locateHash = () => {
       if (typeof window !== 'undefined' && window.location.hash) {
-        const targetId = decodeURIComponent(window.location.hash.substring(1));
-        if (!targetId) return;
+        const rawHash = decodeURIComponent(window.location.hash.substring(1));
+        if (!rawHash) return;
 
-        const targetIndex = list.findIndex((item: any) =>
-          item.id === targetId ||
-          item.mission === targetId ||
-          item.eventFlow?.some((f: any) => f.id === targetId)
-        );
+        // 解析 targetId 與來源 fromTriggerId
+        const [targetId, queryPart] = rawHash.split('?');
+        const urlParams = new URLSearchParams(queryPart || '');
+        const fromTriggerId = urlParams.get('from');
 
+        let targetIndex = -1;
+
+        // 優先檢查來源 Trigger 內部
+        if (fromTriggerId) {
+          const localIndex = list.findIndex((item: any) => item.id === fromTriggerId && checkTriggerHasTarget(item, targetId));
+          if (localIndex !== -1) {
+            targetIndex = localIndex;
+          }
+        }
+
+        // 取得全域第 1 組
+        if (targetIndex === -1) {
+          targetIndex = list.findIndex((item: any) => checkTriggerHasTarget(item, targetId));
+        }
+
+        // 執行換頁與捲動
         if (targetIndex !== -1) {
           setPage((currentPage) => {
             const requiredPage = Math.ceil((targetIndex + 1) / itemsPerPage);
             return requiredPage > currentPage ? requiredPage : currentPage;
           });
-          
+
           setTimeout(() => {
-            // 重組帶有 trigger.id 保證唯一性的複合 DOM ID
             const trigger = list[targetIndex];
             let elId = `trigger-${trigger.id}`;
             if (trigger.mission === targetId) {
@@ -143,7 +166,6 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
             const el = document.getElementById(elId);
             if (el) {
               el.scrollIntoView({ behavior: 'smooth' });
-              // 高光提示動畫
               el.classList.add('bg-primary/20', 'ring-1', 'ring-primary', 'rounded-sm', 'transition-all', 'duration-500');
               setTimeout(() => el.classList.remove('bg-primary/20', 'ring-1', 'ring-primary'), 2000);
             }
@@ -152,11 +174,11 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
       }
     };
 
-    locateHash(); // 初始化時執行
+    locateHash();
 
     window.addEventListener('hashchange', locateHash);
     return () => window.removeEventListener('hashchange', locateHash);
-  }, [list]); // 僅依賴 list
+  }, [list, itemsPerPage]);
 
   // 過濾清單
   const filteredList = useMemo(() => {
@@ -164,7 +186,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
 
     if (activeOnly) sourceList = sourceList.filter((item: any) => item.active === true && item.script);
     if (typeFilter !== 'all') sourceList = sourceList.filter((item: any) => item.type === typeFilter);
-    
+
     if (sheetFilter !== 'all') {
       if (sheetFilter === 'unset') {
         sourceList = sourceList.filter((item: any) => !item.sheet);
@@ -249,9 +271,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                   {translateTerm(`Sheet.${s}`)}
                 </SelectItem>
               ))}
-              <SelectItem value='unset'>
-                {translateTerm('Web.Term.Unset')}
-              </SelectItem>
+              <SelectItem value='unset'>{translateTerm('Web.Term.Unset')}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -293,115 +313,134 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
               const rowCount = Math.max(1, flows.length);
 
               return (
-                <tbody
-                  key={trigger.id}
-                  className={`divide-y divide-border/30 border-b border-border/70 transition-colors ${!trigger.active ? 'opacity-50 grayscale hover:opacity-100 hover:grayscale-0' : ''}`}
-                >
-                  {flows.length > 0 ? (
-                    flows.map((flow: any, idx: number) => (
-                      <tr key={`${trigger.id}-${flow.id}-${idx}`}>
-                        {idx === 0 && (
-                          <>
-                            <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                              <div id={`mission-${trigger.id}-${trigger.mission}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{trigger.mission}</div>
-                              <div className='font-bold mt-1 break-all'>{translateTerm(`Mission.Name.${trigger.mission}`)}</div>
-                              <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Mission.Desc.${trigger.mission}`, undefined, 0)}</div>
-                            </td>
-                            <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                              <div id={`trigger-${trigger.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{trigger.id}</div>
-                              <div className='font-bold mt-1 break-all'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
-                              <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
-                            </td>
-                            <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
-                              {translateTerm(`Web.Label.${trigger.type}`)}
-                            </td>
-                            <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
-                              <div className='flex flex-col mt-0.5 gap-1.5'>
-                                <div className='flex flex-col'>
-                                  <span className='text-xs font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.MinTime')}</span>
-                                  <span>{formatTime(trigger.minTime)}</span>
+                <TriggerContext.Provider key={trigger.id} value={trigger.id}>
+                  <tbody className={`divide-y divide-border/30 border-b border-border/70 transition-colors ${!trigger.active ? 'opacity-50 grayscale hover:opacity-100 hover:grayscale-0' : ''}`}>
+                    {flows.length > 0 ? (
+                      flows.map((flow: any, idx: number) => (
+                        <tr key={`${trigger.id}-${flow.id}-${idx}`}>
+                          {idx === 0 && (
+                            <>
+                              <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
+                                <div id={`mission-${trigger.id}-${trigger.mission}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
+                                  <Link href={`/mission/${trigger.mission}`} target='_blank' rel='noreferrer' className='hover:underline'>
+                                    {trigger.mission}
+                                  </Link>
                                 </div>
-                                <div className='flex flex-col'>
-                                  <span className='text-xs font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.MaxTime')}</span>
-                                  <span>{formatTime(trigger.maxTime)}</span>
+                                <div className='font-bold mt-1 break-all'>{translateTerm(`Mission.Name.${trigger.mission}`)}</div>
+                                <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Mission.Desc.${trigger.mission}`, undefined, 0)}</div>
+                              </td>
+                              <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
+                                <div id={`trigger-${trigger.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
+                                  <Link href={`/trigger/${trigger.id}`} target='_blank' rel='noreferrer' className='hover:underline'>
+                                    {trigger.id}
+                                  </Link>
                                 </div>
-                              </div>
-                            </td>
-                            <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
-                              {trigger.condition ? (
-                                <div className='flex flex-col items-start gap-1 text-sm/normal'>
-                                  {trigger.condition.map((item: any, i: number) => (
-                                    <div key={i} className='flex items-start w-full gap-0.5'>
-                                      <span className='pl-1.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
-                                      <div className='items-center gap-x-0.5 gap-y-1 flex-1 min-w-0'>
-                                        <ParsedText text={item} />
+                                <div className='font-bold mt-1 break-all'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
+                                <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
+                              </td>
+                              <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
+                                {translateTerm(`Web.Label.${trigger.type}`)}
+                              </td>
+                              <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
+                                <div className='flex flex-col mt-0.5 gap-1.5'>
+                                  <div className='flex flex-col'>
+                                    <span className='text-xs font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.MinTime')}</span>
+                                    <span>{formatTime(trigger.minTime)}</span>
+                                  </div>
+                                  <div className='flex flex-col'>
+                                    <span className='text-xs font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.MaxTime')}</span>
+                                    <span>{formatTime(trigger.maxTime)}</span>
+                                  </div>
+                                </div>
+                              </td>
+                              <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
+                                {trigger.condition ? (
+                                  <div className='flex flex-col items-start gap-1 text-sm/normal'>
+                                    {trigger.condition.map((item: any, i: number) => (
+                                      <div key={i} className='flex items-start w-full gap-0.5'>
+                                        <span className='pl-1.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
+                                        <div className='items-center gap-x-0.5 gap-y-1 flex-1 min-w-0'>
+                                          <ParsedText text={item} />
+                                        </div>
                                       </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              ) : (
-                                <span className='text-muted-foreground italic pl-1.5'>-</span>
-                              )}
-                            </td>
-                          </>
-                        )}
-                        <td className='p-2 align-top border-r border-border/30 whitespace-normal bg-background/30'>
-                          <div id={`flow-${trigger.id}-${flow.id}-${idx}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary/80 break-all'>{flow.id}</div>
-                          <div className='font-bold mt-1 break-all'>{translateTerm(`${flow.type}.Name.${flow.id}`)}</div>
-                          <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`${flow.type}.Desc.${flow.id}`, undefined, 0)}</div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <span className='text-muted-foreground italic pl-1.5'>-</span>
+                                )}
+                              </td>
+                            </>
+                          )}
+                          <td className='p-2 align-top border-r border-border/30 whitespace-normal bg-background/30'>
+                            <div id={`flow-${trigger.id}-${flow.id}-${idx}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary/80 break-all'>
+                              <Link href={`/${flow.type.toLowerCase()}/${flow.id}`} target='_blank' rel='noreferrer' className='hover:underline'>
+                                {flow.id}
+                              </Link>
+                            </div>
+                            <div className='font-bold mt-1 break-all'>{translateTerm(`${flow.type}.Name.${flow.id}`)}</div>
+                            <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`${flow.type}.Desc.${flow.id}`, undefined, 0)}</div>
+                          </td>
+                          <td className='p-2 align-top whitespace-normal bg-background/30'>
+                            <FlowContent flow={flow} scriptData={scriptData} combatData={combatData} battleData={battleData} />
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
+                          <div id={`mission-${trigger.id}-${trigger.mission}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
+                            <Link href={`/mission/${trigger.mission}`} target='_blank' rel='noreferrer' className='hover:underline'>
+                              {trigger.mission}
+                            </Link>
+                          </div>
+                          <div className='font-bold mt-1 break-all'>{translateTerm(`Mission.Name.${trigger.mission}`)}</div>
+                          <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Mission.Desc.${trigger.mission}`, undefined, 0)}</div>
                         </td>
-                        <td className='p-2 align-top whitespace-normal bg-background/30'>
-                          <FlowContent flow={flow} scriptData={scriptData} combatData={combatData} battleData={battleData} />
+                        <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
+                          <div id={`trigger-${trigger.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
+                            <Link href={`/trigger/${trigger.id}`} target='_blank' rel='noreferrer' className='hover:underline'>
+                              {trigger.id}
+                            </Link>
+                          </div>
+                          <div className='font-bold mt-1 break-all'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
+                          <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
+                        </td>
+                        <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>{translateTerm(`Web.Label.${trigger.type}`)}</td>
+                        <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>
+                          <div className='flex flex-col gap-1.5'>
+                            <div className='flex flex-col'>
+                              <span className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.MinTime')}</span>
+                              <span>{formatTime(trigger.minTime)}</span>
+                            </div>
+                            <div className='flex flex-col'>
+                              <span className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.MaxTime')}</span>
+                              <span>{formatTime(trigger.maxTime)}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
+                          {trigger.condition ? (
+                            <div className='flex flex-col items-start gap-1 text-sm/loose'>
+                              {trigger.condition.map((item: any, i: number) => (
+                                <div key={i} className='flex items-start w-full py-0.5 gap-1'>
+                                  <span className='pl-1.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
+                                  <div className='items-center gap-x-0.5 gap-y-1 flex-1 min-w-0'>
+                                    <ParsedText text={item} />
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className='text-muted-foreground italic pl-1.5'>-</span>
+                          )}
+                        </td>
+                        <td colSpan={2} className='px-4 py-3 align-middle text-center text-muted-foreground italic bg-background/30'>
+                          -
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
-                        <div id={`mission-${trigger.id}-${trigger.mission}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{trigger.mission}</div>
-                        <div className='font-bold mt-1 break-all'>{translateTerm(`Mission.Name.${trigger.mission}`)}</div>
-                        <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Mission.Desc.${trigger.mission}`, undefined, 0)}</div>
-                      </td>
-                      <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
-                        <div id={`trigger-${trigger.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>{trigger.id}</div>
-                        <div className='font-bold mt-1 break-all'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
-                        <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
-                      </td>
-                      <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>{translateTerm(`Web.Label.${trigger.type}`)}</td>
-                      <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>
-                        <div className='flex flex-col gap-1.5'>
-                          <div className='flex flex-col'>
-                            <span className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.MinTime')}</span>
-                            <span>{formatTime(trigger.minTime)}</span>
-                          </div>
-                          <div className='flex flex-col'>
-                            <span className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.MaxTime')}</span>
-                            <span>{formatTime(trigger.maxTime)}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
-                        {trigger.condition ? (
-                          <div className='flex flex-col items-start gap-1 text-sm/loose'>
-                            {trigger.condition.map((item: any, i: number) => (
-                              <div key={i} className='flex items-start w-full py-0.5 gap-1'>
-                                <span className='pl-1.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
-                                <div className='items-center gap-x-0.5 gap-y-1 flex-1 min-w-0'>
-                                  <ParsedText text={item} />
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <span className='text-muted-foreground italic pl-1.5'>-</span>
-                        )}
-                      </td>
-                      <td colSpan={2} className='px-4 py-3 align-middle text-center text-muted-foreground italic bg-background/30'>
-                        -
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+                    )}
+                  </tbody>
+                </TriggerContext.Provider>
               );
             })}
           </table>
