@@ -227,17 +227,28 @@ export function ParsedText({ text }: { text: string }) {
                 const targetIds = targetId.split('.');
                 const flagId = targetIds[0];
                 const flagPhase = targetIds[1] ?? '0';
+
                 tipName = translateTerm(`Flag.${flagId}.${flagPhase}`, undefined, 0) + ` (${flagId})`;
-                tipDesc = translateTerm(`Flag.${flagId}.${flagPhase}.Desc`, undefined, 0);
-                for (let i = 0; true; i++) {
+                const baseDesc = translateTerm(`Flag.${flagId}.${flagPhase}.Desc`, undefined, 0);
+                const valLines: string[] = [];
+
+                for (let i = -1; true; i--) {
                   const valDef = translateTerm(`Flag.${flagId}.${flagPhase}.${i}`, undefined, 0);
                   if (valDef) {
-                    tipDesc += `\n${i}: ${valDef}`;
+                    valLines.unshift(`${i}: ${valDef}`);
                   } else {
                     break;
                   }
                 }
-                tipDesc = tipDesc.trim();
+                for (let i = 0; true; i++) {
+                  const valDef = translateTerm(`Flag.${flagId}.${flagPhase}.${i}`, undefined, 0);
+                  if (valDef) {
+                    valLines.push(`${i}: ${valDef}`);
+                  } else {
+                    break;
+                  }
+                }
+                tipDesc = [baseDesc, ...valLines].filter(Boolean).join('\n').trim();
                 break;
               case 'GroupStat':
                 tipName = translateTerm(`GroupStat.${targetId}`, undefined, 0);
