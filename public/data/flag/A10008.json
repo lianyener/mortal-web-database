@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{}}],"init":0,"rel":{"post":{"Position":["Travel_601_01","Travel_601_02"],"Combat":["CL_1809_01"],"Script":["ch3_6_4"]},"pre":{"Script":["ch3_6_1","ch3_6_4_1","ch6_3_1","ch8_6_3","travel_result_601_902"]}}}
+{"data":[{"script":[],"value":{}},{"script":["ch3_6_1","ch3_6_4","ch3_6_4_1"],"value":{"0":"[*Flag.A10008.1.0*]","1":"[*Flag.A10008.1.1*]"}}],"init":0,"rel":{"post":{"Position":["Travel_601_01","Travel_601_02"],"Combat":["CL_1809_01"],"Script":["ch3_6_4"]},"pre":{"Script":["ch3_6_1","ch3_6_4_1","ch6_3_1","ch8_6_3","travel_result_601_902"]}}}
