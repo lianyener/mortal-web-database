@@ -230,22 +230,28 @@ export function ParsedText({ text }: { text: string }) {
 
                 tipName = translateTerm(`Flag.${flagId}.${flagPhase}`, undefined, 0) + ` (${flagId})`;
                 const baseDesc = translateTerm(`Flag.${flagId}.${flagPhase}.Desc`, undefined, 0);
+                
                 const valLines: string[] = [];
+                const maxGaps = 3;
 
-                for (let i = -1; true; i--) {
+                let missCount = 0;
+                for (let i = -1; missCount < maxGaps; i--) {
                   const valDef = translateTerm(`Flag.${flagId}.${flagPhase}.${i}`, undefined, 0);
                   if (valDef) {
                     valLines.unshift(`${i}: ${valDef}`);
+                    missCount = 0;
                   } else {
-                    break;
+                    missCount++;
                   }
                 }
-                for (let i = 0; true; i++) {
+                missCount = 0;
+                for (let i = 0; missCount < maxGaps; i++) {
                   const valDef = translateTerm(`Flag.${flagId}.${flagPhase}.${i}`, undefined, 0);
                   if (valDef) {
                     valLines.push(`${i}: ${valDef}`);
+                    missCount = 0;
                   } else {
-                    break;
+                    missCount++;
                   }
                 }
                 tipDesc = [baseDesc, ...valLines].filter(Boolean).join('\n').trim();
