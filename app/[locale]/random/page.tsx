@@ -304,13 +304,13 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                             <tr key={`${posItem.id}-${rId}-${flow.id}-${fIdx}`}>
                               {rIdx === 0 && fIdx === 0 && (
                                 <>
-                                  <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
+                                  <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 text-muted-foreground break-all'>
                                     {translateParagraph(posItem.period)}
                                   </td>
-                                  <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
+                                  <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 text-muted-foreground break-all'>
                                     {translateParagraph(posItem.position) || '-'}
                                   </td>
-                                  <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
+                                  <td rowSpan={posRowCount} className='p-2 align-top border-r border-border/30 break-all'>
                                     <div id={`action-${posItem.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
                                       <Link href={`/position/${posItem.id}`} target='_blank' rel='noreferrer' className='hover:underline'>
                                         {posItem.id}
@@ -322,11 +322,11 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                               )}
                               {fIdx === 0 && (
                                 <>
-                                  <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap'>
+                                  <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 break-all'>
                                     <div className='font-bold text-foreground'>{translateTerm(`Position.Class.${rEv.class}`)}</div>
                                     <div className='text-muted-foreground mt-1'>{rEv.seq}</div>
                                   </td>
-                                  <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 whitespace-normal'>
+                                  <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 break-all'>
                                     <div className='flex flex-col gap-3 font-mixed'>
                                       {rEv.condition && rEv.condition.length > 0 && (
                                         <div className='flex flex-col gap-1.5'>
