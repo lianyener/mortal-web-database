@@ -89,6 +89,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
 
   // 篩選變更時回到第一頁
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
   }, [activeOnly, typeFilter, yearFilter, monthFilter, stageFilter]);
 
@@ -96,7 +97,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
   const filteredList = useMemo(() => {
     let sourceList = list;
 
-    if (activeOnly) sourceList = sourceList.filter((item: any) => item.active === true && item.script);
+    if (activeOnly) sourceList = sourceList.filter((item: any) => item.active === true && (item.script || item.content.length > 0));
     if (typeFilter !== 'all') sourceList = sourceList.filter((item: any) => item.type === typeFilter);
     if (yearFilter !== 'all') sourceList = sourceList.filter((item: any) => parseInt(item.minTime?.year) <= parseInt(yearFilter) && parseInt(item.maxTime?.year || 5) >= parseInt(yearFilter));
     if (monthFilter !== 'all') sourceList = sourceList.filter((item: any) => parseInt(item.minTime?.month) <= parseInt(monthFilter) && parseInt(item.maxTime?.month || 13) >= parseInt(monthFilter));

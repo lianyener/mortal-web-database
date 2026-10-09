@@ -1,1 +1,1 @@
-{"state":"Debuff","type":"Countdown","plural":false,"noRepeat":true,"round":3,"show":true,"rel":{"post":{"Effect":[]},"pre":{"Talent":["2030"],"Effect":["B231_1","B230","C212","S116_3","S116","S906"]}}}
+{"state":"Debuff","type":"Countdown","plural":false,"noRepeat":true,"round":3,"show":true,"rel":{"post":{"Effect":[]},"pre":{"Talent":["2030"],"Effect":["B230","B231_1","C212","S116","S116_3","S906"]}}}
