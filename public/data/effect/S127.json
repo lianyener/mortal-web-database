@@ -1,1 +1,1 @@
-{"state":"Buff","type":"Resident","plural":false,"noRepeat":false,"round":-1,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_S0209_01_01","CL_S0208_05_04","CL_S0208_05_02","CL_S0208_05_03","CL_S0209_01_03","CL_S0209_01_04","CL_S0209_01_02","CL_S0208_05_01"]}}}
+{"state":"Buff","type":"Resident","plural":false,"noRepeat":false,"round":-1,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_S0209_01_03","CL_S0208_05_03","CL_S0209_01_02","CL_S0208_05_02","CL_S0209_01_01","CL_S0209_01_04","CL_S0208_05_01","CL_S0208_05_04"]}}}

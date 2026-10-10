@@ -6,6 +6,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { GlobalSidebar } from '@/components/sidebar/GlobalSidebar';
 import { QueryProvider } from '@/components/providers/QueryProvider';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 const sometypeMono = Sometype_Mono({ subsets: ['latin'], fallback: [], variable: '--font-sometype-mono' });
@@ -25,20 +26,23 @@ export default async function RootLayout({ children, params }: Readonly<{ childr
 
   return (
     // 忽略因瀏覽器擴充功能注入導致的 Hydration 警告
-    <html lang={locale} className={`h-full antialiased ${sometypeMono.variable} ${chironHei.variable}`} suppressHydrationWarning>
-      <body className='min-h-full flex flex-col'>
-        <NextIntlClientProvider messages={messages} locale={locale}>
-          <QueryProvider>
-            <NuqsAdapter>
-              {children}
-              {/* 全域側邊欄 */}
-              <Suspense fallback={null}>
-                <GlobalSidebar />
-              </Suspense>
-            </NuqsAdapter>
-          </QueryProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <>
+      <html lang={locale} className={`h-full antialiased ${sometypeMono.variable} ${chironHei.variable}`} suppressHydrationWarning>
+        <body className='min-h-full flex flex-col'>
+          <NextIntlClientProvider messages={messages} locale={locale}>
+            <QueryProvider>
+              <NuqsAdapter>
+                {children}
+                {/* 全域側邊欄 */}
+                <Suspense fallback={null}>
+                  <GlobalSidebar />
+                </Suspense>
+              </NuqsAdapter>
+            </QueryProvider>
+          </NextIntlClientProvider>
+        </body>
+      </html>
+      <Analytics />
+    </>
   );
 }
