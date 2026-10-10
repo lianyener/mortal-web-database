@@ -430,9 +430,9 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                       })
                     ) : (
                       <tr>
-                        <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>{translateParagraph(posItem.period)}</td>
-                        <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>{translateParagraph(posItem.position) || '-'}</td>
-                        <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
+                        <td className='p-2 align-top border-r border-border/30 text-muted-foreground'>{translateParagraph(posItem.period)}</td>
+                        <td className='p-2 align-top border-r border-border/30 text-muted-foreground'>{translateParagraph(posItem.position) || '-'}</td>
+                        <td className='p-2 align-top border-r border-border/30 whitespace-normal'>
                           <div id={`action-${posItem.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
                             <Link href={`/position/${posItem.id}`} target='_blank' rel='noreferrer' className='hover:underline'>
                               {posItem.id}
@@ -440,7 +440,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                           </div>
                           <div className='font-bold mt-1 text-foreground'>{translateParagraph(posItem.action)}</div>
                         </td>
-                        <td colSpan={4} className='px-4 py-3 align-middle text-center text-muted-foreground italic bg-background/30'>
+                        <td colSpan={4} className='p-2 align-middle text-center text-muted-foreground italic bg-background/30'>
                           -
                         </td>
                       </tr>

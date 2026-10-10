@@ -245,11 +245,23 @@ function CombatBranchItem({ branch }: { branch: any }) {
 
 // --- 單項事件內容分配器 ---
 
-export const FlowContent = ({ flow, scriptData, combatData, battleData }: any) => {
+export const FlowContent = ({ flow, triggerContent, scriptData, combatData, battleData }: any) => {
   const { translateTerm } = useAppTranslation();
 
   if (flow.type === 'Script' && scriptData?.[flow.id]) {
     const content = scriptData[flow.id].content;
+    if (!content || content.length === 0) return <span className='text-muted-foreground italic'>-</span>;
+    return (
+      <div className='flex flex-col min-w-max sm:min-w-0 font-mixed'>
+        {content.map((node: any, idx: number) => (
+          <ScriptNode key={idx} node={node} />
+        ))}
+      </div>
+    );
+  }
+  
+  if (flow.type === 'Trigger' && triggerContent) {
+    const content = triggerContent;
     if (!content || content.length === 0) return <span className='text-muted-foreground italic'>-</span>;
     return (
       <div className='flex flex-col min-w-max sm:min-w-0 font-mixed'>

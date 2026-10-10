@@ -387,7 +387,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                       ))
                     ) : (
                       <tr>
-                        <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
+                        <td className='p-2 align-top border-r border-border/30 whitespace-normal'>
                           <div id={`mission-${trigger.id}-${trigger.mission}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
                             <Link href={`/mission/${trigger.mission}`} target='_blank' rel='noreferrer' className='hover:underline'>
                               {trigger.mission}
@@ -396,7 +396,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                           <div className='font-bold mt-1 break-all'>{translateTerm(`Mission.Name.${trigger.mission}`)}</div>
                           <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Mission.Desc.${trigger.mission}`, undefined, 0)}</div>
                         </td>
-                        <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
+                        <td className='p-2 align-top border-r border-border/30 whitespace-normal'>
                           <div id={`trigger-${trigger.id}`} className='scroll-mt-24 p-1 -m-1 font-mono text-primary break-all'>
                             <Link href={`/trigger/${trigger.id}`} target='_blank' rel='noreferrer' className='hover:underline'>
                               {trigger.id}
@@ -405,8 +405,8 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                           <div className='font-bold mt-1 break-all'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
                           <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
                         </td>
-                        <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>{translateTerm(`Web.Label.${trigger.type}`)}</td>
-                        <td className='px-4 py-3 align-top border-r border-border/30 text-muted-foreground'>
+                        <td className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>{translateTerm(`Web.Label.${trigger.type}`)}</td>
+                        <td className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
                           <div className='flex flex-col gap-1.5'>
                             <div className='flex flex-col'>
                               <span className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.MinTime')}</span>
@@ -418,11 +418,11 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                             </div>
                           </div>
                         </td>
-                        <td className='px-4 py-3 align-top border-r border-border/30 whitespace-normal'>
+                        <td className='p-2 align-top border-r border-border/30 whitespace-normal'>
                           {trigger.condition ? (
-                            <div className='flex flex-col items-start gap-1 text-sm/loose'>
+                            <div className='flex flex-col items-start gap-1 text-sm/normal'>
                               {trigger.condition.map((item: any, i: number) => (
-                                <div key={i} className='flex items-start w-full py-0.5 gap-1'>
+                                <div key={i} className='flex items-start w-full gap-0.5'>
                                   <span className='pl-1.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
                                   <div className='items-center gap-x-0.5 gap-y-1 flex-1 min-w-0'>
                                     <ParsedText text={item} />
@@ -434,8 +434,9 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                             <span className='text-muted-foreground italic pl-1.5'>-</span>
                           )}
                         </td>
-                        <td colSpan={2} className='px-4 py-3 align-middle text-center text-muted-foreground italic bg-background/30'>
-                          -
+                        <td className='p-2 align-top border-r border-border/30 whitespace-normal bg-background/30'>-</td>
+                        <td className='p-2 align-top whitespace-normal bg-background/30'>
+                          <FlowContent flow={{ type: 'Trigger' }} triggerContent={trigger.content} />
                         </td>
                       </tr>
                     )}
