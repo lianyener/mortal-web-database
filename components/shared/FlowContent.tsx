@@ -16,7 +16,7 @@ function ScriptNode({ node }: { node: any }) {
     const textStr = typeof node.text === 'string' ? node.text : '';
     const effectItems = textStr.split(' / ');
     return (
-      <div className='flex items-start gap-2 px-1 py-0.25 text-foreground text-sm/relaxed'>
+      <div className='flex items-start gap-2 px-1 py-px text-foreground text-sm/relaxed'>
         <CircleArrowRight className='size-4 shrink-0 text-muted-foreground/50 mt-0.5' />
         <div className='flex flex-wrap items-center gap-y-1 gap-x-2 flex-1'>
           {effectItems.map((item: string, idx: number) => (
@@ -35,7 +35,7 @@ function ScriptNode({ node }: { node: any }) {
     const label = branchTextItems.shift();
     return (
       <div>
-        <div className='flex items-start py-0.25 gap-2 font-bold text-primary text-sm/relaxed'>
+        <div className='flex items-start py-px gap-2 font-bold text-primary text-sm/relaxed'>
           <div className='shrink-0'>
             <ParsedText text={label} />
           </div>
@@ -63,7 +63,7 @@ function ScriptNode({ node }: { node: any }) {
   }
   if (node.form === 'perform') {
     return (
-      <div className='flex items-start gap-2 py-0.25 text-foreground text-sm/relaxed'>
+      <div className='flex items-start gap-2 py-px text-foreground text-sm/relaxed'>
         <CircleArrowRight className='size-4 shrink-0 text-muted-foreground/50 mt-0.5' />
         <div className='flex-1'>
           <ParsedText text={node.text} />
@@ -89,7 +89,7 @@ function ScriptBranchItem({ branch }: { branch: any }) {
   return (
     <div className='flex flex-col'>
       <div
-        className={`flex items-start py-0.25 -mx-0.5 gap-1 font-semibold text-sm/relaxed ${isSingleEffect ? '' : 'hover:cursor-pointer'}`}
+        className={`flex items-start py-px -mx-0.5 gap-1 font-semibold text-sm/relaxed ${isSingleEffect ? '' : 'hover:cursor-pointer'}`}
         onClick={() => {
           if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return;
           if (!isSingleEffect) setIsExpanded(!isExpanded);
@@ -162,7 +162,7 @@ function CombatNode({ node }: { node: any }) {
     const textStr = typeof node.text === 'string' ? node.text : '';
     const effectItems = textStr.split(' / ');
     return (
-      <div className='flex items-start gap-2 py-0.25 text-foreground text-sm/relaxed'>
+      <div className='flex items-start gap-2 py-px text-foreground text-sm/relaxed'>
         <CircleArrowRight className='size-4 shrink-0 text-muted-foreground/50 mt-0.5' />
         <div className='flex flex-wrap items-center gap-y-1 gap-x-2 flex-1'>
           {effectItems.map((item: string, idx: number) => (
@@ -186,7 +186,7 @@ function CombatNode({ node }: { node: any }) {
   }
   if (node.form === 'perform') {
     return (
-      <div className='flex items-start gap-2 py-0.25 text-foreground text-sm/relaxed'>
+      <div className='flex items-start gap-2 py-px text-foreground text-sm/relaxed'>
         <CircleArrowRight className='size-4 shrink-0 text-muted-foreground/50 mt-0.5' />
         <div className='flex-1'>
           <ParsedText text={node.text} />
@@ -195,7 +195,7 @@ function CombatNode({ node }: { node: any }) {
     );
   }
   return (
-    <div className='py-0.25 text-sm/relaxed bg-destructive/10 text-destructive rounded-md border'>
+    <div className='py-px text-sm/relaxed bg-destructive/10 text-destructive rounded-md border'>
       {translateTerm('Web.UnknownNode')}: {JSON.stringify(node)}
     </div>
   );
@@ -207,7 +207,7 @@ function CombatBranchItem({ branch }: { branch: any }) {
   return (
     <div className='flex flex-col'>
       <div
-        className={`flex items-start py-0.25 -mx-0.5 gap-1 font-semibold text-sm/relaxed ${isSingleEffect ? '' : 'hover:cursor-pointer'}`}
+        className={`flex items-start py-px -mx-0.5 gap-1 font-semibold text-sm/relaxed ${isSingleEffect ? '' : 'hover:cursor-pointer'}`}
         onClick={() => {
           if (typeof window !== 'undefined' && window.getSelection()?.toString().length) return;
         }}
@@ -326,7 +326,7 @@ export const FlowContent = ({ flow, triggerContent, scriptData, combatData, batt
           })}
         </div>
         {end.map((item: any, i: number) => (
-          <div key={i} className='flex items-start w-full py-0.25 gap-1'>
+          <div key={i} className='flex items-start w-full py-px gap-1'>
             <span className='pl-0.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
             <div className='flex flex-wrap items-center gap-x-0.5 gap-y-1 flex-1 min-w-0'>
               <ParsedText text={`${item.condition}`} />
