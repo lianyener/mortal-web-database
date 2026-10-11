@@ -68,6 +68,7 @@ function DataList({ data }: { data: Record<string, any> | any[] }) {
   const [isBuildingCache, setIsBuildingCache] = useState(false);
   useEffect(() => {
     if (!list || list.length === 0) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsBuildingCache(true);
 
     // 讓出主執行緒

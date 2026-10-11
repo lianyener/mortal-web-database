@@ -87,6 +87,18 @@ function DataDetail({ data, id }: { data: any; id: string }) {
               <div className='text-xs text-muted-foreground mb-1'>{translateTerm('Web.Desc')}</div>
               <div className='text-sm leading-relaxed text-foreground'>{translateTerm(`Combat.Desc.${id}`) || translateTerm('System.NA')}</div>
             </div>
+            {data.remark && (Array.isArray(data.remark) ? data.remark.length > 0 : true) && (
+              <div>
+                <div className='text-xs text-muted-foreground mb-1'>{translateTerm('Web.Remark')}</div>
+                <div className='px-2.5 py-1.5 text-sm text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-900/50'>
+                  {data.remark.map((r: string, i: number) => (
+                    <div key={i}>
+                      <ParsedText text={translateParagraph(r, 1, false)} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
