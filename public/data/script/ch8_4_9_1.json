@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,ch8_4_9_2*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["ch8_4_9_2"]},"from":{"Script":["ch8_4_4_break_start_01"],"Trigger":["M7002_01"],"Mission":["main"]}},"remark":[],"effects":["Script"]}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,ch8_4_9_2*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["ch8_4_9_2"]},"from":{"Script":["ch8_4_4_break_start_01"],"Trigger":["M7002_01"],"Mission":["main"]}},"remark":[],"skip":"ch8_4_9_2","effects":["Script"]}
