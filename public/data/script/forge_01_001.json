@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◎[*Custom.NextScript*]var1"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Position":["Forge_01"]}},"remark":[],"effects":["Script"]}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.Random*][*Label.Position,Forge_Work_001*][*System.StoryEvent*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Position":["Forge_01"]}},"remark":["[*Script.Remark.forge_01_001.0*]"],"effects":["Script"]}

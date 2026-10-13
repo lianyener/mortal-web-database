@@ -276,9 +276,10 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
               <tr>
                 <th className='px-4 py-3 font-semibold w-20'>{translateTerm('Web.Period')}</th>
                 <th className='px-4 py-3 font-semibold w-24'>{translateTerm('Web.Position')}</th>
-                <th className='px-4 py-3 font-semibold w-32'>{translateTerm('Web.Action')}</th>
-                <th className='px-4 py-3 font-semibold w-24'>{translateTerm('Web.Random')}</th>
+                <th className='px-4 py-3 font-semibold w-24'>{translateTerm('Web.Action')}</th>
+                <th className='px-4 py-3 font-semibold w-20'>{translateTerm('Web.Random')}</th>
                 <th className='px-4 py-3 font-semibold w-56'>{translateTerm('Web.Condition')}</th>
+                <th className='px-4 py-3 font-semibold w-48'>{translateTerm('Web.Rate')}</th>
                 <th className='px-4 py-3 font-semibold w-32'>{translateTerm('Web.Event')}</th>
                 <th className='px-4 py-3 font-semibold min-w-lg w-full'>{translateTerm('Web.BranchContent')}</th>
               </tr>
@@ -323,14 +324,13 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                               {fIdx === 0 && (
                                 <>
                                   <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 break-all'>
-                                    <div className='font-bold text-foreground'>{translateTerm(`Position.Class.${rEv.class}`)}</div>
-                                    <div className='text-muted-foreground mt-1'>{rEv.seq}</div>
+                                    <div className='text-foreground'>{translateTerm(`Position.Class.${rEv.class}`)}</div>
+                                    <div className='text-foreground mt-1'>{rEv.seq}</div>
                                   </td>
                                   <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 break-all'>
                                     <div className='flex flex-col gap-3 font-mixed'>
                                       {rEv.condition && rEv.condition.length > 0 && (
                                         <div className='flex flex-col gap-1.5'>
-                                          <div className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.Condition')}</div>
                                           {rEv.condition.map((cond: string, i: number) => (
                                             <div key={i} className='flex items-start w-full gap-0.5'>
                                               <span className='pl-1.5 text-muted-foreground shrink-0 select-none'>{i + 1}.</span>
@@ -341,9 +341,13 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                                           ))}
                                         </div>
                                       )}
+                                      {(!rEv.condition || rEv.condition.length === 0) && <span className='text-muted-foreground italic pl-1.5'>-</span>}
+                                    </div>
+                                  </td>
+                                  <td rowSpan={rRowCount} className='p-2 align-top border-r border-border/30 break-all'>
+                                    <div className='flex flex-col gap-3 font-mixed'>
                                       {rEv.rate && rEv.rate.length > 0 && (
                                         <div className='flex flex-col gap-1.5'>
-                                          <div className='text-[10px] font-bold uppercase opacity-60 leading-none mb-0.5'>{translateTerm('Web.Rate')}</div>
                                           {rEv.rate.map((rate: string, i: number) => (
                                             <div key={i} className='pl-1.5'>
                                               <ParsedText text={rate} />
@@ -351,7 +355,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                                           ))}
                                         </div>
                                       )}
-                                      {(!rEv.condition || rEv.condition.length === 0) && (!rEv.rate || rEv.rate.length === 0) && <span className='text-muted-foreground italic pl-1.5'>-</span>}
+                                      {(!rEv.rate || rEv.rate.length === 0) && <span className='text-muted-foreground italic pl-1.5'>-</span>}
                                     </div>
                                   </td>
                                 </>
