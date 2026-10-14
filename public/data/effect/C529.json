@@ -1,1 +1,1 @@
-{"state":"Support","type":"Resident","plural":false,"noRepeat":false,"round":-1,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_S0021_03_02","CL_S0021_03_01","CL_S0021_01","CL_1622_01","CL_S0702_01","CL_1805_01","CL_1806_03","CL_1806_02","CL_1806_01","CL_1809_01"]}}}
+{"state":"Support","type":"Resident","plural":false,"noRepeat":false,"round":-1,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_S0021_03_01","CL_S0021_03_02","CL_S0021_01","CL_1622_01","CL_S0702_01","CL_1805_01","CL_1806_03","CL_1806_02","CL_1806_01","CL_1809_01"]}}}
