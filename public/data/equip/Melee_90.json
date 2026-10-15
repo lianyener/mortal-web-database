@@ -1,0 +1,1 @@
+{"type":"Melee","faction":1,"cost":1,"level":1,"levels":[{"point":10,"combat":["[*UpgradeItemRelationDesc.CombatAttack_002,100*]"],"battle":["[*UpgradeItemRelationDesc.BattleAttack_001,100,15*]"],"effect":[]}],"evolution":[],"rel":{"pre":{},"post":{}}}

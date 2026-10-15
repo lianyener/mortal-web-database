@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.M30028.0.0*]","1":"[*Flag.M30028.0.1*]"}}],"init":0,"rel":{"post":{"Trigger":["S0302_01"]},"pre":{"Script":["S0301_03"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.M30028.0.0*]","1":"[*Flag.M30028.0.1*]"}}],"init":0,"rel":{"post":{"Trigger":["S0302_01"],"Script":["ch4_4_2_break_start_01","S2321_02_03_01","S2321_02_05_03","S2321_07_02"]},"pre":{"Script":["S0301_03"]}}}

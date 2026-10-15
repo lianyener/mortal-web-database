@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"[*Label.Stat,title*]=[*PlayerInfo.Title.7*]"},{"form":"effect","text":"◇[*Custom.ShowVideoCG*]"}],"rel":{"pre":{},"post":{},"intra":{"Character":["girl6","special4","girl2","sister1","girl4"]},"to":{}},"remark":[],"effects":["Stat","Perform"]}

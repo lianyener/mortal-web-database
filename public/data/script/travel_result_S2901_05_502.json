@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"◇[*Custom.ShowPicture*] / [*Label.Stat,mental*]+20 / *[*Label.Stat,cook*]+1"},{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.TempScript*]1"}],"rel":{"pre":{},"post":{},"intra":{},"to":{},"from":{"Position":["Travel_S2901_05"]}},"remark":[],"effects":["Perform","Stat","Script"]}

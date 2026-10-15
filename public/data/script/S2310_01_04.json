@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"★[*System.Combat*][*Label.Combat,CL_S2310_01*] / ◎[*Custom.CombatNextScript*][*Label.Script,S2310_01_04_01*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["S2310_01_04_01"],"Combat":["CL_S2310_01"]},"from":{"Script":["S2310_01_03"],"Trigger":["S2310_01"],"Mission":["S2310"]}},"remark":[],"effects":["Combat","Script"]}

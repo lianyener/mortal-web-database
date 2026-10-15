@@ -1,1 +1,1 @@
-{"cost":0,"rel":{"post":{"Script":["S2001_01"]},"pre":{"Script":["S9904_01"]}}}
+{"cost":0,"rel":{"post":{"Position":["Craft_Work_001"],"Script":["S2001_01"]},"pre":{"Script":["S9904_01"]}}}

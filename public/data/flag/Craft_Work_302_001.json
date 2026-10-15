@@ -1,0 +1,1 @@
+{"data":[{"script":[],"value":{"0":"[*Flag.Craft_Work_302_001.0.0*]","1":"[*Flag.Craft_Work_302_001.0.1*]"}}],"init":0,"rel":{"post":{"Script":["craft_work_302"]},"pre":{"Script":["craft_work_302"]}}}

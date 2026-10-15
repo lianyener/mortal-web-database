@@ -1,0 +1,1 @@
+{"state":"Buff","type":"CountdownTrigger","plural":false,"noRepeat":false,"round":5,"show":true,"rel":{"post":{"Effect":["E1115","E1115_1","B4104","B007_3","D005"]},"pre":{"Talent":["3109"]}}}

@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"◇[*Custom.ShowPicture*]"},{"form":"effect","text":"[*Label.Dead,10121*]"}],"rel":{"pre":{},"post":{"Dead":["10121"]},"intra":{},"to":{},"from":{"Position":["Craft_Work_001"]}},"remark":[],"effects":["Perform","Dead"]}

@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"[*Label.Stat,mental*]-10 / [*Label.Stat,money*]+500 / [*Label.Relationship,girl7*]+1"},{"form":"effect","text":"◎[*Custom.Free*]:[*Label.Free,CS_free*]"}],"rel":{"pre":{},"post":{"Character":["girl7"]},"intra":{},"to":{"Script":["CS_free"]},"from":{"Position":["Door_Free_001"]}},"remark":[],"effects":["Stat","Relationship","Free"]}

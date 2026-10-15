@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"[*Custom.Get*][*Label.Book,3001*] / ◎[*Custom.NextScript*][*Label.Script,section_01_free_07_02_502_01*]"}],"rel":{"pre":{},"post":{"Book":["3001"]},"intra":{},"to":{"Script":["section_01_free_07_02_502_01"]},"from":{"Position":["Section_01_07_02_502"]}},"remark":[],"effects":["Book","Script"]}

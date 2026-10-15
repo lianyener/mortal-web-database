@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"★[*System.Combat*][*Label.Combat,CL_S2901_02_02*] / ◎[*Custom.CombatNextScript*][*Label.Script,travel_result_S2901_02_502_01*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["travel_result_S2901_02_502_01"],"Combat":["CL_S2901_02_02"]},"from":{"Position":["Travel_S2901_02"]}},"remark":[],"effects":["Combat","Script"]}

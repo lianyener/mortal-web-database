@@ -1,0 +1,1 @@
+{"data":[{"script":[],"value":{"0":"[*Flag.M00030.0.0*]","1":"[*Flag.M00030.0.1*]"}}],"init":0,"rel":{"pre":{"Script":["S2600_02_05","S2800_03_05_02","section_01_free_08_05"]},"post":{"Script":["section_01_free_start_02"]}}}

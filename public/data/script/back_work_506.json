@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"[*Label.Stat,contribution*]+8 / [*Label.Stat,team*]+1"},{"form":"effect","text":"◎[*Custom.Free*]:[*Label.Free,CS_free*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["CS_free"]},"from":{"Position":["Back_Work_001"]}},"remark":[],"effects":["Stat","Free"]}

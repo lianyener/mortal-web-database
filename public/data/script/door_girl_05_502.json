@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"★[*System.Combat*][*Label.Combat,CL_3005_01*] / ◎[*Custom.CombatNextScript*][*Label.Script,door_girl_05_502_01*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["door_girl_05_502_01"],"Combat":["CL_3005_01"]},"from":{"Position":["Door_Girl_05"]}},"remark":[],"effects":["Combat","Script"]}

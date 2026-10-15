@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"[*Label.Stat,stamina*]+3 / [*Label.Stat,internal*]+30 / [*Label.Relationship,girl5*]+3"},{"form":"effect","text":"◎[*Custom.Free*]:[*Label.Free,CS_free*]"}],"rel":{"pre":{},"post":{"Character":["girl5"]},"intra":{},"to":{"Script":["CS_free"]},"from":{"Position":["Back_03"]}},"remark":[],"effects":["Stat","Relationship","Free"]}

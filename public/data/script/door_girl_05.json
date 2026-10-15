@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Custom.Random*][*Label.Position,Door_Girl_05*][*System.StoryEvent*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Position":["Door_Girl_05"]},"from":{"Script":["door_001_01"],"Trigger":["CT_S0023_01"],"Mission":["CM_S0023"],"Position":["Door_02"]}},"remark":[],"effects":["Script"]}

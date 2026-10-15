@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"★[*System.Combat*][*Label.Combat,CL_5105_01*] / ◎[*Custom.CombatNextScript*][*Label.Script,section_01_free_01_501_01*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["section_01_free_01_501_01"],"Combat":["CL_5105_01"]},"from":{"Position":["Section_01_01"]}},"remark":[],"effects":["Combat","Script"]}

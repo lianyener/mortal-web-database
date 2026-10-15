@@ -1,0 +1,1 @@
+{"data":[{"script":[],"value":{"0":"[*Flag.M30080.0.0*]","1":"[*Flag.M30080.0.1*]"}}],"init":0,"rel":{"pre":{"Script":["ch3_15_1"]},"post":{"Script":["ch3_16_1","ch3_16_2","travel_result_310_503","travel_result_310_503_break_start_01"]}}}

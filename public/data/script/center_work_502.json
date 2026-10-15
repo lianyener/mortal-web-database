@@ -1,0 +1,1 @@
+{"content":[{"form":"effect","text":"[*Label.Stat,contribution*]+10 / [*Label.Stat,team*]+1"},{"form":"effect","text":"[*Label.Flag,M00044.0*]=[*Flag.M00044.0.1*] / ◎[*Custom.Free*]:[*Label.Free,CS_free*]"}],"rel":{"pre":{},"post":{"Flag":["M00044"]},"intra":{},"to":{"Script":["CS_free"]},"from":{"Position":["Center_Work_001"]}},"remark":[],"effects":["Stat","Flag","Free"]}
