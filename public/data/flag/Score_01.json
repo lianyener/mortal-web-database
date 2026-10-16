@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.Score_01.0.0*]","1":"[*Flag.Score_01.0.1*]"}}],"init":0,"rel":{"post":{"Script":["S0032_03","talk_brother4_option_04"]}}}
+{"data":[{"script":[],"value":{}}],"init":0,"rel":{"post":{"Script":["S0032_03","talk_brother4_option_04"]}}}
