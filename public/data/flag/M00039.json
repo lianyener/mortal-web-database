@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.M00039.0.0*]","1":"[*Flag.M00039.0.1*]"}}],"init":0,"rel":{"post":{"Position":["S2800_02_Break_01"]},"pre":{"Script":["talk_brother3_01"]}}}
+{"data":[{"script":[],"value":{}}],"init":0,"rel":{"post":{"Position":["S2800_02_Break_01"]},"pre":{"Script":["talk_brother3_01"]}}}
