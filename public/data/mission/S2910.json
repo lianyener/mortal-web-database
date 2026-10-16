@@ -1,1 +1,1 @@
-{"trigger":["S2910_01"],"init":"S2910_01","remark":[],"rel":{"to":{"Trigger":["S2910_01"]}}}
+{"trigger":["S2910_01"],"init":"S2910_01","remark":[],"rel":{"to":{"Trigger":["CT_S2910_01","S2910_01"]}}}
