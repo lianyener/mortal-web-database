@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect, Suspense, useMemo } from 'react';
+import { useLocale } from 'next-intl';
 import { Search } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
@@ -57,6 +58,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
   const [searchInput, setSearchInput] = useState('');
   const [searchTarget, setSearchTarget] = useState('');
   const [page, setPage] = useState(1);
+  const locale = useLocale();
   const itemsPerPage = 50;
 
   // 篩選器狀態
@@ -98,16 +100,27 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
     if (list.length === 0) return;
 
     // 檢查 Position 是否包含目標 ID
-    const checkPositionHasTarget = (posItem: any, target: string) => {
+    const checkPositionHasTarget = (posItem: any, target: string, cat?: string) => {
+      const catLower = cat?.toLowerCase();
+
+      // 若為腳本、戰鬥類，優先檢查事件流中的 eventFlow
+      if (['script', 'combat', 'battle'].includes(catLower || '')) {
+        return Object.keys(posItem.event || {}).some((k) => posItem.event[k].eventFlow?.some((f: any) => f.id === target));
+      }
+      // 若為 Position 類別，檢查是否為該地點動作 ID
+      if (catLower === 'position') {
+        return posItem.id === target;
+      }
+
+      // 未指定 cat 或未知時的通用檢查
       if (posItem.id === target) return true;
-      // 檢查底下所有的隨機事件 (event) 裡面的 eventFlow
       if (Object.keys(posItem.event || {}).some((k) => posItem.event[k].eventFlow?.some((f: any) => f.id === target))) {
         return true;
       }
       return false;
     };
 
-    // 獨立出平滑捲動與高光動畫函式
+    // 平滑捲動與高光動畫
     const triggerHighlight = (el: HTMLElement) => {
       el.scrollIntoView({ behavior: 'smooth' });
       el.classList.add('bg-primary/20', 'ring-1', 'ring-primary', 'rounded-sm', 'transition-all', 'duration-500');
@@ -119,33 +132,49 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
         const rawHash = decodeURIComponent(window.location.hash.substring(1));
         if (!rawHash) return;
 
-        // 解析 targetId 與來源 fromPositionId (格式: #targetId?from=positionId)
-        const [targetId, queryPart] = rawHash.split('?');
-        const urlParams = new URLSearchParams(queryPart || '');
-        const fromPositionId = urlParams.get('from');
+        // 優先自標準 searchParams 讀取，並相容舊式 hash 參數
+        const [targetId, hashQueryPart] = rawHash.split(/[?&]/);
+        const searchParams = new URLSearchParams(window.location.search);
+        const hashParams = new URLSearchParams(hashQueryPart ? rawHash.slice(targetId.length + 1) : '');
+
+        const fromPositionId = searchParams.get('from') || hashParams.get('from');
+        const category = searchParams.get('cat') || hashParams.get('cat') || 'unknown';
+        const catLower = category.toLowerCase();
 
         let targetIndex = -1;
 
         // 優先檢查來源 Position 內部
         if (fromPositionId) {
-          const localIndex = list.findIndex((item: any) => item.id === fromPositionId && checkPositionHasTarget(item, targetId));
+          const localIndex = list.findIndex((item: any) => item.id === fromPositionId && checkPositionHasTarget(item, targetId, catLower));
           if (localIndex !== -1) {
             targetIndex = localIndex;
           }
         }
 
-        // 取得全域第 1 組符合的 Position
+        // 取得全域符合的 Position
         if (targetIndex === -1) {
-          targetIndex = list.findIndex((item: any) => checkPositionHasTarget(item, targetId));
+          // 優先依指定類別尋找
+          targetIndex = list.findIndex((item: any) => checkPositionHasTarget(item, targetId, catLower));
+
+          // 沒找到退回盲搜
+          if (targetIndex === -1 && catLower !== 'unknown') {
+            targetIndex = list.findIndex((item: any) => checkPositionHasTarget(item, targetId));
+          }
         }
 
         // 找到目標所在的 Position
         if (targetIndex !== -1) {
           const posItem = list[targetIndex];
 
-          // 1. 取得目標精確的 DOM 元素 ID
-          let elId = `action-${posItem.id}`;
-          if (posItem.id !== targetId) {
+          // 取得目標精確的 DOM 元素 ID
+          let elId = '';
+
+          // 優先依據精確類別尋找 DOM ID
+          if (catLower === 'position') {
+            if (posItem.id === targetId) {
+              elId = `action-${posItem.id}`;
+            }
+          } else if (['script', 'combat', 'battle'].includes(catLower)) {
             for (const [rId, rEv] of Object.entries(posItem.event || {}) as any) {
               const flowIdx = (rEv.eventFlow || []).findIndex((f: any) => f.id === targetId);
               if (flowIdx !== -1) {
@@ -155,17 +184,33 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
             }
           }
 
+          // 沒對應到循序嘗試
+          if (!elId) {
+            if (posItem.id === targetId) {
+              elId = `action-${posItem.id}`;
+            } else {
+              for (const [rId, rEv] of Object.entries(posItem.event || {}) as any) {
+                const flowIdx = (rEv.eventFlow || []).findIndex((f: any) => f.id === targetId);
+                if (flowIdx !== -1) {
+                  elId = `flow-${posItem.id}-${rId}-${targetId}-${flowIdx}`;
+                  break;
+                }
+              }
+            }
+          }
+
           // 檢查目標是否已經渲染在當前的 DOM 中
           const existingEl = document.getElementById(elId);
 
           if (existingEl) {
-            // 目標已在當前可見頁面內，直接捲動與高光
+            // 目標已在當前可見頁面內直接捲動與高光
             triggerHighlight(existingEl);
           } else {
-            // 目標不在當前頁面，先執行 filter 鎖定該 Position
+            // 目標不在當前頁面先 filter 鎖定該 Position
             setSearchInput(posItem.id);
             setSearchTarget(posItem.id);
 
+            // 解除可能阻礙顯示的過濾條件
             setPeriodFilter('all');
             setPositionFilter('all');
             setPage(1);
@@ -182,6 +227,15 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
 
             setTimeout(() => retryHighlight(), 100);
           }
+        } else {
+          // 找不到目標改以新分頁/新視窗開啟獨立頁面
+          if (catLower && catLower !== 'unknown') {
+            const targetUrl = `/${locale}/${catLower}/${targetId}`;
+            window.open(targetUrl, '_blank');
+
+            // 清除當前網址中的無效 Hash，避免重新整理時重複彈出新視窗
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          }
         }
       }
     };
@@ -190,7 +244,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
 
     window.addEventListener('hashchange', locateHash);
     return () => window.removeEventListener('hashchange', locateHash);
-  }, [list]);
+  }, [list, locale]);
 
   // 過濾清單
   const filteredList = useMemo(() => {

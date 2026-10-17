@@ -88,44 +88,36 @@ export function ParsedText({ text }: { text: string }) {
               case 'Script':
               case 'Combat':
               case 'Battle':
+                href = `/${category.toLowerCase()}/${targetId}`;
                 if (inEventPage || inRandomPage) {
                   isHashNav = true;
-                  href = currentTriggerId ? `#${targetId}?from=${currentTriggerId}` : `#${targetId}`;
                 } else {
                   isPageNav = true;
-                  href = `/${category.toLowerCase()}/${targetId}`;
                 }
                 break;
               case 'Trigger':
+                href = `/${category.toLowerCase()}/${targetId}`;
                 if (inEventPage) {
                   isHashNav = true;
-                  href = currentTriggerId ? `#${targetId}?from=${currentTriggerId}` : `#${targetId}`;
                 } else {
                   isPageNav = true;
                   isNewWindow = inRandomPage;
-                  href = `/${category.toLowerCase()}/${targetId}`;
                 }
                 break;
               case 'Position':
+                href = `/${category.toLowerCase()}/${targetId}`;
                 if (inRandomPage) {
                   isHashNav = true;
-                  href = currentTriggerId ? `#${targetId}?from=${currentTriggerId}` : `#${targetId}`;
                 } else {
                   isPageNav = true;
                   isNewWindow = inEventPage;
-                  href = `/${category.toLowerCase()}/${targetId}`;
                 }
                 break;
               case 'Free':
               case 'Mission':
-                if (inEventPage || inRandomPage) {
-                  isPageNav = true;
-                  isNewWindow = true;
-                  href = `/${category.toLowerCase()}/${targetId}`;
-                } else {
-                  isPageNav = true;
-                  href = `/${category.toLowerCase()}/${targetId}`;
-                }
+                href = `/${category.toLowerCase()}/${targetId}`;
+                isPageNav = true;
+                isNewWindow = inEventPage || inRandomPage;
                 break;
               case 'Page':
                 isPageNav = true;
@@ -155,11 +147,13 @@ export function ParsedText({ text }: { text: string }) {
 
               if (isHashNav) {
                 e.preventDefault();
-                if (window.location.hash === href) {
-                  window.dispatchEvent(new HashChangeEvent('hashchange'));
-                } else {
-                  window.location.hash = href;
-                }
+                const currentParams = new URLSearchParams(window.location.search);
+                currentParams.set('cat', category);
+                if (currentTriggerId) currentParams.set('from', currentTriggerId);
+
+                const newUrl = `${window.location.pathname}?${currentParams.toString()}#${targetId}`;
+                window.history.pushState(null, '', newUrl);
+                window.dispatchEvent(new HashChangeEvent('hashchange'));
                 return;
               }
 
@@ -174,9 +168,8 @@ export function ParsedText({ text }: { text: string }) {
                 return;
               }
 
-              // 依分類處理點擊行為
+              // 依分類處理點擊開啟側邊欄
               switch (category) {
-                // 開啟側邊欄
                 case 'Buff':
                 case 'Debuff':
                 case 'Support':
@@ -230,7 +223,7 @@ export function ParsedText({ text }: { text: string }) {
 
                 tipName = translateTerm(`Flag.${flagId}.${flagPhase}`, undefined, 0) + ` (${flagId})`;
                 const baseDesc = translateTerm(`Flag.${flagId}.${flagPhase}.Desc`, undefined, 0);
-                
+
                 const valLines: string[] = [];
                 const maxGaps = 3;
 
@@ -293,15 +286,15 @@ export function ParsedText({ text }: { text: string }) {
 
             if (isPageNav) {
               triggerContent = (
-                <Link href={href} target={isNewWindow ? '_blank' : undefined} onClick={handleClick} className={className}>
+                <Link href={href} target={isNewWindow ? '_blank' : undefined} prefetch={false} onClick={handleClick} className={className}>
                   {contentNode}
                 </Link>
               );
             } else if (isHashNav) {
               triggerContent = (
-                <a href={href} onClick={handleClick} className={className}>
+                <Link href={href} prefetch={false} onClick={handleClick} className={className}>
                   {contentNode}
-                </a>
+                </Link>
               );
             } else {
               triggerContent = (
