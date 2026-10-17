@@ -111,7 +111,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
   }, [activeOnly, typeFilter, sheetFilter]);
 
   // 處理 Hash 定位與自動翻頁
-useEffect(() => {
+  useEffect(() => {
     if (list.length === 0) return;
 
     // 檢查 trigger 是否包含目標 ID
@@ -119,6 +119,13 @@ useEffect(() => {
       if (trigger.id === target || trigger.mission === target) return true;
       if (trigger.eventFlow?.some((f: any) => f.id === target)) return true;
       return false;
+    };
+
+    // 獨立出平滑捲動與高光動畫函式
+    const triggerHighlight = (el: HTMLElement) => {
+      el.scrollIntoView({ behavior: 'smooth' });
+      el.classList.add('bg-primary/20', 'ring-1', 'ring-primary', 'rounded-sm', 'transition-all', 'duration-500');
+      setTimeout(() => el.classList.remove('bg-primary/20', 'ring-1', 'ring-primary'), 2000);
     };
 
     const locateHash = () => {
@@ -146,23 +153,11 @@ useEffect(() => {
           targetIndex = list.findIndex((item: any) => checkTriggerHasTarget(item, targetId));
         }
 
-        // 找到了目標所在的 Trigger
+        // 找到目標所在的 Trigger
         if (targetIndex !== -1) {
           const targetTrigger = list[targetIndex];
 
-          // 執行 Filter：將搜尋條件設為該 Trigger ID
-          setSearchInput(targetTrigger.id);
-          setSearchTarget(targetTrigger.id);
-
-          // 移除可能阻礙該 Trigger 顯示的過濾條件
-          if (!targetTrigger.active) {
-            setActiveOnly(false);
-          }
-          setTypeFilter('all');
-          setSheetFilter('all');
-          setPage(1);
-
-          // 取得要精確定位的 DOM 元素 ID
+          // 取得目標精確的 DOM 元素 ID
           let elId = `trigger-${targetTrigger.id}`;
           if (targetTrigger.mission === targetId) {
             elId = `mission-${targetTrigger.id}-${targetTrigger.mission}`;
@@ -171,20 +166,36 @@ useEffect(() => {
             elId = `flow-${targetTrigger.id}-${targetId}-${flowIdx}`;
           }
 
-          // 進行平滑捲動與高光
-          const highlightElement = (attempts = 10) => {
-            const el = document.getElementById(elId);
-            if (el) {
-              el.scrollIntoView({ behavior: 'smooth' });
-              el.classList.add('bg-primary/20', 'ring-1', 'ring-primary', 'rounded-sm', 'transition-all', 'duration-500');
-              setTimeout(() => el.classList.remove('bg-primary/20', 'ring-1', 'ring-primary'), 2000);
-            } else if (attempts > 0) {
-              // 若 DOM 尚未渲染完成，每 100ms 重試一次
-              setTimeout(() => highlightElement(attempts - 1), 100);
-            }
-          };
+          // 檢查目標是否已經渲染在當前的 DOM 中
+          const existingEl = document.getElementById(elId);
 
-          setTimeout(() => highlightElement(), 100);
+          if (existingEl) {
+            // 目標已在當前可見頁面內，直接捲動與高光
+            triggerHighlight(existingEl);
+          } else {
+            // 目標不在當前頁面，先執行 filter 鎖定該 Trigger
+            setSearchInput(targetTrigger.id);
+            setSearchTarget(targetTrigger.id);
+
+            if (!targetTrigger.active) {
+              setActiveOnly(false);
+            }
+            setTypeFilter('all');
+            setSheetFilter('all');
+            setPage(1);
+
+            // 等待 React 重新渲染篩選後的 DOM，再執行捲動與高光
+            const retryHighlight = (attempts = 10) => {
+              const el = document.getElementById(elId);
+              if (el) {
+                triggerHighlight(el);
+              } else if (attempts > 0) {
+                setTimeout(() => retryHighlight(attempts - 1), 100);
+              }
+            };
+
+            setTimeout(() => retryHighlight(), 100);
+          }
         }
       }
     };
@@ -193,7 +204,7 @@ useEffect(() => {
 
     window.addEventListener('hashchange', locateHash);
     return () => window.removeEventListener('hashchange', locateHash);
-  }, [list, itemsPerPage]);
+  }, [list]);
 
   // 過濾清單
   const filteredList = useMemo(() => {
