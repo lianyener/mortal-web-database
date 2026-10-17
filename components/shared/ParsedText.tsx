@@ -117,7 +117,7 @@ export function ParsedText({ text }: { text: string }) {
               case 'Mission':
                 href = `/${category.toLowerCase()}/${targetId}`;
                 isPageNav = true;
-                isNewWindow = inEventPage || inRandomPage;
+                isHashNav = inEventPage || inRandomPage;
                 break;
               case 'Page':
                 isPageNav = true;
@@ -128,9 +128,22 @@ export function ParsedText({ text }: { text: string }) {
             // 設定點擊事件
             const handleClick = (e: React.MouseEvent) => {
               // 選取文字時不觸發跳轉
-              if (typeof window !== 'undefined' && window.getSelection()?.toString().length) {
-                e.preventDefault();
-                return;
+              if (typeof window !== 'undefined') {
+                const selection = window.getSelection();
+                if (selection && !selection.isCollapsed) {
+                  const currentTarget = e.currentTarget as Node;
+
+                  // 檢查選取範圍是否重疊或包含當前被點擊的節點
+                  const isTargetSelected =
+                    (typeof selection.containsNode === 'function' && selection.containsNode(currentTarget, true)) ||
+                    currentTarget.contains(selection.anchorNode) ||
+                    currentTarget.contains(selection.focusNode);
+
+                  if (isTargetSelected) {
+                    e.preventDefault();
+                    return;
+                  }
+                }
               }
 
               // 允許原生的新分頁行為 (Ctrl+Click, 中鍵等) 不被覆寫

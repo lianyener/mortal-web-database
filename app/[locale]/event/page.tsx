@@ -167,12 +167,26 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
 
         // 取得全域符合的 Trigger
         if (targetIndex === -1) {
-          // 優先依指定類別尋找
-          targetIndex = list.findIndex((item: any) => checkTriggerHasTarget(item, targetId, catLower));
+          // 依指定類別尋找，已啟用優先
+          targetIndex = list.findIndex(
+            (item: any) => item.active === true && checkTriggerHasTarget(item, targetId, catLower)
+          );
+          if (targetIndex === -1) {
+            targetIndex = list.findIndex(
+              (item: any) => checkTriggerHasTarget(item, targetId, catLower)
+            );
+          }
 
-          // 若帶了特定類別卻沒找到，退回不限類別全域盲搜
+          // 沒找到退回盲搜
           if (targetIndex === -1 && catLower !== 'unknown') {
-            targetIndex = list.findIndex((item: any) => checkTriggerHasTarget(item, targetId));
+            targetIndex = list.findIndex(
+              (item: any) => item.active === true && checkTriggerHasTarget(item, targetId)
+            );
+            if (targetIndex === -1) {
+              targetIndex = list.findIndex(
+                (item: any) => checkTriggerHasTarget(item, targetId)
+              );
+            }
           }
         }
 
@@ -259,7 +273,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
 
     window.addEventListener('hashchange', locateHash);
     return () => window.removeEventListener('hashchange', locateHash);
-  }, [list]);
+  }, [list, locale]);
 
   // 過濾清單
   const filteredList = useMemo(() => {
