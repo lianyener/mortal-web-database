@@ -111,7 +111,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
   }, [activeOnly, typeFilter, sheetFilter]);
 
   // 處理 Hash 定位與自動翻頁
-  useEffect(() => {
+useEffect(() => {
     if (list.length === 0) return;
 
     // 檢查 trigger 是否包含目標 ID
@@ -141,35 +141,50 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
           }
         }
 
-        // 取得全域第 1 組
+        // 取得全域第 1 組符合的 Trigger
         if (targetIndex === -1) {
           targetIndex = list.findIndex((item: any) => checkTriggerHasTarget(item, targetId));
         }
 
-        // 執行換頁與捲動
+        // 找到了目標所在的 Trigger
         if (targetIndex !== -1) {
-          setPage((currentPage) => {
-            const requiredPage = Math.ceil((targetIndex + 1) / itemsPerPage);
-            return requiredPage > currentPage ? requiredPage : currentPage;
-          });
+          const targetTrigger = list[targetIndex];
 
-          setTimeout(() => {
-            const trigger = list[targetIndex];
-            let elId = `trigger-${trigger.id}`;
-            if (trigger.mission === targetId) {
-              elId = `mission-${trigger.id}-${trigger.mission}`;
-            } else if (trigger.eventFlow?.some((f: any) => f.id === targetId)) {
-              const flowIdx = trigger.eventFlow.findIndex((f: any) => f.id === targetId);
-              elId = `flow-${trigger.id}-${targetId}-${flowIdx}`;
-            }
+          // 執行 Filter：將搜尋條件設為該 Trigger ID
+          setSearchInput(targetTrigger.id);
+          setSearchTarget(targetTrigger.id);
 
+          // 移除可能阻礙該 Trigger 顯示的過濾條件
+          if (!targetTrigger.active) {
+            setActiveOnly(false);
+          }
+          setTypeFilter('all');
+          setSheetFilter('all');
+          setPage(1);
+
+          // 取得要精確定位的 DOM 元素 ID
+          let elId = `trigger-${targetTrigger.id}`;
+          if (targetTrigger.mission === targetId) {
+            elId = `mission-${targetTrigger.id}-${targetTrigger.mission}`;
+          } else if (targetTrigger.eventFlow?.some((f: any) => f.id === targetId)) {
+            const flowIdx = targetTrigger.eventFlow.findIndex((f: any) => f.id === targetId);
+            elId = `flow-${targetTrigger.id}-${targetId}-${flowIdx}`;
+          }
+
+          // 進行平滑捲動與高光
+          const highlightElement = (attempts = 10) => {
             const el = document.getElementById(elId);
             if (el) {
               el.scrollIntoView({ behavior: 'smooth' });
               el.classList.add('bg-primary/20', 'ring-1', 'ring-primary', 'rounded-sm', 'transition-all', 'duration-500');
               setTimeout(() => el.classList.remove('bg-primary/20', 'ring-1', 'ring-primary'), 2000);
+            } else if (attempts > 0) {
+              // 若 DOM 尚未渲染完成，每 100ms 重試一次
+              setTimeout(() => highlightElement(attempts - 1), 100);
             }
-          }, 300);
+          };
+
+          setTimeout(() => highlightElement(), 100);
         }
       }
     };
