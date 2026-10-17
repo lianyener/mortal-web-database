@@ -107,12 +107,19 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
       return false;
     };
 
+    // 獨立出平滑捲動與高光動畫函式
+    const triggerHighlight = (el: HTMLElement) => {
+      el.scrollIntoView({ behavior: 'smooth' });
+      el.classList.add('bg-primary/20', 'ring-1', 'ring-primary', 'rounded-sm', 'transition-all', 'duration-500');
+      setTimeout(() => el.classList.remove('bg-primary/20', 'ring-1', 'ring-primary'), 2000);
+    };
+
     const locateHash = () => {
       if (typeof window !== 'undefined' && window.location.hash) {
         const rawHash = decodeURIComponent(window.location.hash.substring(1));
         if (!rawHash) return;
 
-        // 解析 targetId 與來源 fromPositionId
+        // 解析 targetId 與來源 fromPositionId (格式: #targetId?from=positionId)
         const [targetId, queryPart] = rawHash.split('?');
         const urlParams = new URLSearchParams(queryPart || '');
         const fromPositionId = urlParams.get('from');
@@ -127,39 +134,54 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
           }
         }
 
-        // 取得全域第 1 組
+        // 取得全域第 1 組符合的 Position
         if (targetIndex === -1) {
           targetIndex = list.findIndex((item: any) => checkPositionHasTarget(item, targetId));
         }
 
-        // 執行換頁與定位
+        // 找到目標所在的 Position
         if (targetIndex !== -1) {
-          setPage((currentPage) => {
-            const requiredPage = Math.ceil((targetIndex + 1) / itemsPerPage);
-            return requiredPage > currentPage ? requiredPage : currentPage;
-          });
+          const posItem = list[targetIndex];
 
-          setTimeout(() => {
-            const posItem = list[targetIndex];
-            let elId = `action-${posItem.id}`;
-
-            if (posItem.id !== targetId) {
-              for (const [rId, rEv] of Object.entries(posItem.event || {}) as any) {
-                const flowIdx = (rEv.eventFlow || []).findIndex((f: any) => f.id === targetId);
-                if (flowIdx !== -1) {
-                  elId = `flow-${posItem.id}-${rId}-${targetId}-${flowIdx}`;
-                  break;
-                }
+          // 1. 取得目標精確的 DOM 元素 ID
+          let elId = `action-${posItem.id}`;
+          if (posItem.id !== targetId) {
+            for (const [rId, rEv] of Object.entries(posItem.event || {}) as any) {
+              const flowIdx = (rEv.eventFlow || []).findIndex((f: any) => f.id === targetId);
+              if (flowIdx !== -1) {
+                elId = `flow-${posItem.id}-${rId}-${targetId}-${flowIdx}`;
+                break;
               }
             }
+          }
 
-            const el = document.getElementById(elId);
-            if (el) {
-              el.scrollIntoView({ behavior: 'smooth' });
-              el.classList.add('bg-primary/20', 'ring-1', 'ring-primary', 'rounded-sm', 'transition-all', 'duration-500');
-              setTimeout(() => el.classList.remove('bg-primary/20', 'ring-1', 'ring-primary'), 2000);
-            }
-          }, 300);
+          // 檢查目標是否已經渲染在當前的 DOM 中
+          const existingEl = document.getElementById(elId);
+
+          if (existingEl) {
+            // 目標已在當前可見頁面內，直接捲動與高光
+            triggerHighlight(existingEl);
+          } else {
+            // 目標不在當前頁面，先執行 filter 鎖定該 Position
+            setSearchInput(posItem.id);
+            setSearchTarget(posItem.id);
+
+            setPeriodFilter('all');
+            setPositionFilter('all');
+            setPage(1);
+
+            // 等待 React 重新渲染篩選後的 DOM，再執行捲動與高光
+            const retryHighlight = (attempts = 10) => {
+              const el = document.getElementById(elId);
+              if (el) {
+                triggerHighlight(el);
+              } else if (attempts > 0) {
+                setTimeout(() => retryHighlight(attempts - 1), 100);
+              }
+            };
+
+            setTimeout(() => retryHighlight(), 100);
+          }
         }
       }
     };
@@ -168,7 +190,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
 
     window.addEventListener('hashchange', locateHash);
     return () => window.removeEventListener('hashchange', locateHash);
-  }, [list, itemsPerPage]);
+  }, [list]);
 
   // 過濾清單
   const filteredList = useMemo(() => {
