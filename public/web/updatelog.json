@@ -1,17 +1,7 @@
 {
   "Log": [
-    {
-      "ID": "20261016-01",
-      "Date": "2026/10/16",
-      "GameVersion": "1.0.6000.2",
-      "Content": [
-        {
-          "Category": "Web",
-          "Type": "Other",
-          "Text": "更新資料已匯入，整理中；更新紀錄之後補"
-        }
-      ]
-    },
+    { "ID": "20261017-01", "Date": "2026/10/17", "GameVersion": "1.0.6000.2", "Content": [{ "Category": "Web", "Type": "Other", "Text": "調整總表事件跳轉的方式以改善效能" }] },
+    { "ID": "20261016-01", "Date": "2026/10/16", "GameVersion": "1.0.6000.2", "Content": [{ "Category": "Web", "Type": "Other", "Text": "更新資料已匯入，整理中；更新紀錄之後補" }] },
     { "ID": "20261015-01", "Date": "2026/10/15", "GameVersion": "1.0.5000.10", "Content": [{ "Category": "Web", "Type": "Other", "Text": "Website initialization." }] },
     {
       "ID": "20250928-01",
@@ -30,11 +20,7 @@
       "Date": "2025/09/13",
       "GameVersion": "1.0.5000.8",
       "Content": [
-        {
-          "Category": "Script",
-          "Type": "New",
-          "Text": "[*Label.Script,S0214_01*]"
-        },
+        { "Category": "Script", "Type": "New", "Text": "[*Label.Script,S0214_01*]" },
         {
           "Category": "Script",
           "Type": "Change",
