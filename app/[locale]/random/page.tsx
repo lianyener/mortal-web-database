@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect, Suspense, useMemo } from 'react';
+import { useState, useEffect, Suspense, useMemo, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import { Search } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
@@ -55,7 +55,7 @@ function RandomEventContentView() {
 // 列表元件
 function DataList({ positionData, scriptData, combatData, battleData }: { positionData: Record<string, any>; scriptData: any; combatData: any; battleData: any }) {
   const { translateTerm, translateParagraph } = useAppTranslation();
-  const [searchInput, setSearchInput] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchTarget, setSearchTarget] = useState('');
   const [page, setPage] = useState(1);
   const locale = useLocale();
@@ -85,7 +85,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
 
   // 執行搜尋
   const handleSearch = () => {
-    setSearchTarget(searchInput);
+    setSearchTarget(searchInputRef.current?.value || '');
     setPage(1);
   };
 
@@ -207,7 +207,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
             triggerHighlight(existingEl);
           } else {
             // 目標不在當前頁面先 filter 鎖定該 Position
-            setSearchInput(posItem.id);
+            if (searchInputRef.current) searchInputRef.current.value = posItem.id;
             setSearchTarget(posItem.id);
 
             // 解除可能阻礙顯示的過濾條件
@@ -329,10 +329,10 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
           {/* 搜尋框 */}
           <ButtonGroup className='flex-1 xl:flex-none'>
             <input
+              ref={searchInputRef}
               type='text'
               placeholder={translateTerm('Web.Msg.SearchPlaceholder')}
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              defaultValue={searchTarget}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSearch();
               }}

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect, Suspense, useMemo } from 'react';
+import { useState, useEffect, Suspense, useMemo, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import { Search, Eye, EyeOff } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
@@ -55,7 +55,7 @@ function EventContentView() {
 // 列表元件
 function DataList({ triggerData, scriptData, combatData, battleData }: { triggerData: Record<string, any>; scriptData: any; combatData: any; battleData: any }) {
   const { translateTerm, translateParagraph } = useAppTranslation();
-  const [searchInput, setSearchInput] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchTarget, setSearchTarget] = useState('');
   const [page, setPage] = useState(1);
   const locale = useLocale();
@@ -102,7 +102,8 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
 
   // 執行搜尋
   const handleSearch = () => {
-    setSearchTarget(searchInput);
+    console.log(searchInputRef.current?.value);
+    setSearchTarget(searchInputRef.current?.value || '');
     setPage(1);
   };
 
@@ -168,24 +169,16 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
         // 取得全域符合的 Trigger
         if (targetIndex === -1) {
           // 依指定類別尋找，已啟用優先
-          targetIndex = list.findIndex(
-            (item: any) => item.active === true && checkTriggerHasTarget(item, targetId, catLower)
-          );
+          targetIndex = list.findIndex((item: any) => item.active === true && checkTriggerHasTarget(item, targetId, catLower));
           if (targetIndex === -1) {
-            targetIndex = list.findIndex(
-              (item: any) => checkTriggerHasTarget(item, targetId, catLower)
-            );
+            targetIndex = list.findIndex((item: any) => checkTriggerHasTarget(item, targetId, catLower));
           }
 
           // 沒找到退回盲搜
           if (targetIndex === -1 && catLower !== 'unknown') {
-            targetIndex = list.findIndex(
-              (item: any) => item.active === true && checkTriggerHasTarget(item, targetId)
-            );
+            targetIndex = list.findIndex((item: any) => item.active === true && checkTriggerHasTarget(item, targetId));
             if (targetIndex === -1) {
-              targetIndex = list.findIndex(
-                (item: any) => checkTriggerHasTarget(item, targetId)
-              );
+              targetIndex = list.findIndex((item: any) => checkTriggerHasTarget(item, targetId));
             }
           }
         }
@@ -233,7 +226,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
             triggerHighlight(existingEl);
           } else {
             // 目標不在當前頁面：先 filter 鎖定該 Trigger
-            setSearchInput(targetTrigger.id);
+            if (searchInputRef.current) searchInputRef.current.value = targetTrigger.id;
             setSearchTarget(targetTrigger.id);
 
             // 解除可能阻礙顯示的過濾條件
@@ -373,10 +366,10 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
           {/* 搜尋框 */}
           <ButtonGroup className='flex-1 xl:flex-none'>
             <input
+              ref={searchInputRef}
               type='text'
               placeholder={translateTerm('Web.Msg.SearchPlaceholder')}
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              defaultValue={searchTarget}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSearch();
               }}
