@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.M50021.0.0*]","1":"[*Flag.M50021.0.1*]"}}],"init":0,"rel":{"post":{"Script":["meeting_option_01"]},"pre":{"Script":["meeting_option_502_01","S2500_01","S2500_02"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.M50021.0.0*]","1":"[*Flag.M50021.0.1*]"}}],"init":0,"rel":{"post":{"Script":["meeting_option_01"]},"pre":{"Script":["meeting_option_502_01","S2500_02","S2500_01"]}}}
