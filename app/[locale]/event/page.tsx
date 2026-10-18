@@ -102,9 +102,19 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
 
   // 執行搜尋
   const handleSearch = () => {
-    console.log(searchInputRef.current?.value);
-    setSearchTarget(searchInputRef.current?.value || '');
+    const value = searchInputRef.current?.value || '';
+    setSearchTarget(value);
     setPage(1);
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      params.delete('cat');
+      params.delete('from');
+
+      const remainingQuery = params.toString();
+      const cleanUrl = remainingQuery ? `${window.location.pathname}?${remainingQuery}` : window.location.pathname;
+      window.history.replaceState(null, '', cleanUrl);
+    }
   };
 
   // 篩選變更時回到第一頁
