@@ -18,7 +18,7 @@ export default function UpdateLogPage() {
 interface UpdateContent {
   Category: string;
   Type: string;
-  Text: string;
+  Text: string | string[];
 }
 
 interface UpdateLog {
@@ -88,19 +88,27 @@ function UpdateLogContent() {
 
                   {/* 更新項目卡片 */}
                   <div className='flex flex-col gap-4'>
-                    {log.Content.map((item, i) => (
-                      <div key={i} className='bg-card border border-border/60 rounded-lg p-4 sm:p-5 shadow-sm flex flex-col gap-3'>
-                        {/* 標籤 */}
-                        <div className='flex items-center gap-2'>
-                          <span className='px-2.5 py-0.5 rounded-md bg-secondary text-secondary-foreground text-xs font-bold tracking-wider'>{translateTerm(`Web.Term.${item.Type}`)}</span>
-                          <span className='px-2.5 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-bold tracking-wider'>{translateTerm(`Web.Label.${item.Category}`)}</span>
+                    {log.Content.map((item, i) => {
+                      const textLines = Array.isArray(item.Text) ? item.Text : [item.Text];
+
+                      return (
+                        <div key={i} className='bg-card border border-border/60 rounded-lg p-4 sm:p-5 shadow-sm flex flex-col gap-3'>
+                          {/* 標籤 */}
+                          <div className='flex items-center gap-2'>
+                            <span className='px-2.5 py-0.5 rounded-md bg-secondary text-secondary-foreground text-xs font-bold tracking-wider'>{translateTerm(`Web.Term.${item.Type}`)}</span>
+                            <span className='px-2.5 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-bold tracking-wider'>{translateTerm(`Web.Label.${item.Category}`)}</span>
+                          </div>
+                          {/* 文字內容 */}
+                          <div className='text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap flex-1 flex flex-col gap-1'>
+                            {textLines.map((line, idx) => (
+                              <div key={idx}>
+                                <ParsedText text={line} />
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                        {/* 文字內容（支援 ParsedText 處理標籤） */}
-                        <div className='text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap flex-1'>
-                          <ParsedText text={item.Text} />
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               ))}
