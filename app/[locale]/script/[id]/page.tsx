@@ -3,7 +3,7 @@
 
 import { Suspense, useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
-import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, TableProperties, Filter, CircleCheck } from 'lucide-react';
+import { ChevronDown, ChevronRight, Lock, Minus, CircleArrowRight, CircleFadingPlus, UnfoldVertical, FoldVertical, TableProperties, Filter, CircleCheck, Expand } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
@@ -59,6 +59,10 @@ function DataDetail({ data, id }: { data: any; id: string }) {
   const [treeActionId, setTreeActionId] = useState(0);
   const [isGlobalExpand, setIsGlobalExpand] = useState(true);
 
+  // 檢查來源
+  const hasTrigger = Boolean(data?.rel?.from?.Trigger?.length);
+  const hasPosition = Boolean(data?.rel?.from?.Position?.length);
+
   // 當載入新劇本時，預設全選所有 effect 類別
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -71,7 +75,23 @@ function DataDetail({ data, id }: { data: any; id: string }) {
       <div className='flex flex-col gap-4'>
         <div className='flex items-center justify-between border-b border-border/50 pb-2'>
           <h2 className='text-lg font-bold whitespace-nowrap'>{translateTermWithParam('Web.Info', 'Script')}</h2>
-          <div className='flex items-center'>
+          <div className='flex justify-end items-center gap-2'>
+            {hasTrigger && (
+              <Button asChild variant='outline' size='sm' className='h-8 px-2.5 text-xs'>
+                <Link href={`/event?cat=script#${id}`}>
+                  <Expand className='mr-1.5 size-3.5 text-muted-foreground' />
+                  {translateTerm('Web.OpenInEventTable')}
+                </Link>
+              </Button>
+            )}
+            {hasPosition && (
+              <Button asChild variant='outline' size='sm' className='h-8 px-2.5 text-xs'>
+                <Link href={`/random?cat=script#${id}`}>
+                  <Expand className='mr-1.5 size-3.5 text-muted-foreground' />
+                  {translateTerm('Web.OpenInRandomTable')}
+                </Link>
+              </Button>
+            )}
             <Button asChild variant='outline' size='sm' className='h-8 px-2.5 text-xs'>
               <Link href='/script'>
                 <TableProperties className='mr-1.5 size-3.5 rotate-180 text-muted-foreground' />
