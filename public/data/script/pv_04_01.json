@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"Info","text":"※[*Custom.OnlyPerform*]"}],"rel":{"pre":{},"post":{},"intra":{"Character":["brother1"]},"to":{}},"remark":[],"effects":["Info"]}
+{"content":[{"form":"effect","type":"Info","text":"※[*Custom.OnlyPerform*]"}],"rel":{"pre":{},"post":{},"intra":{"Character":["player","brother1"]},"to":{}},"remark":[],"effects":["Info"]}

@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.R0002.0.0*]","1":"[*Flag.R0002.0.1*]"}}],"init":0,"rel":{"post":{"Combat":["CL_S2200_04_03","CL_1515_01"]},"pre":{"Combat":["CL_S2200_04_03","CL_1515_01"]}}}
+{"data":[{"script":[],"value":{}},{"script":["CL_S2200_04_03"],"value":{}}],"init":0,"rel":{"post":{"Combat":["CL_S2200_04_03","CL_1515_01"]},"pre":{"Combat":["CL_S2200_04_03","CL_1515_01"]}}}

@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"Info","text":"※[*Custom.OnlyPerform*]"}],"rel":{"pre":{},"post":{},"intra":{"Character":["special999"]},"to":{}},"remark":[],"effects":["Info"]}
+{"content":[{"form":"effect","type":"Info","text":"※[*Custom.OnlyPerform*]"}],"rel":{"pre":{},"post":{},"intra":{"Character":["player","special999"]},"to":{}},"remark":[],"effects":["Info"]}

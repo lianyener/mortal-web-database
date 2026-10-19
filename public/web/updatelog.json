@@ -1,6 +1,32 @@
 {
   "Log": [
     {
+      "ID": "20261020-01",
+      "Date": "2026/10/20",
+      "GameVersion": "1.0.6000.2",
+      "Content": [
+        { "Category": "Web", "Type": "Other", "Text": ["增加直接從劇本、決鬥、戰役頁面開啟總表並定位的功能"] },
+        {
+          "Category": "Trigger",
+          "Type": "New",
+          "Text": [
+            "以下新增任務觸發已整理：", 
+            "[*Label.Trigger,S2914_01_01*]、[*Label.Trigger,S2914_02_01*]、[*Label.Trigger,S2914_01_02*]"
+          ]
+        },
+        {
+          "Category": "Script",
+          "Type": "New",
+          "Text": [
+            "以下新增劇本/決鬥已整理：",
+            "[*Label.Trigger,S2200_02*]：[*Label.Script,S2200_03_05*]",
+            "[*Label.Trigger,S2300_01*]：[*Label.Script,S2300_02*]、[*Label.Combat,CL_S2300_01*]、[*Label.Script,S2300_02_01*]",
+            "[*Label.Trigger,S0802_01_01*]：[*Label.Script,S0802_02_11*]"
+          ]
+        }
+      ]
+    },
+    {
       "ID": "20261019-01",
       "Date": "2026/10/19",
       "GameVersion": "1.0.6000.2",

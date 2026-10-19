@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"Info","text":"※[*Custom.OnlyPerform*]"}],"rel":{"pre":{},"post":{},"intra":{"Character":["girl5"]},"to":{},"from":{"Trigger":["S2301_01"],"Mission":["S2301"]}},"remark":[],"effects":["Info"]}
+{"content":[{"form":"effect","type":"Info","text":"※[*Custom.OnlyPerform*]"}],"rel":{"pre":{},"post":{},"intra":{"Character":["girl5","player"]},"to":{},"from":{"Trigger":["S2301_01"],"Mission":["S2301"]}},"remark":[],"effects":["Info"]}

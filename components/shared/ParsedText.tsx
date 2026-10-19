@@ -83,6 +83,7 @@ export function ParsedText({ text }: { text: string }) {
               case 'Enemy':
               case 'Story':
               case 'Place':
+              case 'BattleSkill':
                 isLink = false;
                 break;
               case 'Script':

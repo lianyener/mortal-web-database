@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,door_001_01*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["door_001_01"]},"from":{"Position":["Door_02"]}},"remark":[],"effects":["Script"]}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,door_001_01*]"}],"rel":{"pre":{},"post":{},"intra":{"Character":["player"]},"to":{"Script":["door_001_01"]},"from":{"Position":["Door_02"]}},"remark":[],"effects":["Script"]}
