@@ -147,7 +147,6 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
         const [targetId, hashQueryPart] = rawHash.split(/[?&]/);
         const searchParams = new URLSearchParams(window.location.search);
         const hashParams = new URLSearchParams(hashQueryPart ? rawHash.slice(targetId.length + 1) : '');
-
         const fromPositionId = searchParams.get('from') || hashParams.get('from');
         const category = searchParams.get('cat') || hashParams.get('cat') || 'unknown';
         const catLower = category.toLowerCase();
@@ -245,7 +244,11 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
             window.open(targetUrl, '_blank');
 
             // 清除當前網址中的無效 Hash，避免重新整理時重複彈出新視窗
-            history.replaceState(null, '', window.location.pathname + window.location.search);
+            searchParams.delete('cat');
+            searchParams.delete('from');
+            const cleanSearch = searchParams.toString();
+            const cleanUrl = cleanSearch ? `${window.location.pathname}?${cleanSearch}` : window.location.pathname;
+            history.replaceState(null, '', cleanUrl);
           }
         }
       }

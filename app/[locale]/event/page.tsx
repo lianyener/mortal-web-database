@@ -160,10 +160,11 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
         if (!rawHash) return;
 
         // 解析 targetId 與來源參數
-        const [targetId, queryPart] = rawHash.split('?');
-        const urlParams = new URLSearchParams(queryPart || '');
-        const fromTriggerId = urlParams.get('from');
-        const category = urlParams.get('cat') || 'unknown';
+        const [targetId, hashQueryPart] = rawHash.split(/[?&]/);
+        const searchParams = new URLSearchParams(window.location.search);
+        const hashParams = new URLSearchParams(hashQueryPart ? rawHash.slice(targetId.length + 1) : '');
+        const fromTriggerId = searchParams.get('from') || hashParams.get('from');
+        const category = searchParams.get('cat') || hashParams.get('cat') || 'unknown';
         const catLower = category.toLowerCase();
 
         let targetIndex = -1;
@@ -266,7 +267,11 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
             window.open(targetUrl, '_blank');
 
             // 清除當前網址中的無效 Hash，避免後續重新整理時重複跳出新視窗
-            history.replaceState(null, '', window.location.pathname + window.location.search);
+            searchParams.delete('cat');
+            searchParams.delete('from');
+            const cleanSearch = searchParams.toString();
+            const cleanUrl = cleanSearch ? `${window.location.pathname}?${cleanSearch}` : window.location.pathname;
+            history.replaceState(null, '', cleanUrl);
           }
         }
       }
