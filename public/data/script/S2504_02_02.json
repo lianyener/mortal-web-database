@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,S2504_02_03*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["S2504_02_03"]},"from":{"Script":["S2504_02"],"Trigger":["S2504_02"],"Mission":["S2504"]}},"remark":[],"effects":["Script"]}
+{"content":[{"form":"effect","text":"◎[*Custom.NextScript*][*Label.Script,S2504_02_03*]"}],"rel":{"pre":{},"post":{},"intra":{},"to":{"Script":["S2504_02_03"]},"from":{"Combat":["CL_S2504_01"],"Script":["S2504_02"],"Trigger":["S2504_02"],"Mission":["S2504"]}},"remark":[],"effects":["Script"]}

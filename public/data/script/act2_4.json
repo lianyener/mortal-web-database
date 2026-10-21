@@ -1,1 +1,1 @@
-{"content":[{"form":"effect","type":"Info","text":"※[*Custom.OnlyPerform*]"}],"rel":{"pre":{},"post":{},"intra":{"Character":["player"]},"to":{},"from":{"Script":["act2_3_1","act2_3_3","act2_3_2"]}},"remark":[],"effects":["Info"]}
+{"content":[{"form":"effect","type":"Info","text":"※[*Custom.OnlyPerform*]"}],"rel":{"pre":{},"post":{},"intra":{"Character":["player"]},"to":{},"from":{"Script":["act2_3_2","act2_3_1","act2_3_3"]}},"remark":[],"effects":["Info"]}

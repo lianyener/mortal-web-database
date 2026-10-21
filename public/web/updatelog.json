@@ -1,6 +1,40 @@
 {
   "Log": [
     {
+      "ID": "20261022-01",
+      "Date": "2026/10/22",
+      "GameVersion": "1.0.6000.2",
+      "Content": [
+        { "Category": "Web", "Type": "Other", "Text": ["調整網域"] },
+        {
+          "Category": "Trigger",
+          "Type": "New",
+          "Text": [
+            "以下新增任務觸發已整理：", 
+            "[*Label.Trigger,S2921_01*]、[*Label.Trigger,CT_M4002_03*]"
+          ]
+        },
+        {
+          "Category": "Position",
+          "Type": "New",
+          "Text": [
+            "以下新增隨機事件已整理：", 
+            "[*Label.Position,Travel_501*]"
+          ]
+        },
+        {
+          "Category": "Script",
+          "Type": "New",
+          "Text": [
+            "以下新增劇本/決鬥已整理：",
+            "[*Label.Trigger,M3003_02*]：[*Label.Script,ch4_8_7_3_part_2*]",
+            "[*Label.Trigger,M3005_02*]：[*Label.Script,ch4_9_3_6*]、[*Label.Script,ch4_9_3_7*]、[*Label.Script,ch4_9_3_8*]、[*Label.Script,ch4_9_3_8_1*]",
+            "[*Label.Trigger,M4002_02*]：[*Label.Script,ch5_4_8_8_1_01*]、[*Label.Script,ch5_4_8_8_5*]"
+          ]
+        }
+      ]
+    },
+    {
       "ID": "20261020-01",
       "Date": "2026/10/20",
       "GameVersion": "1.0.6000.2",
