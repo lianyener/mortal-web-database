@@ -9,6 +9,7 @@ import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { ParsedText, TriggerContext } from '@/components/shared/ParsedText';
 import { FlowContent } from '@/components/shared/FlowContent';
+import { RemarkIcons } from '@/components/shared/RemarkIcons';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -82,6 +83,16 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
     });
     return { periodOptions: Array.from(periods), positionOptions: Array.from(positions) };
   }, [list]);
+
+  // 依事件類別取得對應資料的 remark
+  const getEventRemark = (flow: any) => {
+    if (!flow?.type || !flow?.id) return undefined;
+    const typeLower = flow.type.toLowerCase();
+    if (typeLower === 'script') return scriptData?.[flow.id]?.remark;
+    if (typeLower === 'combat') return combatData?.[flow.id]?.remark;
+    if (typeLower === 'battle') return battleData?.[flow.id]?.remark;
+    return undefined;
+  };
 
   // 執行搜尋
   const handleSearch = () => {
@@ -458,6 +469,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                                 </div>
                                 <div className='font-bold mt-1 break-all'>{translateTerm(`${flow.type}.Name.${flow.id}`)}</div>
                                 <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`${flow.type}.Desc.${flow.id}`, undefined, 0)}</div>
+                                {getEventRemark(flow) && <RemarkIcons remarks={getEventRemark(flow)} />}
                               </td>
                               <td className='p-2 align-top whitespace-normal bg-background/30'>
                                 <FlowContent flow={flow} scriptData={scriptData} combatData={combatData} battleData={battleData} />

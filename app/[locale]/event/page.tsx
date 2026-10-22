@@ -9,6 +9,7 @@ import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { useItemDetail } from '@/hooks/queries/useItemDetail';
 import { ParsedText, TriggerContext } from '@/components/shared/ParsedText';
 import { FlowContent } from '@/components/shared/FlowContent';
+import { RemarkIcons } from '@/components/shared/RemarkIcons';
 import { TopNavbar } from '@/components/layout/TopNavbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -55,6 +56,7 @@ function EventContentView() {
 // 列表元件
 function DataList({ triggerData, scriptData, combatData, battleData }: { triggerData: Record<string, any>; scriptData: any; combatData: any; battleData: any }) {
   const { translateTerm, translateParagraph } = useAppTranslation();
+
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchTarget, setSearchTarget] = useState('');
   const [page, setPage] = useState(1);
@@ -90,6 +92,16 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
     'WestWulin',
     'Hopeless'
   ];
+
+  // 依事件類別取得對應資料的 remark
+  const getEventRemark = (flow: any) => {
+    if (!flow?.type || !flow?.id) return undefined;
+    const typeLower = flow.type.toLowerCase();
+    if (typeLower === 'script') return scriptData?.[flow.id]?.remark;
+    if (typeLower === 'combat') return combatData?.[flow.id]?.remark;
+    if (typeLower === 'battle') return battleData?.[flow.id]?.remark;
+    return undefined;
+  };
 
   // Helper: 格式化時間
   const formatTime = (timeObj: any) => {
@@ -440,6 +452,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                                 </div>
                                 <div className='font-bold mt-1 break-all'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
                                 <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
+                                {trigger.remark && <RemarkIcons remarks={trigger.remark} />}
                               </td>
                               <td rowSpan={rowCount} className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
                                 {translateTerm(`Web.Label.${trigger.type}`)}
@@ -482,6 +495,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                             </div>
                             <div className='font-bold mt-1 break-all'>{translateTerm(`${flow.type}.Name.${flow.id}`)}</div>
                             <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`${flow.type}.Desc.${flow.id}`, undefined, 0)}</div>
+                            {getEventRemark(flow) && <RemarkIcons remarks={getEventRemark(flow)} />}
                           </td>
                           <td className='p-2 align-top whitespace-normal bg-background/30'>
                             <FlowContent flow={flow} scriptData={scriptData} combatData={combatData} battleData={battleData} />
@@ -507,6 +521,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
                           </div>
                           <div className='font-bold mt-1 break-all'>{translateTerm(`Trigger.Name.${trigger.id}`)}</div>
                           <div className='text-xs text-muted-foreground mt-1 break-all'>{translateTerm(`Trigger.Desc.${trigger.id}`, undefined, 0)}</div>
+                          {trigger.remark && <RemarkIcons remarks={trigger.remark} />}
                         </td>
                         <td className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>{translateTerm(`Web.Label.${trigger.type}`)}</td>
                         <td className='p-2 align-top border-r border-border/30 whitespace-nowrap text-muted-foreground'>
