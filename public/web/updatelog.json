@@ -5,24 +5,16 @@
       "Date": "2026/10/23",
       "GameVersion": "1.0.6000.5",
       "Content": [
-        { "Category": "Web", "Type": "Other", "Text": ["基底遊戲資料更新到1.0.6000.5，持續整理中"] },
+        { "Category": "Web", "Type": "Other", "Text": ["基底遊戲資料更新到1.0.6000.5，持續整理中", "總表增加顯示任務觸發和劇本、戰鬥之備註"] },
         {
           "Category": "Position",
           "Type": "New",
-          "Text": [
-            "以下新增隨機事件已整理：", 
-            "[*Label.Position,Door_Girl_05*]", 
-            "[*Label.Position,Section_01_07_02*]、[*Label.Position,Section_01_07_02_502*]"
-          ]
+          "Text": ["以下新增隨機事件已整理：", "[*Label.Position,Door_Girl_05*]", "[*Label.Position,Section_01_07_02*]、[*Label.Position,Section_01_07_02_502*]"]
         },
         {
           "Category": "Script",
           "Type": "New",
-          "Text": [
-            "以下新增劇本已整理：",
-            "[*Label.Trigger,S0032_01*]：[*Label.Script,S0032_04*]",
-            "[*Label.Trigger,CT_Section_01_Free*]：[*Label.Script,section_01_free_08_07*]"
-          ]
+          "Text": ["以下新增劇本已整理：", "[*Label.Trigger,S0032_01*]：[*Label.Script,S0032_04*]", "[*Label.Trigger,CT_Section_01_Free*]：[*Label.Script,section_01_free_08_07*]"]
         }
       ]
     },
@@ -32,22 +24,8 @@
       "GameVersion": "1.0.6000.2",
       "Content": [
         { "Category": "Web", "Type": "Other", "Text": ["調整網域"] },
-        {
-          "Category": "Trigger",
-          "Type": "New",
-          "Text": [
-            "以下新增任務觸發已整理：", 
-            "[*Label.Trigger,S2921_01*]、[*Label.Trigger,CT_M4002_03*]"
-          ]
-        },
-        {
-          "Category": "Position",
-          "Type": "New",
-          "Text": [
-            "以下新增隨機事件已整理：", 
-            "[*Label.Position,Travel_501*]"
-          ]
-        },
+        { "Category": "Trigger", "Type": "New", "Text": ["以下新增任務觸發已整理：", "[*Label.Trigger,S2921_01*]、[*Label.Trigger,CT_M4002_03*]"] },
+        { "Category": "Position", "Type": "New", "Text": ["以下新增隨機事件已整理：", "[*Label.Position,Travel_501*]"] },
         {
           "Category": "Script",
           "Type": "New",
@@ -66,14 +44,7 @@
       "GameVersion": "1.0.6000.2",
       "Content": [
         { "Category": "Web", "Type": "Other", "Text": ["增加直接從劇本、決鬥、戰役頁面開啟總表並定位的功能"] },
-        {
-          "Category": "Trigger",
-          "Type": "New",
-          "Text": [
-            "以下新增任務觸發已整理：", 
-            "[*Label.Trigger,S2914_01_01*]、[*Label.Trigger,S2914_02_01*]、[*Label.Trigger,S2914_01_02*]"
-          ]
-        },
+        { "Category": "Trigger", "Type": "New", "Text": ["以下新增任務觸發已整理：", "[*Label.Trigger,S2914_01_01*]、[*Label.Trigger,S2914_02_01*]、[*Label.Trigger,S2914_01_02*]"] },
         {
           "Category": "Script",
           "Type": "New",
@@ -95,9 +66,9 @@
           "Category": "Trigger",
           "Type": "New",
           "Text": [
-            "以下新增任務觸發已整理：", 
-            "[*Label.Trigger,S0032_01*]、[*Label.Trigger,S0033_01*]、[*Label.Trigger,S0033_02*]", 
-            "[*Label.Trigger,CT_S2600_01*]、[*Label.Trigger,CT_S2700_01*]、[*Label.Trigger,CT_S2800_01*]、[*Label.Trigger,CT_S2915_01*]、[*Label.Trigger,S2320_01*]、[*Label.Trigger,CT_S2900_01*]、[*Label.Trigger,CT_S2900_02*]、[*Label.Trigger,S2901_01*]、[*Label.Trigger,CT_S2910_01*]、[*Label.Trigger,CT_S2911_01*]、[*Label.Trigger,S2912_01*]、[*Label.Trigger,S2310_01*]、[*Label.Trigger,S2913_01*]", 
+            "以下新增任務觸發已整理：",
+            "[*Label.Trigger,S0032_01*]、[*Label.Trigger,S0033_01*]、[*Label.Trigger,S0033_02*]",
+            "[*Label.Trigger,CT_S2600_01*]、[*Label.Trigger,CT_S2700_01*]、[*Label.Trigger,CT_S2800_01*]、[*Label.Trigger,CT_S2915_01*]、[*Label.Trigger,S2320_01*]、[*Label.Trigger,CT_S2900_01*]、[*Label.Trigger,CT_S2900_02*]、[*Label.Trigger,S2901_01*]、[*Label.Trigger,CT_S2910_01*]、[*Label.Trigger,CT_S2911_01*]、[*Label.Trigger,S2912_01*]、[*Label.Trigger,S2310_01*]、[*Label.Trigger,S2913_01*]",
             "[*Label.Trigger,S0304_01*]、[*Label.Trigger,CT_S0305_01*]、[*Label.Trigger,CT_S2321_01*]、[*Label.Trigger,CT_S2918_01*]、[*Label.Trigger,CT_S2919_01*]、[*Label.Trigger,S2300_1_01*]、[*Label.Trigger,S2916_01*]、[*Label.Trigger,S2917_01*]、[*Label.Trigger,CT_S2920_01*]"
           ]
         },
@@ -105,7 +76,7 @@
           "Category": "Position",
           "Type": "New",
           "Text": [
-            "以下新增隨機事件已整理：", 
+            "以下新增隨機事件已整理：",
             "[*Label.Position,Craft_Work_001*]、[*Label.Position,Section_01_08_06*]、[*Label.Position,S2800_02_Break_01*]、[*Label.Position,Travel_S2901_02*]、[*Label.Position,Travel_S2901_05*]、[*Label.Position,S2321_04_03_02*]、[*Label.Position,S2321_04_03_03*]"
           ]
         },
