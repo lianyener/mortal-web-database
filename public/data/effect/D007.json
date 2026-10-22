@@ -1,1 +1,1 @@
-{"state":"Buff","type":"Countdown","plural":false,"noRepeat":false,"round":5,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_A0003_01","CL_A0003_02","CL_A0003_03","CL_A0002_03","CL_A0002_02","CL_A0002_01","CL_1005_2","CL_1214_02"]}}}
+{"state":"Buff","type":"Countdown","plural":false,"noRepeat":false,"round":5,"show":true,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_A0003_02","CL_A0003_01","CL_A0003_03","CL_A0002_03","CL_A0002_02","CL_A0002_01","CL_1005_2","CL_1214_02"]}}}
