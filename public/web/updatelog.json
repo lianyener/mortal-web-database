@@ -1,11 +1,11 @@
 {
   "Log": [
     {
-      "ID": "20261022-02",
-      "Date": "2026/10/22",
+      "ID": "20261023-01",
+      "Date": "2026/10/23",
       "GameVersion": "1.0.6000.5",
       "Content": [
-        { "Category": "Web", "Type": "Other", "Text": ["遊戲資料更新到1.0.6000.5，持續整理中"] },
+        { "Category": "Web", "Type": "Other", "Text": ["基底遊戲資料更新到1.0.6000.5，持續整理中"] },
         {
           "Category": "Position",
           "Type": "New",
@@ -19,7 +19,7 @@
           "Category": "Script",
           "Type": "New",
           "Text": [
-            "以下新增劇本/決鬥已整理：",
+            "以下新增劇本已整理：",
             "[*Label.Trigger,S0032_01*]：[*Label.Script,S0032_04*]",
             "[*Label.Trigger,CT_Section_01_Free*]：[*Label.Script,section_01_free_08_07*]"
           ]
@@ -52,7 +52,7 @@
           "Category": "Script",
           "Type": "New",
           "Text": [
-            "以下新增劇本/決鬥已整理：",
+            "以下新增劇本已整理：",
             "[*Label.Trigger,M3003_02*]：[*Label.Script,ch4_8_7_3_part_2*]",
             "[*Label.Trigger,M3005_02*]：[*Label.Script,ch4_9_3_6*]、[*Label.Script,ch4_9_3_7*]、[*Label.Script,ch4_9_3_8*]、[*Label.Script,ch4_9_3_8_1*]",
             "[*Label.Trigger,M4002_02*]：[*Label.Script,ch5_4_8_8_1_01*]、[*Label.Script,ch5_4_8_8_5*]"

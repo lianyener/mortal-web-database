@@ -287,7 +287,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
   const filteredList = useMemo(() => {
     let sourceList = list;
 
-    if (activeOnly) sourceList = sourceList.filter((item: any) => item.active === true && ((item.script && scriptData[item.script]) || item.content.length > 0));
+    if (activeOnly) sourceList = sourceList.filter((item: any) => item.active === true && ((item.script && scriptData[item.script]) || (item.content.length > 0 && scriptData[item.script])));
     if (typeFilter !== 'all') sourceList = sourceList.filter((item: any) => item.type === typeFilter);
 
     if (sheetFilter !== 'all') {
