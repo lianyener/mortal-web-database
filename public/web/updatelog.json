@@ -1,6 +1,32 @@
 {
   "Log": [
     {
+      "ID": "20261022-02",
+      "Date": "2026/10/22",
+      "GameVersion": "1.0.6000.5",
+      "Content": [
+        { "Category": "Web", "Type": "Other", "Text": ["遊戲資料更新到1.0.6000.5，持續整理中"] },
+        {
+          "Category": "Position",
+          "Type": "New",
+          "Text": [
+            "以下新增隨機事件已整理：", 
+            "[*Label.Position,Door_Girl_05*]", 
+            "[*Label.Position,Section_01_07_02*]、[*Label.Position,Section_01_07_02_502*]"
+          ]
+        },
+        {
+          "Category": "Script",
+          "Type": "New",
+          "Text": [
+            "以下新增劇本/決鬥已整理：",
+            "[*Label.Trigger,S0032_01*]：[*Label.Script,S0032_04*]",
+            "[*Label.Trigger,CT_Section_01_Free*]：[*Label.Script,section_01_free_08_07*]"
+          ]
+        }
+      ]
+    },
+    {
       "ID": "20261022-01",
       "Date": "2026/10/22",
       "GameVersion": "1.0.6000.2",
