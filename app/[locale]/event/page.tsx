@@ -53,6 +53,12 @@ function EventContentView() {
   );
 }
 
+const checkIsTriggerActive = (item: any, scriptData: any) => {
+  if (!item?.active) return false;
+  if (item.script) return Boolean(scriptData?.[item.script]);
+  return Boolean(item.content?.length > 0);
+};
+
 // 列表元件
 function DataList({ triggerData, scriptData, combatData, battleData }: { triggerData: Record<string, any>; scriptData: any; combatData: any; battleData: any }) {
   const { translateTerm, translateParagraph } = useAppTranslation();
@@ -192,7 +198,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
         // 取得全域符合的 Trigger
         if (targetIndex === -1) {
           // 依指定類別尋找，已啟用優先
-          targetIndex = list.findIndex((item: any) => item.active === true && checkTriggerHasTarget(item, targetId, catLower));
+          targetIndex = list.findIndex((item: any) => checkIsTriggerActive(item, scriptDataf) === true && checkTriggerHasTarget(item, targetId, catLower));
           if (targetIndex === -1) {
             targetIndex = list.findIndex((item: any) => checkTriggerHasTarget(item, targetId, catLower));
           }
@@ -253,9 +259,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
             setSearchTarget(targetTrigger.id);
 
             // 解除可能阻礙顯示的過濾條件
-            if (!targetTrigger.active) {
-              setActiveOnly(false);
-            }
+            if (!!checkIsTriggerActive(targetTrigger, scriptData)) setActiveOnly(false);
             setTypeFilter('all');
             setSheetFilter('all');
             setPage(1);
@@ -293,13 +297,13 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
 
     window.addEventListener('hashchange', locateHash);
     return () => window.removeEventListener('hashchange', locateHash);
-  }, [list, locale]);
+  }, [list, locale, scriptData]);
 
   // 過濾清單
   const filteredList = useMemo(() => {
     let sourceList = list;
 
-    if (activeOnly) sourceList = sourceList.filter((item: any) => item.active === true && ((item.script && scriptData[item.script]) || (item.content.length > 0 && scriptData[item.script])));
+    if (activeOnly) sourceList = sourceList.filter((item: any) => checkIsTriggerActive(item, scriptData));
     if (typeFilter !== 'all') sourceList = sourceList.filter((item: any) => item.type === typeFilter);
 
     if (sheetFilter !== 'all') {
@@ -327,7 +331,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
       return searchTerms.every((term) => targetString.includes(term));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [list, searchTarget, activeOnly, typeFilter, sheetFilter]);
+  }, [list, searchTarget, activeOnly, typeFilter, sheetFilter, scriptData]);
 
   // 分頁顯示
   const displayList = useMemo(() => {
