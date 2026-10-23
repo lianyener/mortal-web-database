@@ -259,7 +259,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
             setSearchTarget(targetTrigger.id);
 
             // 解除可能阻礙顯示的過濾條件
-            if (!!checkIsTriggerActive(targetTrigger, scriptData)) setActiveOnly(false);
+            if (!checkIsTriggerActive(targetTrigger, scriptData)) setActiveOnly(false);
             setTypeFilter('all');
             setSheetFilter('all');
             setPage(1);
