@@ -7,6 +7,14 @@
       "Content": [
         { "Category": "Web", "Type": "Other", "Text": ["基底遊戲資料更新到1.0.6000.5，持續整理中", "總表增加顯示任務觸發和劇本、戰鬥之備註"] },
         {
+          "Category": "Trigger",
+          "Type": "New",
+          "Text": [
+            "以下新增任務觸發已整理：",
+            "[*Label.Trigger,S2201_01*]"
+          ]
+        },
+        {
           "Category": "Position",
           "Type": "New",
           "Text": ["以下新增隨機事件已整理：", "[*Label.Position,Door_Girl_05*]", "[*Label.Position,Section_01_07_02*]、[*Label.Position,Section_01_07_02_502*]"]
@@ -14,7 +22,12 @@
         {
           "Category": "Script",
           "Type": "New",
-          "Text": ["以下新增劇本已整理：", "[*Label.Trigger,S0032_01*]：[*Label.Script,S0032_04*]", "[*Label.Trigger,CT_Section_01_Free*]：[*Label.Script,section_01_free_08_07*]"]
+          "Text": [
+            "以下新增劇本已整理：", 
+            "[*Label.Trigger,S0032_01*]：[*Label.Script,S0032_04*]", 
+            "[*Label.Trigger,CT_Section_01_Free*]：[*Label.Script,section_01_free_08_07*]", 
+            "[*Label.Trigger,M5001_05*]：[*Label.Script,ch6_6_2_2*]、[*Label.Script,XXX*]、[*Label.Script,ch6_6_2_2_1*]、[*Label.Script,ch6_6_2_2_2*]、[*Label.Script,ch6_6_2_2_3*]、[*Label.Script,ch6_6_2_2_4*]、[*Label.Script,ch6_6_2_2_5*]、[*Label.Script,ch6_8_4_part_2*]、[*Label.Script,ch6_8_6*]、[*Label.Script,ch6_9_2_4*]、[*Label.Script,ch6_10_1_part_2*]"
+          ]
         }
       ]
     },

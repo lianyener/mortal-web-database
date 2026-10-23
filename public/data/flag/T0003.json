@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{}}],"init":0,"rel":{"pre":{"Script":["ch1_2_2","ch1_2_1","S8400_01","S8400_01_01"]},"post":{"Script":["ch1_2_1"]}}}
+{"data":[{"script":[],"value":{}}],"init":0,"rel":{"post":{"Script":["ch1_2_1"]},"pre":{"Script":["ch1_2_1","ch1_2_2","S8400_01","S8400_01_01"]}}}
