@@ -1,6 +1,31 @@
 {
   "Log": [
     {
+      "ID": "20261024-01",
+      "Date": "2026/10/24",
+      "GameVersion": "1.0.6000.5",
+      "Content": [
+        {
+          "Category": "Trigger",
+          "Type": "New",
+          "Text": [
+            "以下新增任務觸發已整理：",
+            "[*Label.Trigger,S2201_01*]、[*Label.Trigger,S2510_01*]、[*Label.Trigger,S0031_01*]",
+            "[*Label.Trigger,M7006_07_01*]、[*Label.Trigger,M7006_08_01*]"
+          ]
+        },
+        {
+          "Category": "Script",
+          "Type": "New",
+          "Text": [
+            "以下新增劇本已整理：", 
+            "[*Label.Trigger,M5001_05*]：[*Label.Script,ch6_6_2_2*]、[*Label.Script,ch6_6_2_2_1*]、[*Label.Script,ch6_6_2_2_2*]、[*Label.Script,ch6_6_2_2_3*]、[*Label.Script,ch6_6_2_2_4*]、[*Label.Script,ch6_6_2_2_5*]、[*Label.Script,ch6_8_4_part_2*]、[*Label.Script,ch6_8_6*]、[*Label.Script,ch6_9_2_4*]、[*Label.Script,ch6_10_1_part_2*]", 
+            "[*Label.Trigger,M7001_01*]：[*Label.Combat,CL_1807_02*]、[*Label.Script,ch8_1_1_2_3_1*]"
+          ]
+        }
+      ]
+    },
+    {
       "ID": "20261023-01",
       "Date": "2026/10/23",
       "GameVersion": "1.0.6000.5",
@@ -11,7 +36,8 @@
           "Type": "New",
           "Text": [
             "以下新增任務觸發已整理：",
-            "[*Label.Trigger,S2201_01*]、[*Label.Trigger,S2510_01*]、[*Label.Trigger,S0031_01*]"
+            "[*Label.Trigger,S2201_01*]、[*Label.Trigger,S2510_01*]、[*Label.Trigger,S0031_01*]",
+            "[*Label.Trigger,M7006_07_01*]、[*Label.Trigger,M7006_08_01*]"
           ]
         },
         {
