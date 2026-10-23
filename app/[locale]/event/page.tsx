@@ -198,7 +198,7 @@ function DataList({ triggerData, scriptData, combatData, battleData }: { trigger
         // 取得全域符合的 Trigger
         if (targetIndex === -1) {
           // 依指定類別尋找，已啟用優先
-          targetIndex = list.findIndex((item: any) => checkIsTriggerActive(item, scriptDataf) === true && checkTriggerHasTarget(item, targetId, catLower));
+          targetIndex = list.findIndex((item: any) => checkIsTriggerActive(item, scriptData) === true && checkTriggerHasTarget(item, targetId, catLower));
           if (targetIndex === -1) {
             targetIndex = list.findIndex((item: any) => checkTriggerHasTarget(item, targetId, catLower));
           }
