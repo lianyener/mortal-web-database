@@ -5,6 +5,7 @@
       "Date": "2026/10/24",
       "GameVersion": "1.0.6000.5",
       "Content": [
+        { "Category": "Web", "Type": "Other", "Text": ["安全性更新"] },
         {
           "Category": "Trigger",
           "Type": "New",
