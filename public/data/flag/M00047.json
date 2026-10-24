@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.M00047.0.0*]","1":"[*Flag.M00047.0.1*]"}}],"init":0,"rel":{"post":{"Position":["Back_03"],"Script":["ch5_6_7_2","ch5_6_7_3","S2920_01"]},"pre":{"Script":["S2919_01"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.M00047.0.0*]","1":"[*Flag.M00047.0.1*]"}}],"init":0,"rel":{"post":{"Position":["Back_03"],"Script":["ch5_6_7_3","ch5_6_7_2","S2920_01"]},"pre":{"Script":["S2919_01"]}}}

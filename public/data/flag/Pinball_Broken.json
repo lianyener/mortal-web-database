@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.Pinball_Broken.0.0*]","1":"[*Flag.Pinball_Broken.0.1*]"}}],"init":0,"rel":{"post":{"Trigger":["S0033_01","S0033_02"],"Script":["S0032_03","talk_brother4_option_04"]},"pre":{"Script":["S0033_01","S0033_02"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.Pinball_Broken.0.0*]","1":"[*Flag.Pinball_Broken.0.1*]"}}],"init":0,"rel":{"post":{"Trigger":["S0033_01","S0033_02"],"Script":["S0032_03","talk_brother4_option_04"]},"pre":{"Script":["S0033_02","S0033_01"]}}}
