@@ -11,8 +11,7 @@
           "Type": "New",
           "Text": [
             "以下新增任務觸發已整理：",
-            "[*Label.Trigger,S2201_01*]、[*Label.Trigger,S2510_01*]、[*Label.Trigger,S0031_01*]",
-            "[*Label.Trigger,M7006_07_01*]、[*Label.Trigger,M7006_08_01*]、[*Label.Trigger,CT_S2922_01*]"
+            "[*Label.Trigger,CT_S2922_01*]"
           ]
         },
         {
