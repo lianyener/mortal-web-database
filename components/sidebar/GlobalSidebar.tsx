@@ -87,7 +87,7 @@ export function GlobalSidebar() {
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange} modal={false}>
       <SheetContent
-        className='w-full sm:max-w-md md:max-w-lg lg:max-w-xl bg-muted p-0 gap-0 flex flex-col [&>button]:hidden shadow-2xl'
+        className='w-full sm:max-w-md md:max-w-lg lg:max-w-xl bg-muted p-0 gap-0 flex flex-col [&>button]:hidden shadow-2xl data-[state=closed]:fill-mode-[forwards] data-[state=closed]:fade-out-0 data-[state=closed]:transition-none'
         // 在桌面版 (>= 768px) 防止點擊外部關閉，允許無縫更新
         // 在手機版 (< 768px) 恢復預設行為，點擊外部區域時自動關閉側邊欄
         onInteractOutside={(e) => {
