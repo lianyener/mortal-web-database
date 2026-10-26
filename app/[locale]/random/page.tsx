@@ -378,7 +378,7 @@ function DataList({ positionData, scriptData, combatData, battleData }: { positi
                 <th className='px-4 py-3 font-semibold w-20'>{translateTerm('Web.Period')}</th>
                 <th className='px-4 py-3 font-semibold w-24'>{translateTerm('Web.Position')}</th>
                 <th className='px-4 py-3 font-semibold w-24'>{translateTerm('Web.Action')}</th>
-                <th className='px-4 py-3 font-semibold w-20'>{translateTerm('Web.Random')}</th>
+                <th className='px-4 py-3 font-semibold w-22 text-wrap'>{translateTerm('Web.Random')}</th>
                 <th className='px-4 py-3 font-semibold w-56'>{translateTerm('Web.Condition')}</th>
                 <th className='px-4 py-3 font-semibold w-48'>{translateTerm('Web.Rate')}</th>
                 <th className='px-4 py-3 font-semibold w-32'>{translateTerm('Web.Event')}</th>
