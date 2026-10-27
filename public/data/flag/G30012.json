@@ -1,1 +1,1 @@
-{"data":[{"script":[],"value":{"0":"[*Flag.G30012.0.0*]","1":"[*Flag.G30012.0.1*]"}}],"init":0,"rel":{"pre":{"Script":["S0026_01"]}}}
+{"data":[{"script":[],"value":{"0":"[*Flag.G30012.0.0*]","1":"[*Flag.G30012.0.1*]"}}],"init":0,"rel":{"post":{"Position":["Door_02","Fortress_02","Fortress_Work_001","Mall_Work_001","Room_Work_001"]},"pre":{"Script":["S0026_01"]}}}

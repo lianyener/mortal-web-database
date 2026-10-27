@@ -1,6 +1,51 @@
 {
   "Log": [
     {
+      "ID": "20261028-01",
+      "Date": "2026/10/28",
+      "GameVersion": "1.0.6001.0",
+      "Content": [
+        { "Category": "Web", "Type": "Other", "Text": ["更新中文以外語系(機器翻譯)", "基底遊戲資料更新到1.0.6001.0"] },
+        {
+          "Category": "Script",
+          "Type": "New",
+          "Text": [
+            "以下劇本已新增：",
+            "[*Label.Trigger,M3005_02*]：[*Label.Script,ch4_9_3_8_part_2*]"
+          ]
+        },
+        {
+          "Category": "Trigger",
+          "Type": "Change",
+          "Text": ["以下任務觸發已調整：", "[*Label.Trigger,S2914_02_01*]"]
+        },
+        {
+          "Category": "Position",
+          "Type": "Change",
+          "Text": [
+            "以下隨機事件已調整：", 
+            "[*Label.Position,Alchemy_Work_001*](其他001)、[*Label.Position,Back_03*](特殊003)、[*Label.Position,Back_Work_001*](特殊002、特殊003、特殊004)、[*Label.Position,Door_02*](特殊005、特殊006、特殊007)、[*Label.Position,Door_Free_001*](特殊014、特殊015、特殊017)、[*Label.Position,Fortress_02*](特殊001)、[*Label.Position,Fortress_Work_001*](特殊001、特殊002、特殊003)、[*Label.Position,Mall_Work_001*](特殊001)、[*Label.Position,Room_Work_001*](特殊001、特殊002)"]
+        },
+        {
+          "Category": "Script",
+          "Type": "Change",
+          "Text": [
+            "以下劇本已調整：",
+            "[*Label.Script,ch3_16_1*]、[*Label.Script,ch4_8_10_1*]、[*Label.Script,ch4_9_3_8*]、[*Label.Script,ch5_1_1*]、[*Label.Script,ch5_3_2_break_start_01*]、[*Label.Script,ch8_2_1*]、[*Label.Script,ch8_2_6_3_3_1*]、[*Label.Script,ch8_3_1_4_1*]、[*Label.Script,ch8_8_1*]、[*Label.Script,meeting_option_01*]、[*Label.Script,meeting_option_705_01*]、[*Label.Script,S2320_01*]",
+            "[*Label.Script,ch3_5_2*]、[*Label.Script,ch3_10_3*]、[*Label.Script,ch4_9_3_1*]、[*Label.Script,ch5_4_8_5_1*]、[*Label.Script,ch5_4_8_8_1*]、[*Label.Script,ch6_8_3*]"
+          ]
+        },
+        {
+          "Category": "Combat",
+          "Type": "Change",
+          "Text": [
+            "以下決鬥已調整：",
+            "[*Label.Combat,CL_1807_02*]、[*Label.Combat,CL_1809_01*]"
+          ]
+        }
+    ]
+    },
+    {
       "ID": "20261025-01",
       "Date": "2026/10/25",
       "GameVersion": "1.0.6000.5",
