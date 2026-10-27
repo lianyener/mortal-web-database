@@ -5,7 +5,6 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { GlobalSidebar } from '@/components/sidebar/GlobalSidebar';
 import { QueryProvider } from '@/components/providers/QueryProvider';
-import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 // 頁面標題
@@ -44,7 +43,6 @@ export default async function RootLayout({ children, params }: Readonly<{ childr
           </NextIntlClientProvider>
         </body>
       </html>
-      <Analytics />
     </>
   );
 }
