@@ -1,1 +1,1 @@
-{"state":"Buff","type":"CountdownTrigger","plural":false,"noRepeat":false,"round":1,"show":true,"rel":{"post":{"Effect":[]},"pre":{"Talent":["2010"],"Effect":["B210_1","B211_1"]}}}
+{"state":"Buff","type":"CountdownTrigger","plural":false,"noRepeat":false,"round":1,"show":true,"rel":{"post":{"Effect":[]},"pre":{"Talent":["2010"],"Effect":["B211_1","B210_1"]}}}
