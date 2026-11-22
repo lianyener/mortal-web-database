@@ -1,6 +1,102 @@
 {
   "Log": [
     {
+      "ID": "20261123-01",
+      "Date": "2026/11/23",
+      "GameVersion": "1.0.6001.2",
+      "Content": [
+        { "Category": "Web", "Type": "Other", "Text": ["修復一些解析錯誤", "基底遊戲資料更新到1.0.6002.0"] },
+        {
+          "Category": "Position",
+          "Type": "Change",
+          "Text": [
+            "以下隨機事件已調整：", 
+            "[*Label.Position,Center_Free_001*](大失敗001、失敗003)、[*Label.Position,Mall_Work_001*](失敗003)：觸發條件(新增檢定唐錚在唐門)", 
+            "[*Label.Position,Mall_Work_001*](其他005)、[*Label.Position,Study_Work_001*](特殊001、特殊002)：觸發條件(新增檢定唐陞在唐門)", 
+            "[*Label.Position,Door_02*](特殊004)、[*Label.Position,Door_Free_001*](特殊002、特殊003、特殊004、特殊005、特殊006)、[*Label.Position,Fortress_02*](特殊001)、[*Label.Position,Teashop_Work_001*](特殊001)：觸發條件(排除龍湘在金國期間)",
+            "[*Label.Position,Spa_Free_001*](特殊002)：觸發條件(新增檢定結緣小梅)" 
+          ]
+        },
+        {
+          "Category": "Script",
+          "Type": "Change",
+          "Text": [
+            "以下劇本已調整：",
+            "[*Label.Script,ch2_2_3_4*]：補上重置某暫存旗標",
+            "[*Label.Script,ch2_4_1_1*]：新增設定旗標小師妹守護者",
+            "[*Label.Script,ch2_4_2_1*]：補上重置對話旗標",
+            "[*Label.Script,ch2_4_8_1*]：補上重置某暫存旗標",
+            "[*Label.Script,ch3_2_3_2_3_break_start_01*]：新增添加傳記",
+            "[*Label.Script,ch3_16_5*]：修正轉盤修養補正為負向",
+            "[*Label.Script,ch3_9_2*]：調整接王幫主招選項性情門檻(>40變為>=40)",
+            "[*Label.Script,ch4_4_2_break_start_01*]：修復旗標錯誤",
+            "[*Label.Script,ch4_6_13*]：補上重置某暫存旗標",
+            "[*Label.Script,ch4_6_4_2_1*]：修復檢定處世之分岐結果相反",
+            "[*Label.Script,ch4_8_8_3*]：修復回憶首次段考考官分岐判定",
+            "[*Label.Script,ch5_4_1*]：調整屋頂觀戰選項心相門檻(>=65變為>65)",
+            "[*Label.Script,ch5_6_1*]：查看郁城情況新增依是否發生金烏抓同門擋死之差分",
+            "[*Label.Script,ch5_6_8_2*]：修復某處立繪顏疆死亡之差分",
+            "[*Label.Script,ch6_3_5_break_start_01*]：小梅增加一句台詞(不影響分岐，本站資料看不出差異)",
+            "[*Label.Script,ch6_4_1*]：修復無法觸發官兵同行狀況道別差分的BUG(但變成選擇步行不會把宋悲同行設成否，雖無後續影響)",
+            "[*Label.Script,ch6_5_2_break_start_01*]：修復判定觸發南宮淺六戒刀相關劇情條件一致",
+            "[*Label.Script,ch6_8_3*]：崆峒掌派人分岐補上崆峒態度=友善",
+            "[*Label.Script,ch6_8_4*]：補上無人同行之演出分岐",
+            "[*Label.Script,ch6_9_2_4*]：修正暴言三轉盤之>=符號",
+            "[*Label.Script,ch7_5_2_9*]：移除一句旁白(不影響分岐，本站資料看不出差異)",
+            "[*Label.Script,ch7_5_4_10_break_start_01*]：修復選王八蛋的處世增減",
+            "[*Label.Script,ch7_5_4_2_2_break_start_01*]：讓四師兄在家待著新增設定任務結束",
+            "[*Label.Script,ch8_1_1_1*]：修正轉盤之>=符號",
+            "[*Label.Script,ch8_1_1_2*]：鵬程萬里是否出全力由檢定好感改成檢定道德",
+            "[*Label.Script,ch8_2_6_3_2_part_2*]、[*Label.Script,ch8_3_1_1*]：修正西盟有崆峒及西盟有崆峒及郁竹旗標設置之條件",
+            "[*Label.Script,ch8_2_6_4_break_start_01*]：修復調戲小竹旗標的設定方式",
+            "[*Label.Script,ch8_2_6_7*]：修復飛石幫主立繪演出(不影響分岐，本站資料看不出差異)",
+            "[*Label.Script,ch8_3_1_3_1*]、[*Label.Script,ch8_3_1_4_1*]：補上設置戰至力竭會使用到的暫存旗標",
+            "[*Label.Script,ch8_4_10_1*]：修正再世鳳雛或和魏菊結緣分岐誤被放入四師兄不在唐門的分岐內",
+            "[*Label.Script,ch8_4_12*]：修正大師兄斷成兩截的判定條件",
+            "[*Label.Script,ch8_4_3_4*]：調整場景(不影響分岐，本站資料看不出差異)",
+            "[*Label.Script,ch8_7_2_1*]：增加碰面時是否觸發生活雙俠的分岐(但目前版本沒差別)",
+            "[*Label.Script,ch8_7_2_2*]：修復說服丐幫結果之複合判定BUG",
+            "[*Label.Script,S0213_02*]：修正轉盤顯示數字",
+            "[*Label.Script,S0702_01_01*]：修正立繪演出(不影響分岐，本站資料看不出差異)",
+            "[*Label.Script,S0702_01_02*]：補上重置對話旗標；調整喝酒聊選項持有酒門檻(>1變為>=1)",
+            "[*Label.Script,S0703_01*]、[*Label.Script,S0703_01_01*]：修正與飛石幫和解、飛石幫支持唐門旗標設定(趕走則不成立)",
+            "[*Label.Script,S2310_01_03*]：修復無法進入學問≥50分岐的BUG",
+            "[*Label.Script,travel_result_S2501_01_903_01*]：調整殺無赦之道德減少量",
+            "[*Label.Script,S2901_03_01_07*]：來源是小竹分岐，和余公子對話時檢定心上人修正為郁竹",
+            "[*Label.Script,alchemy_work_901_01*]：修復武學增加判定BUG",
+            "[*Label.Script,center_work_301*]、[*Label.Script,craft_work_510*]、[*Label.Script,kitchen_work_001*]、[*Label.Script,kitchen_work_101*]、[*Label.Script,kitchen_work_901*]：唐陞好感變化新增判定唐陞在唐門",
+            "[*Label.Script,craft_work_302*]：補上趙活在唐門但相關人員均不再唐門時的分岐",
+            "[*Label.Script,craft_work_506*]：新增判定三師兄是否在唐門的差分",
+            "[*Label.Script,door_001*]：竹之心觸發條件增加判定認識郁竹",
+            "[*Label.Script,door_02_504*]：調整排隊買包子選項銀兩門檻(>500變為>=500)",
+            "[*Label.Script,door_02_504_01*]：上官螢、唐中翎好感減少新增判定上官螢在唐門、唐中翎在唐門",
+            "[*Label.Script,door_work_201*]：賭博輸光遇龍湘劇情增加判定龍湘在唐門",
+            "[*Label.Script,fortress_work_201_01*]、[*Label.Script,fortress_work_302*]、[*Label.Script,spa_free_101*]：龍湘好感增加排除龍湘在金國期間",
+            "[*Label.Script,meeting_option_103_01*]：大師兄相關劇情排除唐布衣在金國期間",
+            "[*Label.Script,mall_work_001*]、[*Label.Script,mall_work_102*]、[*Label.Script,mall_work_103*]、[*Label.Script,mall_work_201*]：調整唐陞好感變化條件",
+            "[*Label.Script,travel_result_601_501*]：唐中翎好感減少新增判定唐中翎在唐門",
+            "[*Label.Script,travel_result_601_904*]：葉雲舟、葉雲裳好感變化新增判定是否收留及死亡"
+          ]
+        },
+        {
+          "Category": "Combat",
+          "Type": "Change",
+          "Text": [
+            "以下決鬥已調整：",
+            "[*Label.Combat,CL_1806_01*]、[*Label.Combat,CL_1806_02*]、[*Label.Combat,CL_1806_03*]：新增各協力者相關劇情"
+          ]
+        },
+        {
+          "Category": "End",
+          "Type": "Change",
+          "Text": [
+            "以下汗青書已調整：",
+            "[*Label.End,20014*]：調整名稱"
+          ]
+        }
+      ]
+    },
+    {
       "ID": "20261028-01",
       "Date": "2026/10/28",
       "GameVersion": "1.0.6001.0",
@@ -43,7 +139,7 @@
             "[*Label.Combat,CL_1807_02*]、[*Label.Combat,CL_1809_01*]"
           ]
         }
-    ]
+      ]
     },
     {
       "ID": "20261025-01",

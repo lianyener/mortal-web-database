@@ -1,1 +1,1 @@
-{"state":"Buff","type":"Resident","plural":false,"noRepeat":false,"round":-1,"show":false,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_0000_03","CL_0000_02"]}}}
+{"state":"Buff","type":"Resident","plural":false,"noRepeat":false,"round":-1,"show":false,"rel":{"post":{"Effect":[]},"inter":{"Combat":["CL_0000_02","CL_0000_03"]}}}
