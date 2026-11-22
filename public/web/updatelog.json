@@ -5,7 +5,7 @@
       "Date": "2026/11/23",
       "GameVersion": "1.0.6001.2",
       "Content": [
-        { "Category": "Web", "Type": "Other", "Text": ["修復一些解析錯誤", "基底遊戲資料更新到1.0.6002.0"] },
+        { "Category": "Web", "Type": "Other", "Text": ["修復一些解析錯誤", "基底遊戲資料更新到1.0.6001.2"] },
         {
           "Category": "Position",
           "Type": "Change",
