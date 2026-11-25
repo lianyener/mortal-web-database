@@ -1,4 +1,7 @@
 import createNextIntlPlugin from 'next-intl/plugin';
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
+
+initOpenNextCloudflareForDev();
 
 const withNextIntl = createNextIntlPlugin();
 
@@ -6,23 +9,7 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
   /* 配置選項 */
   experimental: { optimizePackageImports: ['lucide-react'] },
-
-  // 轉址
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'mortal-web-database.vercel.app',
-          },
-        ],
-        destination: 'https://mortal.eraser.moe/:path*',
-        permanent: true, // 發送 HTTP 308 永久重定向
-      },
-    ];
-  }
+  images: { unoptimized: true }
 };
 
 export default withNextIntl(nextConfig);
