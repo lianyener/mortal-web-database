@@ -43,6 +43,9 @@
     "typescript": "^5",
     "wrangler": "^4.165.0"
   },
+  "optionalDependencies": {
+    "@swc/core-linux-x64-gnu": "^1.16.22"
+  },
   "allowScripts": {
     "@swc/core": true,
     "esbuild": true,
