@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:cf": "node scripts/cf-build.mjs",
-    "preview:cf": "node scripts/cf-build.mjs && opennextjs-cloudflare preview",
-    "deploy:cf": "node scripts/cf-build.mjs && opennextjs-cloudflare deploy"
+    "build:cf": "opennextjs-cloudflare build",
+    "preview:cf": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy:cf": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.17",
@@ -18,7 +18,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.577.0",
     "next": "^16.4.5",
-    "next-intl": "^4.14.9",
+    "next-intl": "^4.15.1",
     "nuqs": "^2.8.9",
     "radix-ui": "^1.4.3",
     "react": "19.2.4",
