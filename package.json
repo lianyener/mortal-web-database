@@ -42,5 +42,10 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "wrangler": "^4.165.0"
+  },
+  "allowScripts": {
+    "@swc/core": true,
+    "esbuild": true,
+    "workerd": true
   }
 }
